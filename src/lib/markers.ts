@@ -42,7 +42,7 @@ export const BLOOD_MARKERS: BloodMarker[] = [
   { id: "magnesium", name: "Magnesium", name_de: "Magnesium", category: "Vitamine", unit: "mg/dL", ref_min_m: 1.7, ref_max_m: 2.2, ref_min_f: 1.7, ref_max_f: 2.2, opt_min_m: 2.0, opt_max_m: 2.2, opt_min_f: 2.0, opt_max_f: 2.2, description: "300+ enzymatic reactions" },
 ];
 
-export const CATEGORIES = [...new Set(BLOOD_MARKERS.map(m => m.category))];
+export const CATEGORIES = Array.from(new Set(BLOOD_MARKERS.map(m => m.category)));
 
 export interface StatusInfo {
   status: "optimal" | "normal" | "low" | "high";
