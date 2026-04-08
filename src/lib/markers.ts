@@ -1,53 +1,684 @@
+// BlutBild — Blood Markers Library
+// Inspired by Peter Attia (Outlive) + standard Austrian lab reference ranges
+// Each marker has: standard lab range (ref_) + longevity-optimal range (opt_)
+// Priority tiers: "core" = Attia Priority 1 | "important" = Priority 2 | "extended" = supplementary
+
 export interface BloodMarker {
   id: string;
   name: string;
   name_de: string;
   category: string;
   unit: string;
-  ref_min_m: number; ref_max_m: number;
-  ref_min_f: number; ref_max_f: number;
-  opt_min_m: number; opt_max_m: number;
-  opt_min_f: number; opt_max_f: number;
+  // Standard lab reference ranges (sex-specific)
+  ref_min_m: number;
+  ref_max_m: number;
+  ref_min_f: number;
+  ref_max_f: number;
+  // Longevity-optimal ranges (Attia / evidence-based)
+  opt_min_m: number;
+  opt_max_m: number;
+  opt_min_f: number;
+  opt_max_f: number;
   description: string;
+  // Priority tier for UI prominence
+  priority: "core" | "important" | "extended";
+  // Attia-specific note explaining why this differs from standard ranges
+  attia_note?: string;
 }
 
 export const BLOOD_MARKERS: BloodMarker[] = [
-  { id: "hb", name: "Hemoglobin", name_de: "Hämoglobin", category: "Blutbild", unit: "g/dL", ref_min_m: 13.5, ref_max_m: 17.5, ref_min_f: 12.0, ref_max_f: 16.0, opt_min_m: 14.5, opt_max_m: 16.0, opt_min_f: 13.0, opt_max_f: 15.0, description: "Oxygen-carrying protein in red blood cells" },
-  { id: "hct", name: "Hematocrit", name_de: "Hämatokrit", category: "Blutbild", unit: "%", ref_min_m: 40, ref_max_m: 54, ref_min_f: 36, ref_max_f: 48, opt_min_m: 42, opt_max_m: 48, opt_min_f: 38, opt_max_f: 44, description: "Percentage of blood volume occupied by red blood cells" },
-  { id: "wbc", name: "White Blood Cells", name_de: "Leukozyten", category: "Blutbild", unit: "×10³/µL", ref_min_m: 4.0, ref_max_m: 11.0, ref_min_f: 4.0, ref_max_f: 11.0, opt_min_m: 4.5, opt_max_m: 7.5, opt_min_f: 4.5, opt_max_f: 7.5, description: "Immune system cells" },
-  { id: "plt", name: "Platelets", name_de: "Thrombozyten", category: "Blutbild", unit: "×10³/µL", ref_min_m: 150, ref_max_m: 400, ref_min_f: 150, ref_max_f: 400, opt_min_m: 200, opt_max_m: 300, opt_min_f: 200, opt_max_f: 300, description: "Blood clotting cells" },
-  { id: "glucose", name: "Fasting Glucose", name_de: "Nüchternglukose", category: "Stoffwechsel", unit: "mg/dL", ref_min_m: 70, ref_max_m: 100, ref_min_f: 70, ref_max_f: 100, opt_min_m: 72, opt_max_m: 90, opt_min_f: 72, opt_max_f: 90, description: "Blood sugar level" },
-  { id: "hba1c", name: "HbA1c", name_de: "HbA1c", category: "Stoffwechsel", unit: "%", ref_min_m: 4.0, ref_max_m: 5.6, ref_min_f: 4.0, ref_max_f: 5.6, opt_min_m: 4.5, opt_max_m: 5.2, opt_min_f: 4.5, opt_max_f: 5.2, description: "3-month average blood sugar" },
-  { id: "insulin", name: "Fasting Insulin", name_de: "Nüchterninsulin", category: "Stoffwechsel", unit: "µU/mL", ref_min_m: 2.0, ref_max_m: 25.0, ref_min_f: 2.0, ref_max_f: 25.0, opt_min_m: 2.0, opt_max_m: 8.0, opt_min_f: 2.0, opt_max_f: 8.0, description: "Insulin resistance marker" },
-  { id: "chol_total", name: "Total Cholesterol", name_de: "Gesamtcholesterin", category: "Lipide", unit: "mg/dL", ref_min_m: 0, ref_max_m: 200, ref_min_f: 0, ref_max_f: 200, opt_min_m: 120, opt_max_m: 190, opt_min_f: 120, opt_max_f: 190, description: "Total blood cholesterol" },
-  { id: "ldl", name: "LDL Cholesterol", name_de: "LDL-Cholesterin", category: "Lipide", unit: "mg/dL", ref_min_m: 0, ref_max_m: 130, ref_min_f: 0, ref_max_f: 130, opt_min_m: 40, opt_max_m: 100, opt_min_f: 40, opt_max_f: 100, description: "Cardiovascular risk factor" },
-  { id: "hdl", name: "HDL Cholesterol", name_de: "HDL-Cholesterin", category: "Lipide", unit: "mg/dL", ref_min_m: 40, ref_max_m: 200, ref_min_f: 50, ref_max_f: 200, opt_min_m: 55, opt_max_m: 90, opt_min_f: 65, opt_max_f: 100, description: "Good cholesterol" },
-  { id: "trig", name: "Triglycerides", name_de: "Triglyzeride", category: "Lipide", unit: "mg/dL", ref_min_m: 0, ref_max_m: 150, ref_min_f: 0, ref_max_f: 150, opt_min_m: 30, opt_max_m: 80, opt_min_f: 30, opt_max_f: 80, description: "Blood fats" },
-  { id: "apob", name: "ApoB", name_de: "Apolipoprotein B", category: "Lipide", unit: "mg/dL", ref_min_m: 40, ref_max_m: 130, ref_min_f: 40, ref_max_f: 130, opt_min_m: 40, opt_max_m: 80, opt_min_f: 40, opt_max_f: 80, description: "Best cardiovascular risk predictor" },
-  { id: "crp", name: "hs-CRP", name_de: "hs-CRP", category: "Entzündung", unit: "mg/L", ref_min_m: 0, ref_max_m: 5.0, ref_min_f: 0, ref_max_f: 5.0, opt_min_m: 0, opt_max_m: 1.0, opt_min_f: 0, opt_max_f: 1.0, description: "Inflammation marker" },
-  { id: "ferritin", name: "Ferritin", name_de: "Ferritin", category: "Entzündung", unit: "ng/mL", ref_min_m: 30, ref_max_m: 400, ref_min_f: 15, ref_max_f: 200, opt_min_m: 40, opt_max_m: 150, opt_min_f: 30, opt_max_f: 100, description: "Iron storage protein" },
-  { id: "homocysteine", name: "Homocysteine", name_de: "Homocystein", category: "Entzündung", unit: "µmol/L", ref_min_m: 5.0, ref_max_m: 15.0, ref_min_f: 5.0, ref_max_f: 15.0, opt_min_m: 5.0, opt_max_m: 9.0, opt_min_f: 5.0, opt_max_f: 9.0, description: "Cardiovascular risk marker" },
-  { id: "tsh", name: "TSH", name_de: "TSH", category: "Schilddrüse", unit: "mU/L", ref_min_m: 0.4, ref_max_m: 4.0, ref_min_f: 0.4, ref_max_f: 4.0, opt_min_m: 1.0, opt_max_m: 2.5, opt_min_f: 1.0, opt_max_f: 2.5, description: "Thyroid-stimulating hormone" },
-  { id: "ft3", name: "Free T3", name_de: "Freies T3", category: "Schilddrüse", unit: "pg/mL", ref_min_m: 2.0, ref_max_m: 4.4, ref_min_f: 2.0, ref_max_f: 4.4, opt_min_m: 2.8, opt_max_m: 3.8, opt_min_f: 2.8, opt_max_f: 3.8, description: "Active thyroid hormone" },
-  { id: "ft4", name: "Free T4", name_de: "Freies T4", category: "Schilddrüse", unit: "ng/dL", ref_min_m: 0.8, ref_max_m: 1.8, ref_min_f: 0.8, ref_max_f: 1.8, opt_min_m: 1.0, opt_max_m: 1.5, opt_min_f: 1.0, opt_max_f: 1.5, description: "Thyroid hormone precursor" },
-  { id: "alt", name: "ALT (GPT)", name_de: "GPT (ALT)", category: "Leber", unit: "U/L", ref_min_m: 0, ref_max_m: 50, ref_min_f: 0, ref_max_f: 35, opt_min_m: 7, opt_max_m: 25, opt_min_f: 7, opt_max_f: 20, description: "Liver enzyme" },
-  { id: "ast", name: "AST (GOT)", name_de: "GOT (AST)", category: "Leber", unit: "U/L", ref_min_m: 0, ref_max_m: 50, ref_min_f: 0, ref_max_f: 35, opt_min_m: 10, opt_max_m: 25, opt_min_f: 10, opt_max_f: 20, description: "Liver/muscle enzyme" },
-  { id: "ggt", name: "GGT", name_de: "Gamma-GT", category: "Leber", unit: "U/L", ref_min_m: 0, ref_max_m: 60, ref_min_f: 0, ref_max_f: 40, opt_min_m: 8, opt_max_m: 30, opt_min_f: 5, opt_max_f: 20, description: "Liver enzyme" },
-  { id: "creatinine", name: "Creatinine", name_de: "Kreatinin", category: "Niere", unit: "mg/dL", ref_min_m: 0.7, ref_max_m: 1.3, ref_min_f: 0.5, ref_max_f: 1.1, opt_min_m: 0.8, opt_max_m: 1.1, opt_min_f: 0.6, opt_max_f: 0.9, description: "Kidney function marker" },
-  { id: "egfr", name: "eGFR", name_de: "eGFR", category: "Niere", unit: "mL/min", ref_min_m: 90, ref_max_m: 200, ref_min_f: 90, ref_max_f: 200, opt_min_m: 100, opt_max_m: 150, opt_min_f: 100, opt_max_f: 150, description: "Kidney health indicator" },
-  { id: "vitd", name: "Vitamin D (25-OH)", name_de: "Vitamin D", category: "Vitamine", unit: "ng/mL", ref_min_m: 30, ref_max_m: 100, ref_min_f: 30, ref_max_f: 100, opt_min_m: 50, opt_max_m: 80, opt_min_f: 50, opt_max_f: 80, description: "Immunity, bones, mood" },
-  { id: "b12", name: "Vitamin B12", name_de: "Vitamin B12", category: "Vitamine", unit: "pg/mL", ref_min_m: 200, ref_max_m: 900, ref_min_f: 200, ref_max_f: 900, opt_min_m: 500, opt_max_m: 800, opt_min_f: 500, opt_max_f: 800, description: "Nerve function and energy" },
-  { id: "folate", name: "Folate", name_de: "Folsäure", category: "Vitamine", unit: "ng/mL", ref_min_m: 3.0, ref_max_m: 20.0, ref_min_f: 3.0, ref_max_f: 20.0, opt_min_m: 10.0, opt_max_m: 20.0, opt_min_f: 10.0, opt_max_f: 20.0, description: "DNA repair vitamin" },
-  { id: "iron", name: "Serum Iron", name_de: "Eisen", category: "Vitamine", unit: "µg/dL", ref_min_m: 60, ref_max_m: 170, ref_min_f: 50, ref_max_f: 170, opt_min_m: 80, opt_max_m: 140, opt_min_f: 70, opt_max_f: 130, description: "Available iron in blood" },
-  { id: "magnesium", name: "Magnesium", name_de: "Magnesium", category: "Vitamine", unit: "mg/dL", ref_min_m: 1.7, ref_max_m: 2.2, ref_min_f: 1.7, ref_max_f: 2.2, opt_min_m: 2.0, opt_max_m: 2.2, opt_min_f: 2.0, opt_max_f: 2.2, description: "300+ enzymatic reactions" },
+
+  // ─── BLUTBILD (Hämatologie) ──────────────────────────────────────────────
+  {
+    id: "hgb",
+    name: "Hemoglobin",
+    name_de: "Hämoglobin",
+    category: "Blutbild",
+    unit: "g/dL",
+    ref_min_m: 13.5, ref_max_m: 17.5,
+    ref_min_f: 12.0, ref_max_f: 16.0,
+    opt_min_m: 14.5, opt_max_m: 16.5,
+    opt_min_f: 13.0, opt_max_f: 15.5,
+    description: "Sauerstofftransport im Blut",
+    priority: "important",
+  },
+  {
+    id: "hct",
+    name: "Hematocrit",
+    name_de: "Hämatokrit",
+    category: "Blutbild",
+    unit: "%",
+    ref_min_m: 40, ref_max_m: 52,
+    ref_min_f: 36, ref_max_f: 46,
+    opt_min_m: 42, opt_max_m: 50,
+    opt_min_f: 38, opt_max_f: 44,
+    description: "Anteil der roten Blutkörperchen",
+    priority: "extended",
+  },
+  {
+    id: "rbc",
+    name: "Red Blood Cells",
+    name_de: "Erythrozyten",
+    category: "Blutbild",
+    unit: "Mio/µL",
+    ref_min_m: 4.5, ref_max_m: 5.9,
+    ref_min_f: 4.0, ref_max_f: 5.2,
+    opt_min_m: 4.7, opt_max_m: 5.5,
+    opt_min_f: 4.2, opt_max_f: 5.0,
+    description: "Anzahl roter Blutkörperchen",
+    priority: "extended",
+  },
+  {
+    id: "wbc",
+    name: "White Blood Cells",
+    name_de: "Leukozyten",
+    category: "Blutbild",
+    unit: "Tsd/µL",
+    ref_min_m: 4.0, ref_max_m: 10.0,
+    ref_min_f: 4.0, ref_max_f: 10.0,
+    opt_min_m: 4.5, opt_max_m: 7.5,
+    opt_min_f: 4.5, opt_max_f: 7.5,
+    description: "Immunsystem-Marker",
+    priority: "important",
+  },
+  {
+    id: "plt",
+    name: "Platelets",
+    name_de: "Thrombozyten",
+    category: "Blutbild",
+    unit: "Tsd/µL",
+    ref_min_m: 150, ref_max_m: 400,
+    ref_min_f: 150, ref_max_f: 400,
+    opt_min_m: 180, opt_max_m: 320,
+    opt_min_f: 180, opt_max_f: 320,
+    description: "Blutgerinnung",
+    priority: "extended",
+  },
+  {
+    id: "mcv",
+    name: "MCV",
+    name_de: "Mittleres Zellvolumen",
+    category: "Blutbild",
+    unit: "fL",
+    ref_min_m: 80, ref_max_m: 100,
+    ref_min_f: 80, ref_max_f: 100,
+    opt_min_m: 85, opt_max_m: 95,
+    opt_min_f: 85, opt_max_f: 95,
+    description: "Größe der roten Blutkörperchen — Hinweis auf Anämietyp",
+    priority: "extended",
+  },
+
+  // ─── HERZ-KREISLAUF (Lipide & Kardiovaskulär) ───────────────────────────
+  {
+    id: "apob",
+    name: "ApoB",
+    name_de: "Apolipoprotein B",
+    category: "Herz-Kreislauf",
+    unit: "mg/dL",
+    ref_min_m: 0, ref_max_m: 130,
+    ref_min_f: 0, ref_max_f: 130,
+    opt_min_m: 0, opt_max_m: 60,
+    opt_min_f: 0, opt_max_f: 60,
+    description: "Zuverlässigster Prädiktor für Herzerkrankungen",
+    priority: "core",
+    attia_note: "Attia: 'So niedrig wie möglich, so früh wie möglich.' Idealziel 30–40 mg/dL (Kindesniveau). Oberkante 60 mg/dL als absolute Grenze.",
+  },
+  {
+    id: "lpa",
+    name: "Lp(a)",
+    name_de: "Lipoprotein(a)",
+    category: "Herz-Kreislauf",
+    unit: "nmol/L",
+    ref_min_m: 0, ref_max_m: 75,
+    ref_min_f: 0, ref_max_f: 75,
+    opt_min_m: 0, opt_max_m: 30,
+    opt_min_f: 0, opt_max_f: 30,
+    description: "Genetisch bestimmter Risikofaktor — 'klebrigeres' LDL",
+    priority: "core",
+    attia_note: "Einmalig messen reicht (genetisch stabil). Erhöhte Werte > 75 nmol/L erfordern aggressiveres ApoB-Management.",
+  },
+  {
+    id: "ldl",
+    name: "LDL-Cholesterin",
+    name_de: "LDL-Cholesterin",
+    category: "Herz-Kreislauf",
+    unit: "mg/dL",
+    ref_min_m: 0, ref_max_m: 160,
+    ref_min_f: 0, ref_max_f: 160,
+    opt_min_m: 0, opt_max_m: 100,
+    opt_min_f: 0, opt_max_f: 100,
+    description: "LDL-Cholesterin — weniger präzise als ApoB",
+    priority: "important",
+    attia_note: "LDL-C kann irreführend sein. Attia bevorzugt ApoB als primären Marker.",
+  },
+  {
+    id: "hdl",
+    name: "HDL-Cholesterin",
+    name_de: "HDL-Cholesterin",
+    category: "Herz-Kreislauf",
+    unit: "mg/dL",
+    ref_min_m: 40, ref_max_m: 999,
+    ref_min_f: 50, ref_max_f: 999,
+    opt_min_m: 60, opt_max_m: 100,
+    opt_min_f: 65, opt_max_f: 110,
+    description: "Schutzfaktor gegen Herzkrankheiten",
+    priority: "important",
+  },
+  {
+    id: "trig",
+    name: "Triglyceride",
+    name_de: "Triglyceride",
+    category: "Herz-Kreislauf",
+    unit: "mg/dL",
+    ref_min_m: 0, ref_max_m: 150,
+    ref_min_f: 0, ref_max_f: 150,
+    opt_min_m: 0, opt_max_m: 75,
+    opt_min_f: 0, opt_max_f: 75,
+    description: "Blutfette — stark mit Insulinresistenz verknüpft",
+    priority: "important",
+    attia_note: "Attia: < 75 mg/dL optimal. TG:HDL-Ratio > 3,5 ist starker Insulinresistenz-Marker.",
+  },
+  {
+    id: "tchol",
+    name: "Gesamtcholesterin",
+    name_de: "Gesamtcholesterin",
+    category: "Herz-Kreislauf",
+    unit: "mg/dL",
+    ref_min_m: 0, ref_max_m: 200,
+    ref_min_f: 0, ref_max_f: 200,
+    opt_min_m: 150, opt_max_m: 190,
+    opt_min_f: 150, opt_max_f: 190,
+    description: "Gesamtcholesterin — wenig aussagekräftig allein",
+    priority: "extended",
+    attia_note: "Gesamtcholesterin allein ist ein schlechter Prädiktor. Wichtiger: ApoB + HDL + Triglyceride.",
+  },
+
+  // ─── METABOLIK / GLUKOSE ────────────────────────────────────────────────
+  {
+    id: "hba1c",
+    name: "HbA1c",
+    name_de: "HbA1c",
+    category: "Metabolik",
+    unit: "%",
+    ref_min_m: 4.0, ref_max_m: 5.6,
+    ref_min_f: 4.0, ref_max_f: 5.6,
+    opt_min_m: 4.5, opt_max_m: 5.2,
+    opt_min_f: 4.5, opt_max_f: 5.2,
+    description: "Langzeit-Blutzucker der letzten 3 Monate",
+    priority: "core",
+    attia_note: "Attia: Ziel 5,0–5,2%. Werte Richtung 5,5% bereits als metabolisches Warnsignal. Standard-Prediabetes-Grenze (5,7%) viel zu spät.",
+  },
+  {
+    id: "glucose",
+    name: "Nüchternglukose",
+    name_de: "Nüchternglukose",
+    category: "Metabolik",
+    unit: "mg/dL",
+    ref_min_m: 70, ref_max_m: 100,
+    ref_min_f: 70, ref_max_f: 100,
+    opt_min_m: 72, opt_max_m: 90,
+    opt_min_f: 72, opt_max_f: 90,
+    description: "Blutzucker nach mindestens 8h Fasten",
+    priority: "important",
+    attia_note: "CGM-Durchschnitt unter 100 mg/dL angestrebt, Standardabweichung < 15.",
+  },
+  {
+    id: "insulin",
+    name: "Nüchterninsulin",
+    name_de: "Nüchterninsulin",
+    category: "Metabolik",
+    unit: "µU/mL",
+    ref_min_m: 0, ref_max_m: 25,
+    ref_min_f: 0, ref_max_f: 25,
+    opt_min_m: 2, opt_max_m: 6,
+    opt_min_f: 2, opt_max_f: 6,
+    description: "Frühester Marker für Insulinresistenz",
+    priority: "core",
+    attia_note: "Standard-Labore sagen < 25 µU/mL 'normal'. Attia: > 6 µU/mL nüchtern ist bereits ein Warnsignal für Insulinresistenz.",
+  },
+  {
+    id: "homa_ir",
+    name: "HOMA-IR",
+    name_de: "HOMA-IR",
+    category: "Metabolik",
+    unit: "Index",
+    ref_min_m: 0, ref_max_m: 2.5,
+    ref_min_f: 0, ref_max_f: 2.5,
+    opt_min_m: 0, opt_max_m: 1.0,
+    opt_min_f: 0, opt_max_f: 1.0,
+    description: "Insulinresistenz-Score (Insulin × Glukose / 405)",
+    priority: "important",
+    attia_note: "Berechnet aus Nüchterninsulin und Nüchternglukose. Attia: < 1,0 optimal.",
+  },
+
+  // ─── ENTZÜNDUNG ────────────────────────────────────────────────────────
+  {
+    id: "hscrp",
+    name: "hs-CRP",
+    name_de: "hs-CRP",
+    category: "Entzündung",
+    unit: "mg/L",
+    ref_min_m: 0, ref_max_m: 3.0,
+    ref_min_f: 0, ref_max_f: 3.0,
+    opt_min_m: 0, opt_max_m: 0.5,
+    opt_min_f: 0, opt_max_f: 0.5,
+    description: "Systemischer Entzündungsmarker",
+    priority: "core",
+    attia_note: "Attia & ACC empfehlen Routinetestung. Optimal < 0,5 mg/L. Standard-Grenze 3,0 mg/L ist Attia viel zu hoch.",
+  },
+  {
+    id: "homocysteine",
+    name: "Homocystein",
+    name_de: "Homocystein",
+    category: "Entzündung",
+    unit: "µmol/L",
+    ref_min_m: 5.0, ref_max_m: 15.0,
+    ref_min_f: 5.0, ref_max_f: 12.0,
+    opt_min_m: 5.0, opt_max_m: 9.0,
+    opt_min_f: 5.0, opt_max_f: 9.0,
+    description: "Gefäß- und kognitiver Risikofaktor",
+    priority: "important",
+    attia_note: "Attia: persönliches Ziel < 9 µmol/L durch Methyl-B12 + Methylfolat-Supplementierung.",
+  },
+  {
+    id: "uric_acid",
+    name: "Harnsäure",
+    name_de: "Harnsäure",
+    category: "Entzündung",
+    unit: "mg/dL",
+    ref_min_m: 3.4, ref_max_m: 7.0,
+    ref_min_f: 2.4, ref_max_f: 6.0,
+    opt_min_m: 3.0, opt_max_m: 5.0,
+    opt_min_f: 2.5, opt_max_f: 4.5,
+    description: "Gicht-Marker und Insulinresistenz-Signal",
+    priority: "important",
+    attia_note: "Attia: < 5 mg/dL 'non-negotiable'. Standard-Labor warnt erst bei > 7 mg/dL (Gicht). Attia sieht erhöhte Werte als Blutdruck- und Insulinresistenz-Signal.",
+  },
+  {
+    id: "ferritin",
+    name: "Ferritin",
+    name_de: "Ferritin",
+    category: "Entzündung",
+    unit: "ng/mL",
+    ref_min_m: 30, ref_max_m: 400,
+    ref_min_f: 15, ref_max_f: 200,
+    opt_min_m: 50, opt_max_m: 150,
+    opt_min_f: 30, opt_max_f: 100,
+    description: "Eisenspeicher — erhöht auch bei Entzündung",
+    priority: "important",
+    attia_note: "Zu hoch = oxidativer Stress. Zu niedrig = Erschöpfung & Anämie. Attia: engerer Bereich als Standard-Labor.",
+  },
+
+  // ─── LEBER ───────────────────────────────────────────────────────────────
+  {
+    id: "alt",
+    name: "ALT (GPT)",
+    name_de: "GPT (ALT)",
+    category: "Leber",
+    unit: "U/L",
+    ref_min_m: 0, ref_max_m: 50,
+    ref_min_f: 0, ref_max_f: 35,
+    opt_min_m: 7, opt_max_m: 25,
+    opt_min_f: 7, opt_max_f: 20,
+    description: "Leberenzym — erhöht bei Leberstress",
+    priority: "important",
+    attia_note: "Standard-Labor: < 50 U/L. Attia: < 25 (m) / < 20 (f). Erhöhter ALT = erste Anzeichen von Fettleber, noch bevor andere Marker reagieren.",
+  },
+  {
+    id: "ast",
+    name: "AST (GOT)",
+    name_de: "GOT (AST)",
+    category: "Leber",
+    unit: "U/L",
+    ref_min_m: 0, ref_max_m: 50,
+    ref_min_f: 0, ref_max_f: 35,
+    opt_min_m: 10, opt_max_m: 25,
+    opt_min_f: 10, opt_max_f: 20,
+    description: "Leber- und Muskelenzym",
+    priority: "important",
+    attia_note: "Wie ALT: Attia-Ziel deutlich unter Standardbereich. Wichtig auch AST:ALT Verhältnis.",
+  },
+  {
+    id: "ggt",
+    name: "GGT",
+    name_de: "Gamma-GT",
+    category: "Leber",
+    unit: "U/L",
+    ref_min_m: 0, ref_max_m: 60,
+    ref_min_f: 0, ref_max_f: 40,
+    opt_min_m: 5, opt_max_m: 25,
+    opt_min_f: 5, opt_max_f: 20,
+    description: "Alkohol- und Lebermarker",
+    priority: "extended",
+  },
+  {
+    id: "bilirubin",
+    name: "Bilirubin (gesamt)",
+    name_de: "Bilirubin (gesamt)",
+    category: "Leber",
+    unit: "mg/dL",
+    ref_min_m: 0.2, ref_max_m: 1.2,
+    ref_min_f: 0.2, ref_max_f: 1.2,
+    opt_min_m: 0.3, opt_max_m: 0.9,
+    opt_min_f: 0.3, opt_max_f: 0.9,
+    description: "Abbauprodukt roter Blutkörperchen",
+    priority: "extended",
+  },
+
+  // ─── NIERE ───────────────────────────────────────────────────────────────
+  {
+    id: "cystatin_c",
+    name: "Cystatin C",
+    name_de: "Cystatin C",
+    category: "Niere",
+    unit: "mg/L",
+    ref_min_m: 0.5, ref_max_m: 1.0,
+    ref_min_f: 0.5, ref_max_f: 0.9,
+    opt_min_m: 0.5, opt_max_m: 0.7,
+    opt_min_f: 0.5, opt_max_f: 0.7,
+    description: "Präziserer Nierenfiltrationsmarker als Kreatinin",
+    priority: "important",
+    attia_note: "Attia bevorzugt Cystatin C gegenüber Kreatinin — weniger durch Muskelmasse beeinflusst.",
+  },
+  {
+    id: "creatinine",
+    name: "Kreatinin",
+    name_de: "Kreatinin",
+    category: "Niere",
+    unit: "mg/dL",
+    ref_min_m: 0.7, ref_max_m: 1.3,
+    ref_min_f: 0.5, ref_max_f: 1.1,
+    opt_min_m: 0.8, opt_max_m: 1.1,
+    opt_min_f: 0.6, opt_max_f: 0.9,
+    description: "Nierenfunktion (durch Muskelmasse beeinflusst)",
+    priority: "important",
+  },
+  {
+    id: "egfr",
+    name: "eGFR",
+    name_de: "eGFR",
+    category: "Niere",
+    unit: "mL/min/1,73m²",
+    ref_min_m: 60, ref_max_m: 999,
+    ref_min_f: 60, ref_max_f: 999,
+    opt_min_m: 90, opt_max_m: 999,
+    opt_min_f: 90, opt_max_f: 999,
+    description: "Glomeruläre Filtrationsrate — Nierenfunktion",
+    priority: "important",
+  },
+  {
+    id: "urea",
+    name: "Harnstoff (BUN)",
+    name_de: "Harnstoff",
+    category: "Niere",
+    unit: "mg/dL",
+    ref_min_m: 7, ref_max_m: 25,
+    ref_min_f: 7, ref_max_f: 25,
+    opt_min_m: 10, opt_max_m: 20,
+    opt_min_f: 10, opt_max_f: 20,
+    description: "Nierenfunktion und Proteinabbau",
+    priority: "extended",
+  },
+
+  // ─── SCHILDDRÜSE ─────────────────────────────────────────────────────────
+  {
+    id: "tsh",
+    name: "TSH",
+    name_de: "TSH",
+    category: "Schilddrüse",
+    unit: "mU/L",
+    ref_min_m: 0.4, ref_max_m: 4.0,
+    ref_min_f: 0.4, ref_max_f: 4.0,
+    opt_min_m: 0.5, opt_max_m: 2.5,
+    opt_min_f: 0.5, opt_max_f: 2.5,
+    description: "Schilddrüsenstimulierendes Hormon",
+    priority: "important",
+    attia_note: "Attia: oberer Normalbereich 4,0 viel zu großzügig. TSH > 2,5 bereits metabolisch suboptimal.",
+  },
+  {
+    id: "ft3",
+    name: "Freies T3",
+    name_de: "Freies T3",
+    category: "Schilddrüse",
+    unit: "pg/mL",
+    ref_min_m: 2.0, ref_max_m: 4.4,
+    ref_min_f: 2.0, ref_max_f: 4.4,
+    opt_min_m: 2.8, opt_max_m: 3.8,
+    opt_min_f: 2.8, opt_max_f: 3.8,
+    description: "Aktives Schilddrüsenhormon",
+    priority: "important",
+  },
+  {
+    id: "ft4",
+    name: "Freies T4",
+    name_de: "Freies T4",
+    category: "Schilddrüse",
+    unit: "ng/dL",
+    ref_min_m: 0.8, ref_max_m: 1.8,
+    ref_min_f: 0.8, ref_max_f: 1.8,
+    opt_min_m: 1.0, opt_max_m: 1.5,
+    opt_min_f: 1.0, opt_max_f: 1.5,
+    description: "Schilddrüsenhormon-Vorstufe",
+    priority: "extended",
+  },
+
+  // ─── VITAMINE & MIKRONÄHRSTOFFE ──────────────────────────────────────────
+  {
+    id: "vitd",
+    name: "Vitamin D (25-OH)",
+    name_de: "Vitamin D",
+    category: "Vitamine",
+    unit: "ng/mL",
+    ref_min_m: 20, ref_max_m: 100,
+    ref_min_f: 20, ref_max_f: 100,
+    opt_min_m: 40, opt_max_m: 60,
+    opt_min_f: 40, opt_max_f: 60,
+    description: "Immunsystem, Knochen, Stimmung",
+    priority: "important",
+    attia_note: "Attia: hält seinen Wert durch 5.000 IU täglich bei 40–60 ng/mL. Standard 'ausreichend' (> 20 ng/mL) ist zu niedrig für Longevity.",
+  },
+  {
+    id: "b12",
+    name: "Vitamin B12",
+    name_de: "Vitamin B12",
+    category: "Vitamine",
+    unit: "pg/mL",
+    ref_min_m: 200, ref_max_m: 900,
+    ref_min_f: 200, ref_max_f: 900,
+    opt_min_m: 500, opt_max_m: 900,
+    opt_min_f: 500, opt_max_f: 900,
+    description: "Nerven, Energie, Homocystein-Regulation",
+    priority: "important",
+    attia_note: "Wichtig für Homocystein-Senkung. Attia nimmt Methyl-B12 (aktivste Form).",
+  },
+  {
+    id: "folate",
+    name: "Folsäure",
+    name_de: "Folsäure",
+    category: "Vitamine",
+    unit: "ng/mL",
+    ref_min_m: 3.0, ref_max_m: 20.0,
+    ref_min_f: 3.0, ref_max_f: 20.0,
+    opt_min_m: 10.0, opt_max_m: 20.0,
+    opt_min_f: 10.0, opt_max_f: 20.0,
+    description: "DNA-Reparatur, Homocystein-Regulation",
+    priority: "important",
+    attia_note: "Attia nimmt Methylfolat (aktivste Form) zur Homocystein-Senkung.",
+  },
+  {
+    id: "omega3_idx",
+    name: "Omega-3 Index",
+    name_de: "Omega-3 Index",
+    category: "Vitamine",
+    unit: "%",
+    ref_min_m: 4.0, ref_max_m: 20.0,
+    ref_min_f: 4.0, ref_max_f: 20.0,
+    opt_min_m: 8.0, opt_max_m: 12.0,
+    opt_min_f: 8.0, opt_max_f: 12.0,
+    description: "EPA+DHA-Anteil in roten Blutkörperchen",
+    priority: "important",
+    attia_note: "Attia: persönliches Ziel 12% EPA/DHA. Braucht hohe tägliche Dosierung (2+ g EPA/Tag).",
+  },
+  {
+    id: "magnesium",
+    name: "Magnesium (RBC)",
+    name_de: "Magnesium (RBC)",
+    category: "Vitamine",
+    unit: "mg/dL",
+    ref_min_m: 1.7, ref_max_m: 2.2,
+    ref_min_f: 1.7, ref_max_f: 2.2,
+    opt_min_m: 2.0, opt_max_m: 2.2,
+    opt_min_f: 2.0, opt_max_f: 2.2,
+    description: "Intrazelluläres Magnesium — aussagekräftiger als Serum",
+    priority: "important",
+    attia_note: "RBC-Magnesium ist besser als Serum-Magnesium — Serum bleibt oft normal trotz Mangel.",
+  },
+  {
+    id: "iron",
+    name: "Eisen",
+    name_de: "Eisen",
+    category: "Vitamine",
+    unit: "µg/dL",
+    ref_min_m: 60, ref_max_m: 170,
+    ref_min_f: 50, ref_max_f: 170,
+    opt_min_m: 80, opt_max_m: 140,
+    opt_min_f: 70, opt_max_f: 130,
+    description: "Verfügbares Eisen im Blut",
+    priority: "extended",
+  },
+  {
+    id: "zinc",
+    name: "Zink",
+    name_de: "Zink",
+    category: "Vitamine",
+    unit: "µg/dL",
+    ref_min_m: 60, ref_max_m: 120,
+    ref_min_f: 60, ref_max_f: 120,
+    opt_min_m: 80, opt_max_m: 110,
+    opt_min_f: 80, opt_max_f: 110,
+    description: "Immunsystem, Hormonproduktion",
+    priority: "extended",
+  },
+
+  // ─── HORMONE ─────────────────────────────────────────────────────────────
+  {
+    id: "testo_total",
+    name: "Testosteron (gesamt)",
+    name_de: "Testosteron (gesamt)",
+    category: "Hormone",
+    unit: "ng/dL",
+    ref_min_m: 300, ref_max_m: 1000,
+    ref_min_f: 15, ref_max_f: 70,
+    opt_min_m: 500, opt_max_m: 900,
+    opt_min_f: 30, opt_max_f: 60,
+    description: "Anaboles Hormon — Muskel, Libido, Energie",
+    priority: "important",
+    attia_note: "Attia: Symptome wichtiger als Laborwert. TRT nur wenn Symptome + niedrige Werte zusammen.",
+  },
+  {
+    id: "testo_free",
+    name: "Testosteron (frei)",
+    name_de: "Testosteron (frei)",
+    category: "Hormone",
+    unit: "pg/mL",
+    ref_min_m: 9.0, ref_max_m: 30.0,
+    ref_min_f: 0.3, ref_max_f: 3.5,
+    opt_min_m: 15.0, opt_max_m: 30.0,
+    opt_min_f: 1.5, opt_max_f: 3.5,
+    description: "Biologisch aktives Testosteron",
+    priority: "important",
+    attia_note: "Freies Testosteron wichtiger als Gesamt-T. SHBG beeinflusst stark das Verhältnis.",
+  },
+  {
+    id: "dhea_s",
+    name: "DHEA-S",
+    name_de: "DHEA-S",
+    category: "Hormone",
+    unit: "µg/dL",
+    ref_min_m: 80, ref_max_m: 560,
+    ref_min_f: 45, ref_max_f: 380,
+    opt_min_m: 200, opt_max_m: 450,
+    opt_min_f: 150, opt_max_f: 300,
+    description: "Marker für Nebennierenreserve und anabolen Status",
+    priority: "important",
+    attia_note: "Fällt mit dem Alter — oberes Drittel des altersgerechten Bereichs angestrebt.",
+  },
+  {
+    id: "estradiol",
+    name: "Östradiol (E2)",
+    name_de: "Östradiol (E2)",
+    category: "Hormone",
+    unit: "pg/mL",
+    ref_min_m: 10, ref_max_m: 40,
+    ref_min_f: 20, ref_max_f: 350,
+    opt_min_m: 20, opt_max_m: 30,
+    opt_min_f: 50, opt_max_f: 200,
+    description: "Östrogen — relevant auch bei Männern",
+    priority: "extended",
+    attia_note: "Attia: 'honorable mention'. Bei Männern: zu hohes E2 signalisiert Testosteron-Konversion.",
+  },
+  {
+    id: "shbg",
+    name: "SHBG",
+    name_de: "SHBG",
+    category: "Hormone",
+    unit: "nmol/L",
+    ref_min_m: 10, ref_max_m: 57,
+    ref_min_f: 18, ref_max_f: 114,
+    opt_min_m: 20, opt_max_m: 45,
+    opt_min_f: 30, opt_max_f: 90,
+    description: "Sexualhormon-bindendes Globulin — beeinflusst freies Testosteron",
+    priority: "extended",
+  },
+  {
+    id: "igf1",
+    name: "IGF-1",
+    name_de: "IGF-1",
+    category: "Hormone",
+    unit: "ng/mL",
+    ref_min_m: 90, ref_max_m: 250,
+    ref_min_f: 90, ref_max_f: 250,
+    opt_min_m: 150, opt_max_m: 230,
+    opt_min_f: 130, opt_max_f: 210,
+    description: "Wachstumshormon-Achse — Muskelerhalt & Alterung",
+    priority: "extended",
+    attia_note: "Marker für Wachstumshormon-Aktivität. Wichtig für Muskelerhalt im Alter.",
+  },
+  {
+    id: "cortisol",
+    name: "Cortisol (Nüchtern)",
+    name_de: "Cortisol",
+    category: "Hormone",
+    unit: "µg/dL",
+    ref_min_m: 6.0, ref_max_m: 23.0,
+    ref_min_f: 6.0, ref_max_f: 23.0,
+    opt_min_m: 8.0, opt_max_m: 18.0,
+    opt_min_f: 8.0, opt_max_f: 18.0,
+    description: "Stresshormon — chronisch erhöht ist schädlich",
+    priority: "extended",
+  },
 ];
 
 export const CATEGORIES = Array.from(new Set(BLOOD_MARKERS.map(m => m.category)));
+
+// Priority display order for categories
+export const CATEGORY_ORDER = [
+  "Herz-Kreislauf",
+  "Metabolik",
+  "Entzündung",
+  "Leber",
+  "Niere",
+  "Schilddrüse",
+  "Hormone",
+  "Vitamine",
+  "Blutbild",
+];
 
 export interface StatusInfo {
   status: "optimal" | "normal" | "low" | "high";
   label: string;
   color: string;
+  bgColor: string;
 }
 
 export function getStatus(value: number, marker: BloodMarker, sex: string): StatusInfo {
@@ -56,8 +687,34 @@ export function getStatus(value: number, marker: BloodMarker, sex: string): Stat
   const refMax = marker[`ref_max_${s}` as keyof BloodMarker] as number;
   const optMin = marker[`opt_min_${s}` as keyof BloodMarker] as number;
   const optMax = marker[`opt_max_${s}` as keyof BloodMarker] as number;
-  if (value < refMin) return { status: "low", label: "Niedrig", color: "#dc2626" };
-  if (value > refMax) return { status: "high", label: "Hoch", color: "#dc2626" };
-  if (value >= optMin && value <= optMax) return { status: "optimal", label: "Optimal", color: "#059669" };
-  return { status: "normal", label: "Normal", color: "#d97706" };
+
+  if (value < refMin) return { status: "low", label: "Niedrig", color: "#dc2626", bgColor: "#fef2f2" };
+  if (value > refMax) return { status: "high", label: "Hoch", color: "#dc2626", bgColor: "#fef2f2" };
+  if (value >= optMin && value <= optMax) return { status: "optimal", label: "Optimal", color: "#059669", bgColor: "#f0fdf4" };
+  return { status: "normal", label: "Normal", color: "#d97706", bgColor: "#fffbeb" };
+}
+
+// Get markers sorted by priority for a given category
+export function getMarkersByCategory(category: string): BloodMarker[] {
+  const priorityOrder = { core: 0, important: 1, extended: 2 };
+  return BLOOD_MARKERS
+    .filter(m => m.category === category)
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+}
+
+// Count markers by status for a set of values
+export function getSummaryStats(
+  values: { markerId: string; value: number }[],
+  sex: string
+): { optimal: number; normal: number; attention: number; total: number } {
+  let optimal = 0, normal = 0, attention = 0;
+  for (const v of values) {
+    const marker = BLOOD_MARKERS.find(m => m.id === v.markerId);
+    if (!marker) continue;
+    const s = getStatus(v.value, marker, sex);
+    if (s.status === "optimal") optimal++;
+    else if (s.status === "normal") normal++;
+    else attention++;
+  }
+  return { optimal, normal, attention, total: values.length };
 }
