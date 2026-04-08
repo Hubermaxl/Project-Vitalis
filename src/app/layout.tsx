@@ -2,8 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "BlutBild — Deine Blutwerte, klar verstanden",
-  description: "Verfolge deine Blutwerte privat und sicher. Österreichische Referenzwerte, Longevity-optimale Bereiche, DSGVO-konform.",
+  title: "Vitalis — Deine Blutwerte, optimiert verstanden",
+  description: "Verfolge deine Blutwerte privat und sicher. Longevity-optimale Bereiche nach Dr. Peter Attia, österreichische Referenzwerte, DSGVO-konform.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
