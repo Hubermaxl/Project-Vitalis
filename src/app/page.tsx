@@ -6,8 +6,70 @@ import { BLOOD_MARKERS, CATEGORIES, CATEGORY_ORDER, getStatus, getSortedCategori
 interface Panel { id: string; user_id: string; test_date: string; lab_name: string | null; values: { markerId: string; value: number }[]; }
 interface Prof { id: string; display_name: string; sex: string; birth_year: number; }
 
+/* ─── CATEGORY COLORS ───────────────────────────────────────────── */
+const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string; accent: string; dot: string; light: string }> = {
+  "Blutbild":              { bg: "bg-rose-50/60",      border: "border-rose-200/60",    text: "text-rose-700",    accent: "#e11d48", dot: "bg-rose-400",    light: "bg-rose-100" },
+  "Stoffwechsel":          { bg: "bg-amber-50/60",     border: "border-amber-200/60",   text: "text-amber-700",   accent: "#d97706", dot: "bg-amber-400",   light: "bg-amber-100" },
+  "Lipide":                { bg: "bg-violet-50/60",    border: "border-violet-200/60",  text: "text-violet-700",  accent: "#7c3aed", dot: "bg-violet-400",  light: "bg-violet-100" },
+  "Entzündung":            { bg: "bg-orange-50/60",    border: "border-orange-200/60",  text: "text-orange-700",  accent: "#ea580c", dot: "bg-orange-400",  light: "bg-orange-100" },
+  "Schilddrüse":           { bg: "bg-sky-50/60",       border: "border-sky-200/60",     text: "text-sky-700",     accent: "#0284c7", dot: "bg-sky-400",     light: "bg-sky-100" },
+  "Leber":                 { bg: "bg-emerald-50/60",   border: "border-emerald-200/60", text: "text-emerald-700", accent: "#059669", dot: "bg-emerald-400", light: "bg-emerald-100" },
+  "Niere":                 { bg: "bg-cyan-50/60",      border: "border-cyan-200/60",    text: "text-cyan-700",    accent: "#0891b2", dot: "bg-cyan-400",    light: "bg-cyan-100" },
+  "Vitamine & Minerale":   { bg: "bg-yellow-50/60",    border: "border-yellow-200/60",  text: "text-yellow-700",  accent: "#ca8a04", dot: "bg-yellow-400",  light: "bg-yellow-100" },
+  "Hormone":               { bg: "bg-fuchsia-50/60",   border: "border-fuchsia-200/60", text: "text-fuchsia-700", accent: "#c026d3", dot: "bg-fuchsia-400", light: "bg-fuchsia-100" },
+  "Weitere":               { bg: "bg-stone-50/60",     border: "border-stone-200/60",   text: "text-stone-600",   accent: "#78716c", dot: "bg-stone-400",   light: "bg-stone-100" },
+};
+const getCatColor = (cat: string) => CATEGORY_COLORS[cat] || CATEGORY_COLORS["Weitere"];
+
+/* ─── SHORT MARKER EXPLANATIONS ─────────────────────────────────── */
+const MARKER_EXPLANATIONS: Record<string, string> = {
+  hb: "Transportiert Sauerstoff im Blut. Niedrig = Müdigkeit, hoch = Dehydration oder andere Ursachen.",
+  hct: "Anteil roter Blutkörperchen am Gesamtblut. Zeigt Sauerstoff-Transportkapazität.",
+  wbc: "Deine Immunzellen. Erhöht bei Infektionen oder chronischer Entzündung.",
+  plt: "Zuständig für Blutgerinnung. Zu niedrig = Blutungsrisiko, zu hoch = Thromboserisiko.",
+  glucose: "Dein Blutzucker im Nüchternzustand. Zentral für Stoffwechselgesundheit und Diabetes-Prävention.",
+  hba1c: "Langzeit-Blutzucker der letzten 3 Monate. Der wichtigste Marker für metabolische Gesundheit.",
+  insulin: "Zeigt wie viel Insulin dein Körper produziert. Frühwarnsystem für Insulinresistenz.",
+  homa_ir: "Berechnet aus Glukose und Insulin. Der beste Einzelwert um Insulinresistenz zu erkennen.",
+  uric_acid: "Stoffwechsel-Endprodukt. Erhöht bei Gicht, aber auch Marker für Herz-Kreislauf-Risiko.",
+  chol_total: "Gesamtcholesterin — allein wenig aussagekräftig, erst im Kontext mit LDL/HDL/ApoB relevant.",
+  ldl: "Sogenanntes 'schlechtes' Cholesterin. Lagert sich in Gefäßwänden ab und fördert Arteriosklerose.",
+  hdl: "Sogenanntes 'gutes' Cholesterin. Transportiert Cholesterin zurück zur Leber zur Entsorgung.",
+  trig: "Blutfette — steigen durch Zucker, Alkohol und gesättigte Fette. Nüchternwert am aussagekräftigsten.",
+  apob: "Zählt die atherogenen Partikel direkt. Besserer Risikomarker als LDL allein.",
+  lpa: "Genetisch bestimmt — einmal messen reicht. Erhöht = höheres Herz-Kreislauf-Risiko.",
+  crp: "Hochsensitiver Entzündungsmarker. Chronisch erhöht = stille Entzündung im Körper.",
+  ferritin: "Dein Eisenspeicher. Zu niedrig = Müdigkeit. Zu hoch = Entzündung oder Eisenüberladung.",
+  homocysteine: "Aminosäure im Blut. Erhöht bei B12/Folat-Mangel — Risiko für Herz und Gehirn.",
+  esr: "Blutsenkungsgeschwindigkeit. Unspezifischer Entzündungsmarker — zeigt ob 'etwas los ist'.",
+  tsh: "Steuerhormon der Schilddrüse. Zu hoch = Unterfunktion, zu niedrig = Überfunktion.",
+  ft3: "Das aktive Schilddrüsenhormon. Verantwortlich für Energielevel und Stoffwechsel.",
+  ft4: "Vorstufe des aktiven T3. Wird in der Schilddrüse produziert.",
+  alt: "Leberenzym — sehr empfindlich für Leberstress. Steigt bei Fettleber, Alkohol, Medikamenten.",
+  ast: "Leber- und Muskelenzym. Erhöht nach Sport, bei Lebererkrankungen oder Muskelverletzungen.",
+  ggt: "Reagiert stark auf Alkohol und Medikamente. Auch unabhängiger Herz-Kreislauf-Risikomarker.",
+  alp: "Knochen- und Leberenzym. Erhöht bei Knochenumbau, Gallenstau oder Lebererkrankungen.",
+  creatinine: "Abbauprodukt aus Muskeln. Zeigt wie gut deine Nieren filtern.",
+  egfr: "Geschätzte Filtrationsrate der Nieren. Sinkt natürlich mit dem Alter.",
+  cystatin_c: "Präziserer Nierenmarker als Kreatinin — unabhängig von Muskelmasse.",
+  bun: "Harnstoff — Endprodukt des Eiweißstoffwechsels. Zeigt Nierenfunktion und Hydrationsstatus.",
+  vitd: "Das 'Sonnenvitamin'. Wichtig für Immunsystem, Knochen und Stimmung. Im Winter oft zu niedrig.",
+  b12: "Essentiell für Nerven und Blutbildung. Mangel häufig bei vegetarischer Ernährung.",
+  folate: "Wichtig für DNA-Reparatur und Zellteilung. Oft zu niedrig ohne grünes Gemüse.",
+  iron: "Verfügbares Eisen im Blut. Schwankt stark — immer zusammen mit Ferritin betrachten.",
+  magnesium: "Beteiligt an über 300 Enzymreaktionen. Serum-Wert zeigt nur 1% der Gesamtspeicher.",
+  zinc: "Wichtig für Immunsystem und Hormonproduktion. Mangel häufiger als gedacht.",
+  omega3_index: "EPA+DHA-Anteil in roten Blutkörperchen. Zeigt den Omega-3-Status der letzten 3 Monate.",
+  testosterone_total: "Hauptsächlich männliches Hormon. Sinkt ab 30 um ca. 1% pro Jahr.",
+  dhea_s: "Anti-Aging-Hormon. Sinkt mit dem Alter stärker als jedes andere Hormon.",
+  cortisol: "Stresshormon — morgens am höchsten. Chronisch erhöht = Schlafprobleme, Gewichtszunahme.",
+  igf1: "Wachstumsfaktor. Moderate Werte scheinen optimal — zu hoch und zu niedrig haben Nachteile.",
+  albumin: "Zeigt Ernährungs- und Leberstatus. Niedrig bei Mangelernährung oder Lebererkrankungen.",
+  ldh: "Gewebeschadens-Marker. Erhöht bei Verletzungen, Infektionen oder Bluterkrankungen.",
+};
+
 /* ─── SHARED UI ─────────────────────────────────────────────────── */
-function RangeBar({ value, marker, sex }: { value: number; marker: BloodMarker; sex: string }) {
+function RangeBar({ value, marker, sex, showLongevity }: { value: number; marker: BloodMarker; sex: string; showLongevity: boolean }) {
   const s = sex === "female" ? "f" : "m";
   const refMin = marker[`ref_min_${s}` as keyof BloodMarker] as number;
   const refMax = marker[`ref_max_${s}` as keyof BloodMarker] as number;
@@ -22,7 +84,7 @@ function RangeBar({ value, marker, sex }: { value: number; marker: BloodMarker; 
     <div className="relative h-10 mt-3">
       <div className="absolute top-[14px] left-0 right-0 h-3 rounded-full bg-slate-100" />
       <div className="absolute top-[14px] h-3 rounded-full bg-amber-200/50" style={{ left: `${toP(refMin)}%`, width: `${toP(refMax)-toP(refMin)}%` }} />
-      <div className="absolute top-[12px] h-4 rounded-full bg-emerald-300/60" style={{ left: `${toP(optMin)}%`, width: `${toP(optMax)-toP(optMin)}%` }} />
+      {showLongevity && <div className="absolute top-[12px] h-4 rounded-full bg-emerald-300/60 border border-emerald-400/30" style={{ left: `${toP(optMin)}%`, width: `${toP(optMax)-toP(optMin)}%` }} />}
       <div className="absolute top-[8px] w-7 h-7 rounded-full border-[3px] border-white z-[2] transition-all duration-500 ease-out shadow-md" style={{ left: `calc(${toP(value)}% - 14px)`, background: si.color }} />
       <div className="absolute top-[28px] text-[10px] text-stone-400" style={{ left: `${toP(refMin)}%`, transform: "translateX(-50%)" }}>{refMin}</div>
       <div className="absolute top-[28px] text-[10px] text-stone-400" style={{ left: `${toP(refMax)}%`, transform: "translateX(-50%)" }}>{refMax}</div>
@@ -59,6 +121,36 @@ function DeltaIndicator({ current, previous }: { current: number; previous: numb
 
 function Disclaimer() {
   return <div className="p-4 rounded-xl text-sm text-stone-500 bg-stone-50 mt-8 leading-relaxed border-l-[3px] border-stone-300"><strong>⚕️ Kein medizinischer Befund.</strong> Vitalis ist ein Bildungstool inspiriert von der Longevity-Medizin. Bitte konsultiere immer einen Arzt. Optimale Bereiche stammen aus publizierter Forschung und gelten möglicherweise nicht für deine individuelle Situation.</div>;
+}
+
+/* ─── LONGEVITY TOGGLE ──────────────────────────────────────────── */
+function LongevityToggle({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+        enabled
+          ? "bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm"
+          : "bg-stone-50 text-stone-500 border border-stone-200 hover:bg-stone-100"
+      }`}
+    >
+      <div className={`w-8 h-[18px] rounded-full flex items-center transition-all ${enabled ? "bg-emerald-500 justify-end" : "bg-stone-300 justify-start"}`}>
+        <div className="w-3.5 h-3.5 rounded-full bg-white mx-0.5 shadow-sm" />
+      </div>
+      <span>{enabled ? "Longevity-Optimal an" : "Longevity-Optimal"}</span>
+    </button>
+  );
+}
+
+/* ─── CATEGORY HEADER ───────────────────────────────────────────── */
+function CategoryHeader({ category }: { category: string }) {
+  const cc = getCatColor(category);
+  return (
+    <div className={`flex items-center gap-2 mb-3 pb-2 border-b ${cc.border}`}>
+      <span className={`w-3 h-3 rounded-full ${cc.dot}`} />
+      <h3 className={`text-sm font-semibold uppercase tracking-widest ${cc.text}`}>{category}</h3>
+    </div>
+  );
 }
 
 /* ─── HEADER ────────────────────────────────────────────────────── */
@@ -120,7 +212,7 @@ function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, 
 }
 
 /* ─── DASHBOARD ──────────────────────────────────────────────────── */
-function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues, setPanelCategory, getHistory }: any) {
+function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues, setPanelCategory, getHistory, showLongevity, setShowLongevity }: any) {
   const latest = panels[panels.length-1];
   const displayName = profile?.display_name || user?.email?.split("@")[0] || "";
   if (!latest) return (
@@ -136,14 +228,16 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
   const total = latest.values.length;
   const optPct = total > 0 ? Math.round((counts.optimal / total) * 100) : 0;
   
-  // Find previous panel for delta comparison
   const prevPanel = panels.length > 1 ? panels[panels.length - 2] : null;
   
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       <div className="flex justify-between items-start mb-8 flex-wrap gap-4">
         <div><h1 className="font-display text-3xl mb-1">Hallo {displayName}</h1><p className="text-base text-stone-500">{new Date(latest.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{latest.lab_name&&` · ${latest.lab_name}`} · {total} Marker</p></div>
-        <button onClick={()=>{setPanelValues({});setPanelCategory(CATEGORY_ORDER[0]);setScreen("addpanel");}} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">+ Neues Panel</button>
+        <div className="flex gap-2 flex-wrap">
+          <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
+          <button onClick={()=>{setPanelValues({});setPanelCategory(CATEGORY_ORDER[0]);setScreen("addpanel");}} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">+ Neues Panel</button>
+        </div>
       </div>
 
       {/* Score Overview */}
@@ -169,13 +263,28 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
         </div>
       </div>
 
+      {/* Longevity legend when enabled */}
+      {showLongevity && (
+        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-2.5 rounded bg-amber-200/70" />
+            <span>Referenzbereich</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-2.5 rounded bg-emerald-300/80 border border-emerald-400/30" />
+            <span>Longevity-Optimal (nach Attia)</span>
+          </div>
+        </div>
+      )}
+
       {/* Markers by Category */}
       {getSortedCategories().map(cat => {
+        const cc = getCatColor(cat);
         const cv = latest.values.filter((v:any)=>BLOOD_MARKERS.find(bm=>bm.id===v.markerId)?.category===cat);
         if(!cv.length) return null;
         return (
           <div key={cat} className="mb-8">
-            <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 mb-3 pb-2 border-b border-stone-100">{cat}</h3>
+            <CategoryHeader category={cat} />
             <div className="flex flex-col gap-3">
               {cv.map((v:any) => {
                 const marker = BLOOD_MARKERS.find(m=>m.id===v.markerId); if(!marker) return null;
@@ -184,8 +293,9 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
                 const sx = sex==="female"?"f":"m";
                 const prevVal = prevPanel?.values.find((pv:any) => pv.markerId === v.markerId);
                 const [showNote, setShowNote] = useState(false);
+                const explanation = MARKER_EXPLANATIONS[marker.id];
                 return (
-                  <div key={v.markerId} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 hover:shadow-md transition-shadow">
+                  <div key={v.markerId} className={`rounded-2xl border shadow-sm p-5 hover:shadow-md transition-shadow ${cc.bg} ${cc.border}`}>
                     <div className="flex justify-between items-start flex-wrap gap-3">
                       <div className="flex-1 min-w-[200px]">
                         <div className="flex items-center gap-2.5 mb-1">
@@ -195,6 +305,7 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
                           {prevVal && <DeltaIndicator current={v.value} previous={prevVal.value} />}
                         </div>
                         <div className="text-sm text-stone-400">{marker.name_de} · {marker.description_de}</div>
+                        {explanation && <div className="text-xs text-stone-500 mt-1.5 leading-relaxed max-w-lg">{explanation}</div>}
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold leading-none" style={{color:si.color}}>{v.value}</div>
@@ -202,16 +313,16 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
                       </div>
                       {hist.length >= 2 && <Sparkline data={hist.map((h:any)=>h.value)} color={si.color} />}
                     </div>
-                    <RangeBar value={v.value} marker={marker} sex={sex} />
+                    <RangeBar value={v.value} marker={marker} sex={sex} showLongevity={showLongevity} />
                     <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
                       <div className="flex gap-5 text-xs text-stone-400">
                         <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
-                        <span className="text-teal-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
+                        {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
                       </div>
-                      {marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+                      {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
                     </div>
-                    {showNote && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed">{marker.longevity_note}</div>}
-                    {hist.length >= 2 && <div className="flex gap-2 mt-2 flex-wrap">{hist.map((h:any,i:number)=><span key={i} className="text-[11px] text-stone-400 bg-stone-50 px-2.5 py-1 rounded-lg">{new Date(h.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {h.value}</span>)}</div>}
+                    {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed">{marker.longevity_note}</div>}
+                    {hist.length >= 2 && <div className="flex gap-2 mt-2 flex-wrap">{hist.map((h:any,i:number)=><span key={i} className="text-[11px] text-stone-400 bg-white/60 px-2.5 py-1 rounded-lg">{new Date(h.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {h.value}</span>)}</div>}
                   </div>
                 );
               })}
@@ -224,12 +335,13 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
   );
 }
 
-/* ─── ADD PANEL (with save fix) ──────────────────────────────────── */
+/* ─── ADD PANEL ──────────────────────────────────────────────────── */
 function AddPanelScreen({ sex, panelDate, setPanelDate, panelLab, setPanelLab, panelValues, setPanelValues, panelCategory, setPanelCategory, saving, onSave, setScreen }: any) {
   const sx = sex==="female"?"f":"m";
   const [filter, setFilter] = useState<"all"|"essential"|"recommended">("essential");
   const filtered = BLOOD_MARKERS.filter(m => m.category === panelCategory).filter(m => filter === "all" ? true : filter === "essential" ? m.priority === "essential" : m.priority !== "extended");
   const filledCount = Object.values(panelValues).filter((v:any) => v !== "" && v !== undefined).length;
+  const cc = getCatColor(panelCategory);
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
       <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 hover:text-stone-700 mb-4 transition-colors">← Zurück</button>
@@ -241,23 +353,32 @@ function AddPanelScreen({ sex, panelDate, setPanelDate, panelLab, setPanelLab, p
           <div><label className="block text-sm font-medium text-stone-600 mb-2">Labor (optional)</label><input value={panelLab} onChange={(e:any)=>setPanelLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
         </div>
       </div>
-      {/* Category Tabs */}
-      <div className="flex gap-1.5 mb-3 flex-wrap">{getSortedCategories().map(cat=>(<button key={cat} onClick={()=>setPanelCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${panelCategory===cat?"bg-teal-600 text-white shadow-sm":"bg-stone-100 text-stone-500 hover:bg-stone-200"}`}>{cat}</button>))}</div>
+      {/* Category Tabs with colors */}
+      <div className="flex gap-1.5 mb-3 flex-wrap">{getSortedCategories().map(cat=>{
+        const catC = getCatColor(cat);
+        return (<button key={cat} onClick={()=>setPanelCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${panelCategory===cat? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}>{cat}</button>);
+      })}</div>
       {/* Filter */}
       <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 text-white":"bg-stone-50 text-stone-500 hover:bg-stone-100"}`}>{f.l}</button>))}</div>
       {/* Marker Inputs */}
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5">
+      <div className={`rounded-2xl border shadow-sm p-5 ${cc.bg} ${cc.border}`}>
         {filtered.length === 0 && <p className="text-sm text-stone-400 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
-        {filtered.map(marker=>(<div key={marker.id} className="flex items-center gap-4 py-3.5 border-b border-stone-50 last:border-0">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-medium text-base">{marker.name}</span></div>
-            <div className="text-xs text-stone-400 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <input type="number" step="any" value={panelValues[marker.id]||""} onChange={(e:any)=>setPanelValues((pv:any)=>({...pv,[marker.id]:e.target.value}))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" />
-            <span className="text-xs text-stone-400 min-w-[52px]">{marker.unit}</span>
-          </div>
-        </div>))}
+        {filtered.map(marker => {
+          const explanation = MARKER_EXPLANATIONS[marker.id];
+          return (
+            <div key={marker.id} className="flex items-center gap-4 py-3.5 border-b border-stone-100/50 last:border-0">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-medium text-base">{marker.name}</span></div>
+                <div className="text-xs text-stone-400 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
+                {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed">{explanation}</div>}
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="number" step="any" value={panelValues[marker.id]||""} onChange={(e:any)=>setPanelValues((pv:any)=>({...pv,[marker.id]:e.target.value}))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white" />
+                <span className="text-xs text-stone-400 min-w-[52px]">{marker.unit}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <div className="flex gap-3 mt-6">
         <button onClick={onSave} disabled={saving||filledCount===0} className="flex-1 py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{saving?"Speichern…":`Panel speichern (${filledCount} Werte)`}</button>
@@ -267,8 +388,78 @@ function AddPanelScreen({ sex, panelDate, setPanelDate, panelLab, setPanelLab, p
   );
 }
 
+/* ─── EDIT PANEL ─────────────────────────────────────────────────── */
+function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel: Panel; sex: string; saving: boolean; onSaveEdit: (panelId: string, date: string, lab: string, values: Record<string,string>) => void; setScreen: (s:string) => void }) {
+  const sx = sex === "female" ? "f" : "m";
+  const [editDate, setEditDate] = useState(panel.test_date);
+  const [editLab, setEditLab] = useState(panel.lab_name || "");
+  const [editValues, setEditValues] = useState<Record<string,string>>(() => {
+    const vals: Record<string,string> = {};
+    panel.values.forEach(v => { vals[v.markerId] = String(v.value); });
+    return vals;
+  });
+  const [editCategory, setEditCategory] = useState(CATEGORY_ORDER[0]);
+  const [filter, setFilter] = useState<"all"|"essential"|"recommended">("all");
+
+  const filtered = BLOOD_MARKERS.filter(m => m.category === editCategory).filter(m => filter === "all" ? true : filter === "essential" ? m.priority === "essential" : m.priority !== "extended");
+  const filledCount = Object.values(editValues).filter(v => v !== "" && v !== undefined).length;
+  const cc = getCatColor(editCategory);
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      <button onClick={() => setScreen("viewpanel")} className="text-sm text-stone-500 hover:text-stone-700 mb-4 transition-colors">← Zurück zum Panel</button>
+      <h2 className="font-display text-3xl mb-2">Panel bearbeiten</h2>
+      <p className="text-base text-stone-500 mb-8">Korrigiere oder ergänze deine Werte. Änderungen werden sofort in der Datenbank aktualisiert.</p>
+      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 mb-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div><label className="block text-sm font-medium text-stone-600 mb-2">Testdatum</label><input type="date" value={editDate} onChange={(e:any) => setEditDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+          <div><label className="block text-sm font-medium text-stone-600 mb-2">Labor (optional)</label><input value={editLab} onChange={(e:any) => setEditLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+        </div>
+      </div>
+      {/* Category Tabs */}
+      <div className="flex gap-1.5 mb-3 flex-wrap">{getSortedCategories().map(cat => {
+        const catC = getCatColor(cat);
+        const hasValues = BLOOD_MARKERS.filter(m => m.category === cat).some(m => editValues[m.id] && editValues[m.id] !== "");
+        return (
+          <button key={cat} onClick={() => setEditCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative ${editCategory === cat ? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}>
+            {cat}
+            {hasValues && <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${catC.dot}`} />}
+          </button>
+        );
+      })}</div>
+      {/* Filter */}
+      <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 text-white":"bg-stone-50 text-stone-500 hover:bg-stone-100"}`}>{f.l}</button>))}</div>
+      {/* Marker Inputs */}
+      <div className={`rounded-2xl border shadow-sm p-5 ${cc.bg} ${cc.border}`}>
+        {filtered.length === 0 && <p className="text-sm text-stone-400 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
+        {filtered.map(marker => {
+          const hasValue = editValues[marker.id] && editValues[marker.id] !== "";
+          const explanation = MARKER_EXPLANATIONS[marker.id];
+          return (
+            <div key={marker.id} className={`flex items-center gap-4 py-3.5 border-b border-stone-100/50 last:border-0 ${hasValue ? "" : "opacity-60"}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-medium text-base">{marker.name}</span>{hasValue && <span className="text-xs text-emerald-600 font-medium">✓</span>}</div>
+                <div className="text-xs text-stone-400 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
+                {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed">{explanation}</div>}
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="number" step="any" value={editValues[marker.id] || ""} onChange={(e:any) => setEditValues(pv => ({ ...pv, [marker.id]: e.target.value }))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white" />
+                <span className="text-xs text-stone-400 min-w-[52px]">{marker.unit}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex gap-3 mt-6">
+        <button onClick={() => onSaveEdit(panel.id, editDate, editLab, editValues)} disabled={saving || filledCount === 0} className="flex-1 py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{saving ? "Speichern…" : `Änderungen speichern (${filledCount} Werte)`}</button>
+        <button onClick={() => setScreen("viewpanel")} className="px-6 py-3.5 border border-stone-200 rounded-xl text-base hover:bg-stone-50 transition-colors">Abbrechen</button>
+      </div>
+    </div>
+  );
+}
+
 /* ─── VIEW PANEL ────────────────────────────────────────────────── */
-function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf }: any) {
+function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, showLongevity, setShowLongevity }: any) {
   const p = currentPanel||panels[panels.length-1]; if(!p) return null;
   const panelIdx = panels.findIndex((pan:Panel) => pan.id === p.id);
   const prevPanel = panelIdx > 0 ? panels[panelIdx - 1] : null;
@@ -277,17 +468,50 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
       <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 hover:text-stone-700 mb-4">← Zurück</button>
       <div className="flex justify-between items-start mb-6 flex-wrap gap-3">
         <div><h2 className="font-display text-3xl mb-1">Panel Ergebnisse</h2><p className="text-base text-stone-500">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{p.lab_name&&` · ${p.lab_name}`} · {p.values.length} Marker</p></div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
+          <button onClick={() => setScreen("editpanel")} className="px-4 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors">✏️ Bearbeiten</button>
           <button onClick={()=>onExportPdf(p)} className="px-4 py-2.5 bg-stone-800 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">📄 PDF Export</button>
           <button onClick={()=>onDelete(p.id)} className="px-4 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 transition-colors">Löschen</button>
         </div>
       </div>
+
+      {showLongevity && (
+        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-2.5 rounded bg-amber-200/70" />
+            <span>Referenzbereich</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-2.5 rounded bg-emerald-300/80 border border-emerald-400/30" />
+            <span>Longevity-Optimal (nach Attia)</span>
+          </div>
+        </div>
+      )}
+
       {getSortedCategories().map(cat=>{
+        const cc = getCatColor(cat);
         const cv=p.values.filter((v:any)=>BLOOD_MARKERS.find(bm=>bm.id===v.markerId)?.category===cat);if(!cv.length) return null;
-        return (<div key={cat} className="mb-7"><h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 mb-3">{cat}</h3>{cv.map((v:any)=>{const marker=BLOOD_MARKERS.find(m=>m.id===v.markerId);if(!marker) return null;const si=getStatus(v.value,marker,sex);const prevVal=prevPanel?.values.find((pv:any)=>pv.markerId===v.markerId);
-          return (<div key={v.markerId} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 mb-3">
-            <div className="flex justify-between items-center flex-wrap gap-2"><div className="flex items-center gap-2.5"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><StatusBadge status={si.status} />{prevVal&&<DeltaIndicator current={v.value} previous={prevVal.value} />}</div><div className="text-xl font-bold" style={{color:si.color}}>{v.value} <span className="text-sm font-normal text-stone-400">{marker.unit}</span></div></div>
-            <RangeBar value={v.value} marker={marker} sex={sex} />
+        return (<div key={cat} className="mb-7">
+          <CategoryHeader category={cat} />
+          {cv.map((v:any)=>{const marker=BLOOD_MARKERS.find(m=>m.id===v.markerId);if(!marker) return null;const si=getStatus(v.value,marker,sex);const prevVal=prevPanel?.values.find((pv:any)=>pv.markerId===v.markerId);
+            const sx = sex==="female"?"f":"m";
+            const explanation = MARKER_EXPLANATIONS[marker.id];
+            const [showNote, setShowNote] = useState(false);
+          return (<div key={v.markerId} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}>
+            <div className="flex justify-between items-center flex-wrap gap-2"><div className="flex-1"><div className="flex items-center gap-2.5"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><StatusBadge status={si.status} />{prevVal&&<DeltaIndicator current={v.value} previous={prevVal.value} />}</div>
+            <div className="text-sm text-stone-400">{marker.name_de}</div>
+            {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed max-w-lg">{explanation}</div>}
+            </div><div className="text-xl font-bold" style={{color:si.color}}>{v.value} <span className="text-sm font-normal text-stone-400">{marker.unit}</span></div></div>
+            <RangeBar value={v.value} marker={marker} sex={sex} showLongevity={showLongevity} />
+            <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
+              <div className="flex gap-5 text-xs text-stone-400">
+                <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
+                {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
+              </div>
+              {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+            </div>
+            {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed">{marker.longevity_note}</div>}
           </div>);})}</div>);
       })}
       <Disclaimer />
@@ -296,7 +520,7 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
 }
 
 /* ─── HISTORY ───────────────────────────────────────────────────── */
-function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory }: any) {
+function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, showLongevity }: any) {
   if(!panels.length) return (<div className="max-w-lg mx-auto mt-16 px-6 text-center"><p className="text-stone-500 text-base mb-5">Noch keine Panels vorhanden.</p><button onClick={()=>setScreen("addpanel")} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700">+ Panel hinzufügen</button></div>);
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
@@ -305,7 +529,8 @@ function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory }: 
       {[...panels].reverse().map((p:any)=>(<div key={p.id} onClick={()=>{setCurrentPanel(p);setScreen("viewpanel");}} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 mb-3 cursor-pointer hover:shadow-md hover:-translate-y-px transition-all"><div className="flex justify-between items-center"><div><span className="font-semibold text-base">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}</span>{p.lab_name&&<span className="text-stone-400 text-sm ml-3">· {p.lab_name}</span>}</div><span className="text-sm text-stone-500">{p.values.length} Marker →</span></div></div>))}
       <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 mt-8 mb-3">Trends</h3>
       {BLOOD_MARKERS.filter(m=>m.priority!=="extended").map(marker=>{const h=getHistory(marker.id);if(h.length<2) return null;const lsi=getStatus(h[h.length-1].value,marker,sex);const prev=h[h.length-2];
-        return (<div key={marker.id} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 mb-3"><div className="flex justify-between items-center flex-wrap gap-3"><div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><span className="text-sm text-stone-400">{marker.name_de}</span><DeltaIndicator current={h[h.length-1].value} previous={prev.value} /></div><div className="flex items-center gap-4"><Sparkline data={h.map((x:any)=>x.value)} color={lsi.color} /><div className="text-right"><div className="text-lg font-bold" style={{color:lsi.color}}>{h[h.length-1].value}</div><div className="text-xs text-stone-400">{marker.unit}</div></div></div></div><div className="flex gap-2 mt-3 flex-wrap">{h.map((x:any,i:number)=><span key={i} className="text-xs text-stone-400 bg-stone-50 px-2.5 py-1 rounded-lg">{new Date(x.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {x.value}</span>)}</div></div>);
+        const cc = getCatColor(marker.category);
+        return (<div key={marker.id} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}><div className="flex justify-between items-center flex-wrap gap-3"><div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><span className="text-sm text-stone-400">{marker.name_de}</span><DeltaIndicator current={h[h.length-1].value} previous={prev.value} /></div><div className="flex items-center gap-4"><Sparkline data={h.map((x:any)=>x.value)} color={lsi.color} /><div className="text-right"><div className="text-lg font-bold" style={{color:lsi.color}}>{h[h.length-1].value}</div><div className="text-xs text-stone-400">{marker.unit}</div></div></div></div><div className="flex gap-2 mt-3 flex-wrap">{h.map((x:any,i:number)=><span key={i} className="text-xs text-stone-400 bg-white/60 px-2.5 py-1 rounded-lg">{new Date(x.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {x.value}</span>)}</div></div>);
       })}
       <Disclaimer />
     </div>
@@ -363,6 +588,7 @@ export default function Home() {
   const [panelValues, setPanelValues] = useState<Record<string,string>>({});
   const [panelCategory, setPanelCategory] = useState(CATEGORY_ORDER[0]);
   const [saving, setSaving] = useState(false);
+  const [showLongevity, setShowLongevity] = useState(false);
 
   const notify = (msg:string,type="ok") => {setToast({msg,type});setTimeout(()=>setToast(null),3000);};
 
@@ -408,21 +634,18 @@ export default function Home() {
 
   const handleLogout = async ()=>{await supabase.auth.signOut();setUser(null);setProfile(null);setPanels([]);setScreen("landing");};
 
-  /* ─── FIXED: Save panel — ensures correct insert with select ─── */
+  /* ─── Save panel ──────────────────────────────────────────────── */
   const handleSavePanel = async () => {
     const vals = Object.entries(panelValues).filter(([_,v])=>v!==""&&v!==undefined).map(([id,v])=>({markerId:id,value:parseFloat(v as string)})).filter(e=>!isNaN(e.value));
     if(!vals.length){notify("Mindestens einen Wert eingeben","err");return;}
     setSaving(true);
     try {
-      // Step 1: Insert panel
       const{data:panelRow,error:panelErr}=await supabase.from("blood_panels").insert([{user_id:user.id,test_date:panelDate,lab_name:panelLab||null}]).select().single();
       if(panelErr) throw panelErr;
       if(!panelRow) throw new Error("Panel konnte nicht erstellt werden");
-      // Step 2: Insert values
       const valueRows = vals.map(v=>({panel_id:panelRow.id,user_id:user.id,marker_id:v.markerId,value:v.value}));
       const{error:valErr}=await supabase.from("blood_values").insert(valueRows);
       if(valErr) throw valErr;
-      // Step 3: Reload & navigate
       await loadPanels(user.id);
       setCurrentPanel({...panelRow,values:vals});
       setPanelValues({});setPanelDate(new Date().toISOString().split("T")[0]);setPanelLab("");
@@ -431,6 +654,36 @@ export default function Home() {
     } catch(e:any) {
       console.error("Save error:",e);
       notify("Fehler beim Speichern: "+(e.message||"Unbekannter Fehler"),"err");
+    }
+    setSaving(false);
+  };
+
+  /* ─── Edit panel (UPDATE existing) ────────────────────────────── */
+  const handleEditPanel = async (panelId: string, date: string, lab: string, values: Record<string,string>) => {
+    const vals = Object.entries(values).filter(([_,v]) => v !== "" && v !== undefined).map(([id,v]) => ({ markerId: id, value: parseFloat(v as string) })).filter(e => !isNaN(e.value));
+    if (!vals.length) { notify("Mindestens einen Wert eingeben", "err"); return; }
+    setSaving(true);
+    try {
+      // Update panel metadata
+      const { error: panelErr } = await supabase.from("blood_panels").update({ test_date: date, lab_name: lab || null }).eq("id", panelId);
+      if (panelErr) throw panelErr;
+
+      // Delete old values and insert new ones
+      const { error: delErr } = await supabase.from("blood_values").delete().eq("panel_id", panelId);
+      if (delErr) throw delErr;
+
+      const valueRows = vals.map(v => ({ panel_id: panelId, user_id: user.id, marker_id: v.markerId, value: v.value }));
+      const { error: valErr } = await supabase.from("blood_values").insert(valueRows);
+      if (valErr) throw valErr;
+
+      await loadPanels(user.id);
+      const updatedPanel = { id: panelId, user_id: user.id, test_date: date, lab_name: lab || null, values: vals };
+      setCurrentPanel(updatedPanel);
+      setScreen("viewpanel");
+      notify(`Aktualisiert — ${vals.length} Marker gespeichert`);
+    } catch (e: any) {
+      console.error("Edit error:", e);
+      notify("Fehler beim Aktualisieren: " + (e.message || "Unbekannter Fehler"), "err");
     }
     setSaving(false);
   };
@@ -508,10 +761,11 @@ export default function Home() {
     {screen==="landing"&&<LandingScreen setScreen={setScreen} />}
     {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
     {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
-    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={setScreen} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} />}
+    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={setScreen} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} />}
     {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={setScreen} />}
-    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={setScreen} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} />}
-    {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={setScreen} setCurrentPanel={setCurrentPanel} getHistory={getHistory} />}
+    {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={setScreen} />}
+    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={setScreen} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} />}
+    {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={setScreen} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
     {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={setScreen} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={setScreen} />}
   </>);
