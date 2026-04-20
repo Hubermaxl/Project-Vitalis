@@ -155,16 +155,51 @@ function CategoryHeader({ category }: { category: string }) {
 
 /* ─── HEADER ────────────────────────────────────────────────────── */
 function AppHeader({ user, screen, setScreen, onLogout }: any) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navItems = [{ l: "Dashboard", s: "dashboard" }, { l: "Verlauf", s: "history" }, { l: "Profil", s: "profile" }];
+  const go = (s: string) => { setScreen(s); setMenuOpen(false); };
+
+  useEffect(() => { setMenuOpen(false); }, [screen]);
+
   return (
-    <header className="flex justify-between items-center px-6 py-4 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50">
-      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setScreen(user ? "dashboard" : "landing")}>
-        <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white text-base font-bold shadow-sm shadow-teal-600/20">V</div>
-        <span className="font-display text-[22px] tracking-tight">Vitalis</span>
+    <header className="px-6 py-3 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-3 cursor-pointer min-h-11" onClick={() => { setScreen(user ? "dashboard" : "landing"); setMenuOpen(false); }}>
+          <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white text-base font-bold shadow-sm shadow-teal-600/20">V</div>
+          <span className="font-display text-[22px] tracking-tight">Vitalis</span>
+        </div>
+        {user && (
+          <>
+            {/* Desktop nav */}
+            <nav className="hidden md:flex items-center gap-1">
+              {navItems.map(n => (
+                <button key={n.s} onClick={() => setScreen(n.s)} className={`min-h-11 px-4 py-2 rounded-lg text-sm transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50" : "text-stone-500 hover:text-stone-700 hover:bg-stone-100"}`}>{n.l}</button>
+              ))}
+              <button onClick={onLogout} className="min-h-11 px-4 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors ml-2">Abmelden</button>
+            </nav>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
+              aria-expanded={menuOpen}
+              className="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-stone-100 transition-colors"
+            >
+              <span className={`block w-5 h-0.5 bg-stone-700 transition-transform duration-200 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-stone-700 transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-stone-700 transition-transform duration-200 ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+            </button>
+          </>
+        )}
       </div>
-      {user && (<nav className="flex items-center gap-1">
-        {[{l:"Dashboard",s:"dashboard"},{l:"Verlauf",s:"history"},{l:"Profil",s:"profile"}].map(n=>(<button key={n.s} onClick={()=>setScreen(n.s)} className={`px-3 py-2 rounded-lg text-sm transition-colors ${screen===n.s?"text-teal-600 font-semibold bg-teal-50":"text-stone-500 hover:text-stone-700 hover:bg-stone-100"}`}>{n.l}</button>))}
-        <button onClick={onLogout} className="px-3 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors ml-2">Abmelden</button>
-      </nav>)}
+      {/* Mobile dropdown panel */}
+      {user && menuOpen && (
+        <nav className="md:hidden mt-3 pt-3 border-t border-stone-100 flex flex-col gap-1 animate-in fade-in slide-in-from-top-2 duration-200">
+          {navItems.map(n => (
+            <button key={n.s} onClick={() => go(n.s)} className={`min-h-11 w-full text-left px-4 py-3 rounded-lg text-base transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50" : "text-stone-600 hover:bg-stone-100"}`}>{n.l}</button>
+          ))}
+          <button onClick={() => { onLogout(); setMenuOpen(false); }} className="min-h-11 w-full text-left px-4 py-3 rounded-lg text-sm text-stone-500 hover:bg-stone-100 transition-colors">Abmelden</button>
+        </nav>
+      )}
     </header>
   );
 }
