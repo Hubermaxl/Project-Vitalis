@@ -8,16 +8,16 @@ interface Prof { id: string; display_name: string; sex: string; birth_year: numb
 
 /* ─── CATEGORY COLORS ───────────────────────────────────────────── */
 const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string; accent: string; dot: string; light: string }> = {
-  "Blutbild":              { bg: "bg-rose-50/60",      border: "border-rose-200/60",    text: "text-rose-700",    accent: "#e11d48", dot: "bg-rose-400",    light: "bg-rose-100" },
-  "Stoffwechsel":          { bg: "bg-amber-50/60",     border: "border-amber-200/60",   text: "text-amber-700",   accent: "#d97706", dot: "bg-amber-400",   light: "bg-amber-100" },
-  "Lipide":                { bg: "bg-violet-50/60",    border: "border-violet-200/60",  text: "text-violet-700",  accent: "#7c3aed", dot: "bg-violet-400",  light: "bg-violet-100" },
-  "Entzündung":            { bg: "bg-orange-50/60",    border: "border-orange-200/60",  text: "text-orange-700",  accent: "#ea580c", dot: "bg-orange-400",  light: "bg-orange-100" },
-  "Schilddrüse":           { bg: "bg-sky-50/60",       border: "border-sky-200/60",     text: "text-sky-700",     accent: "#0284c7", dot: "bg-sky-400",     light: "bg-sky-100" },
-  "Leber":                 { bg: "bg-emerald-50/60",   border: "border-emerald-200/60", text: "text-emerald-700", accent: "#059669", dot: "bg-emerald-400", light: "bg-emerald-100" },
-  "Niere":                 { bg: "bg-cyan-50/60",      border: "border-cyan-200/60",    text: "text-cyan-700",    accent: "#0891b2", dot: "bg-cyan-400",    light: "bg-cyan-100" },
-  "Vitamine & Minerale":   { bg: "bg-yellow-50/60",    border: "border-yellow-200/60",  text: "text-yellow-700",  accent: "#ca8a04", dot: "bg-yellow-400",  light: "bg-yellow-100" },
-  "Hormone":               { bg: "bg-fuchsia-50/60",   border: "border-fuchsia-200/60", text: "text-fuchsia-700", accent: "#c026d3", dot: "bg-fuchsia-400", light: "bg-fuchsia-100" },
-  "Weitere":               { bg: "bg-stone-50/60",     border: "border-stone-200/60",   text: "text-stone-600",   accent: "#78716c", dot: "bg-stone-400",   light: "bg-stone-100" },
+  "Blutbild":              { bg: "bg-rose-50/60 dark:bg-rose-950/30",         border: "border-rose-200/60 dark:border-rose-800/40",        text: "text-rose-700 dark:text-rose-300",       accent: "#e11d48", dot: "bg-rose-400",    light: "bg-rose-100 dark:bg-rose-900/50" },
+  "Stoffwechsel":          { bg: "bg-amber-50/60 dark:bg-amber-950/30",       border: "border-amber-200/60 dark:border-amber-800/40",      text: "text-amber-700 dark:text-amber-300",     accent: "#d97706", dot: "bg-amber-400",   light: "bg-amber-100 dark:bg-amber-900/50" },
+  "Lipide":                { bg: "bg-violet-50/60 dark:bg-violet-950/30",     border: "border-violet-200/60 dark:border-violet-800/40",    text: "text-violet-700 dark:text-violet-300",   accent: "#7c3aed", dot: "bg-violet-400",  light: "bg-violet-100 dark:bg-violet-900/50" },
+  "Entzündung":            { bg: "bg-orange-50/60 dark:bg-orange-950/30",     border: "border-orange-200/60 dark:border-orange-800/40",    text: "text-orange-700 dark:text-orange-300",   accent: "#ea580c", dot: "bg-orange-400",  light: "bg-orange-100 dark:bg-orange-900/50" },
+  "Schilddrüse":           { bg: "bg-sky-50/60 dark:bg-sky-950/30",           border: "border-sky-200/60 dark:border-sky-800/40",          text: "text-sky-700 dark:text-sky-300",         accent: "#0284c7", dot: "bg-sky-400",     light: "bg-sky-100 dark:bg-sky-900/50" },
+  "Leber":                 { bg: "bg-emerald-50/60 dark:bg-emerald-950/30",   border: "border-emerald-200/60 dark:border-emerald-800/40",  text: "text-emerald-700 dark:text-emerald-300", accent: "#059669", dot: "bg-emerald-400", light: "bg-emerald-100 dark:bg-emerald-900/50" },
+  "Niere":                 { bg: "bg-cyan-50/60 dark:bg-cyan-950/30",         border: "border-cyan-200/60 dark:border-cyan-800/40",        text: "text-cyan-700 dark:text-cyan-300",       accent: "#0891b2", dot: "bg-cyan-400",    light: "bg-cyan-100 dark:bg-cyan-900/50" },
+  "Vitamine & Minerale":   { bg: "bg-yellow-50/60 dark:bg-yellow-950/30",     border: "border-yellow-200/60 dark:border-yellow-800/40",    text: "text-yellow-700 dark:text-yellow-300",   accent: "#ca8a04", dot: "bg-yellow-400",  light: "bg-yellow-100 dark:bg-yellow-900/50" },
+  "Hormone":               { bg: "bg-fuchsia-50/60 dark:bg-fuchsia-950/30",   border: "border-fuchsia-200/60 dark:border-fuchsia-800/40",  text: "text-fuchsia-700 dark:text-fuchsia-300", accent: "#c026d3", dot: "bg-fuchsia-400", light: "bg-fuchsia-100 dark:bg-fuchsia-900/50" },
+  "Weitere":               { bg: "bg-stone-50/60 dark:bg-stone-800/40",       border: "border-stone-200/60 dark:border-stone-700/50",      text: "text-stone-600 dark:text-stone-300",     accent: "#78716c", dot: "bg-stone-400",   light: "bg-stone-100 dark:bg-stone-800" },
 };
 const getCatColor = (cat: string) => CATEGORY_COLORS[cat] || CATEGORY_COLORS["Weitere"];
 
@@ -82,12 +82,12 @@ function RangeBar({ value, marker, sex, showLongevity }: { value: number; marker
   const si = getStatus(value, marker, sex);
   return (
     <div className="relative h-10 mt-3">
-      <div className="absolute top-[14px] left-0 right-0 h-3 rounded-full bg-slate-100" />
+      <div className="absolute top-[14px] left-0 right-0 h-3 rounded-full bg-slate-100 dark:bg-stone-800" />
       <div className="absolute top-[14px] h-3 rounded-full bg-amber-200/50" style={{ left: `${toP(refMin)}%`, width: `${toP(refMax)-toP(refMin)}%` }} />
       {showLongevity && <div className="absolute top-[12px] h-4 rounded-full bg-emerald-300/60 border border-emerald-400/30" style={{ left: `${toP(optMin)}%`, width: `${toP(optMax)-toP(optMin)}%` }} />}
       <div className="absolute top-[8px] w-7 h-7 rounded-full border-[3px] border-white z-[2] transition-all duration-500 ease-out shadow-md" style={{ left: `calc(${toP(value)}% - 14px)`, background: si.color }} />
-      <div className="absolute top-[28px] text-[10px] text-stone-400" style={{ left: `${toP(refMin)}%`, transform: "translateX(-50%)" }}>{refMin}</div>
-      <div className="absolute top-[28px] text-[10px] text-stone-400" style={{ left: `${toP(refMax)}%`, transform: "translateX(-50%)" }}>{refMax}</div>
+      <div className="absolute top-[28px] text-[10px] text-stone-400 dark:text-stone-500" style={{ left: `${toP(refMin)}%`, transform: "translateX(-50%)" }}>{refMin}</div>
+      <div className="absolute top-[28px] text-[10px] text-stone-400 dark:text-stone-500" style={{ left: `${toP(refMax)}%`, transform: "translateX(-50%)" }}>{refMax}</div>
     </div>
   );
 }
@@ -100,7 +100,12 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const c: Record<string, { l:string; cls:string; i:string }> = { optimal:{l:"Optimal",cls:"text-emerald-700 bg-emerald-50",i:"✓"}, normal:{l:"Normal",cls:"text-amber-700 bg-amber-50",i:"~"}, low:{l:"Niedrig",cls:"text-red-700 bg-red-50",i:"↓"}, high:{l:"Hoch",cls:"text-red-700 bg-red-50",i:"↑"} };
+  const c: Record<string, { l:string; cls:string; i:string }> = {
+    optimal:{ l:"Optimal", cls:"text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-950/50", i:"✓" },
+    normal: { l:"Normal",  cls:"text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-950/50",       i:"~" },
+    low:    { l:"Niedrig", cls:"text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/50",                i:"↓" },
+    high:   { l:"Hoch",    cls:"text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/50",                i:"↑" },
+  };
   const s = c[status] || c.normal;
   return <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${s.cls}`}>{s.i} {s.l}</span>;
 }
@@ -114,13 +119,13 @@ function PriorityDot({ priority }: { priority: string }) {
 function DeltaIndicator({ current, previous }: { current: number; previous: number }) {
   const diff = current - previous;
   const pct = previous !== 0 ? Math.round((diff / previous) * 100) : 0;
-  if (Math.abs(pct) < 1) return <span className="text-xs text-stone-400">unverändert</span>;
+  if (Math.abs(pct) < 1) return <span className="text-xs text-stone-400 dark:text-stone-500">unverändert</span>;
   const up = diff > 0;
   return <span className={`text-xs font-medium ${up ? "text-rose-500" : "text-emerald-600"}`}>{up ? "↑" : "↓"} {Math.abs(pct)}%</span>;
 }
 
 function Disclaimer() {
-  return <div className="p-4 rounded-xl text-sm text-stone-500 bg-stone-50 mt-8 leading-relaxed border-l-[3px] border-stone-300"><strong>⚕️ Kein medizinischer Befund.</strong> Vitalis ist ein Bildungstool inspiriert von der Longevity-Medizin. Bitte konsultiere immer einen Arzt. Optimale Bereiche stammen aus publizierter Forschung und gelten möglicherweise nicht für deine individuelle Situation.</div>;
+  return <div className="p-4 rounded-xl text-sm text-stone-500 bg-stone-50 mt-8 leading-relaxed border-l-[3px] border-stone-300 dark:text-stone-400 dark:bg-stone-900 dark:border-stone-700"><strong>⚕️ Kein medizinischer Befund.</strong> Vitalis ist ein Bildungstool inspiriert von der Longevity-Medizin. Bitte konsultiere immer einen Arzt. Optimale Bereiche stammen aus publizierter Forschung und gelten möglicherweise nicht für deine individuelle Situation.</div>;
 }
 
 /* ─── LONGEVITY TOGGLE ──────────────────────────────────────────── */
@@ -128,16 +133,37 @@ function LongevityToggle({ enabled, onToggle }: { enabled: boolean; onToggle: ()
   return (
     <button
       onClick={onToggle}
-      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+      className={`flex items-center gap-2 min-h-11 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
         enabled
-          ? "bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm"
-          : "bg-stone-50 text-stone-500 border border-stone-200 hover:bg-stone-100"
+          ? "bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50"
+          : "bg-stone-50 text-stone-500 border border-stone-200 hover:bg-stone-100 dark:bg-stone-900 dark:text-stone-400 dark:border-stone-700 dark:hover:bg-stone-800"
       }`}
     >
-      <div className={`w-8 h-[18px] rounded-full flex items-center transition-all ${enabled ? "bg-emerald-500 justify-end" : "bg-stone-300 justify-start"}`}>
+      <div className={`w-8 h-[18px] rounded-full flex items-center transition-all ${enabled ? "bg-emerald-500 justify-end" : "bg-stone-300 justify-start dark:bg-stone-600"}`}>
         <div className="w-3.5 h-3.5 rounded-full bg-white mx-0.5 shadow-sm" />
       </div>
       <span>{enabled ? "Longevity-Optimal an" : "Longevity-Optimal"}</span>
+    </button>
+  );
+}
+
+/* ─── THEME TOGGLE ──────────────────────────────────────────────── */
+function ThemeToggle({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (t: "light" | "dark") => void }) {
+  const isDark = theme === "dark";
+  return (
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Zu hellem Modus wechseln" : "Zu dunklem Modus wechseln"}
+      title={isDark ? "Hell" : "Dunkel"}
+      className="w-11 h-11 flex items-center justify-center rounded-lg text-stone-500 hover:text-stone-700 hover:bg-stone-100 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:bg-stone-800 transition-colors"
+    >
+      {isDark ? (
+        /* Sun icon */
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+      ) : (
+        /* Moon icon */
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+      )}
     </button>
   );
 }
@@ -154,7 +180,7 @@ function CategoryHeader({ category }: { category: string }) {
 }
 
 /* ─── HEADER ────────────────────────────────────────────────────── */
-function AppHeader({ user, screen, setScreen, onLogout }: any) {
+function AppHeader({ user, screen, setScreen, onLogout, theme, setTheme }: any) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navItems = [{ l: "Dashboard", s: "dashboard" }, { l: "Verlauf", s: "history" }, { l: "Profil", s: "profile" }];
   const go = (s: string) => { setScreen(s); setMenuOpen(false); };
@@ -162,42 +188,49 @@ function AppHeader({ user, screen, setScreen, onLogout }: any) {
   useEffect(() => { setMenuOpen(false); }, [screen]);
 
   return (
-    <header className="px-6 py-3 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50">
+    <header className="px-6 py-3 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 dark:border-stone-800 dark:bg-stone-950/80">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3 cursor-pointer min-h-11" onClick={() => { setScreen(user ? "dashboard" : "landing"); setMenuOpen(false); }}>
           <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white text-base font-bold shadow-sm shadow-teal-600/20">V</div>
           <span className="font-display text-[22px] tracking-tight">Vitalis</span>
         </div>
-        {user && (
+        {user ? (
           <>
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map(n => (
-                <button key={n.s} onClick={() => setScreen(n.s)} className={`min-h-11 px-4 py-2 rounded-lg text-sm transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50" : "text-stone-500 hover:text-stone-700 hover:bg-stone-100"}`}>{n.l}</button>
+                <button key={n.s} onClick={() => setScreen(n.s)} className={`min-h-11 px-4 py-2 rounded-lg text-sm transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50 dark:text-teal-400 dark:bg-teal-950/40" : "text-stone-500 hover:text-stone-700 hover:bg-stone-100 dark:text-stone-400 dark:hover:text-stone-200 dark:hover:bg-stone-800"}`}>{n.l}</button>
               ))}
-              <button onClick={onLogout} className="min-h-11 px-4 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors ml-2">Abmelden</button>
+              <button onClick={onLogout} className="min-h-11 px-4 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors ml-2 dark:text-stone-500 dark:hover:text-stone-300">Abmelden</button>
+              <ThemeToggle theme={theme} setTheme={setTheme} />
             </nav>
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setMenuOpen(o => !o)}
-              aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
-              aria-expanded={menuOpen}
-              className="md:hidden w-11 h-11 flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-stone-100 transition-colors"
-            >
-              <span className={`block w-5 h-0.5 bg-stone-700 transition-transform duration-200 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
-              <span className={`block w-5 h-0.5 bg-stone-700 transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
-              <span className={`block w-5 h-0.5 bg-stone-700 transition-transform duration-200 ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
-            </button>
+            {/* Mobile: theme toggle + hamburger */}
+            <div className="md:hidden flex items-center gap-1">
+              <ThemeToggle theme={theme} setTheme={setTheme} />
+              <button
+                onClick={() => setMenuOpen(o => !o)}
+                aria-label={menuOpen ? "Menü schließen" : "Menü öffnen"}
+                aria-expanded={menuOpen}
+                className="w-11 h-11 flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+              >
+                <span className={`block w-5 h-0.5 bg-stone-700 dark:bg-stone-300 transition-transform duration-200 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+                <span className={`block w-5 h-0.5 bg-stone-700 dark:bg-stone-300 transition-opacity duration-200 ${menuOpen ? "opacity-0" : ""}`} />
+                <span className={`block w-5 h-0.5 bg-stone-700 dark:bg-stone-300 transition-transform duration-200 ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+              </button>
+            </div>
           </>
+        ) : (
+          /* Logged-out users still get theme toggle */
+          <ThemeToggle theme={theme} setTheme={setTheme} />
         )}
       </div>
       {/* Mobile dropdown panel */}
       {user && menuOpen && (
-        <nav className="md:hidden mt-3 pt-3 border-t border-stone-100 flex flex-col gap-1 animate-in fade-in slide-in-from-top-2 duration-200">
+        <nav className="md:hidden mt-3 pt-3 border-t border-stone-100 flex flex-col gap-1 animate-in fade-in slide-in-from-top-2 duration-200 dark:border-stone-800">
           {navItems.map(n => (
-            <button key={n.s} onClick={() => go(n.s)} className={`min-h-11 w-full text-left px-4 py-3 rounded-lg text-base transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50" : "text-stone-600 hover:bg-stone-100"}`}>{n.l}</button>
+            <button key={n.s} onClick={() => go(n.s)} className={`min-h-11 w-full text-left px-4 py-3 rounded-lg text-base transition-colors ${screen === n.s ? "text-teal-600 font-semibold bg-teal-50 dark:text-teal-400 dark:bg-teal-950/40" : "text-stone-600 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800"}`}>{n.l}</button>
           ))}
-          <button onClick={() => { onLogout(); setMenuOpen(false); }} className="min-h-11 w-full text-left px-4 py-3 rounded-lg text-sm text-stone-500 hover:bg-stone-100 transition-colors">Abmelden</button>
+          <button onClick={() => { onLogout(); setMenuOpen(false); }} className="min-h-11 w-full text-left px-4 py-3 rounded-lg text-sm text-stone-500 hover:bg-stone-100 transition-colors dark:text-stone-400 dark:hover:bg-stone-800">Abmelden</button>
         </nav>
       )}
     </header>
@@ -211,19 +244,19 @@ function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
       <div className="text-center mb-20">
         <div className="w-20 h-20 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 shadow-xl shadow-teal-600/25">V</div>
         <h1 className="font-display text-4xl sm:text-5xl font-normal leading-[1.1] mb-6 tracking-tight">Deine Blutwerte,<br /><span className="text-teal-600">optimiert verstanden.</span></h1>
-        <p className="text-lg text-stone-500 max-w-xl mx-auto mb-4 leading-relaxed">Vitalis zeigt dir nicht nur ob deine Werte im Referenzbereich liegen — sondern ob sie <em>optimal für deine Gesundheit</em> sind.</p>
-        <p className="text-base text-stone-400 max-w-lg mx-auto mb-10 leading-relaxed">Inspiriert von der Longevity-Medizin nach Dr. Peter Attia. Privat, sicher, und schön dargestellt — weil das Auge immer mitspielt.</p>
+        <p className="text-lg text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-4 leading-relaxed">Vitalis zeigt dir nicht nur ob deine Werte im Referenzbereich liegen — sondern ob sie <em>optimal für deine Gesundheit</em> sind.</p>
+        <p className="text-base text-stone-400 dark:text-stone-500 max-w-lg mx-auto mb-10 leading-relaxed">Inspiriert von der Longevity-Medizin nach Dr. Peter Attia. Privat, sicher, und schön dargestellt — weil das Auge immer mitspielt.</p>
         <div className="flex gap-3 justify-center flex-wrap">
           <button onClick={()=>setScreen("signup")} className="px-8 py-4 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">Kostenlos starten</button>
-          <button onClick={()=>setScreen("login")} className="px-8 py-4 border border-stone-200 rounded-xl font-medium text-base hover:bg-stone-50 transition-colors">Anmelden</button>
+          <button onClick={()=>setScreen("login")} className="px-8 py-4 border border-stone-200 dark:border-stone-700 rounded-xl font-medium text-base hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">Anmelden</button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
         {[{icon:"📊",title:"Mehr als nur Referenzwerte",desc:"Standard-Labore sagen dir nur ob etwas 'normal' ist. Wir zeigen dir den optimalen Bereich — nach neuester Longevity-Forschung."},{icon:"📈",title:"Veränderungen sehen",desc:"Vergleiche deine Werte über Monate und Jahre. Sieh auf einen Blick was sich verbessert und was Aufmerksamkeit braucht."},{icon:"🔒",title:"100% Privat",desc:"Deine Gesundheitsdaten gehören nur dir. Verschlüsselt gespeichert, DSGVO-konform, kein Tracking, kein Datenverkauf."}].map((f,i)=>(
-          <div key={i} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6"><div className="text-3xl mb-3">{f.icon}</div><h3 className="text-base font-semibold mb-2">{f.title}</h3><p className="text-sm text-stone-500 leading-relaxed">{f.desc}</p></div>
+          <div key={i} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6"><div className="text-3xl mb-3">{f.icon}</div><h3 className="text-base font-semibold mb-2">{f.title}</h3><p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">{f.desc}</p></div>
         ))}
       </div>
-      <div className="text-center"><p className="text-sm text-stone-400 mb-2">Gemacht in Österreich 🇦🇹</p><button onClick={()=>setScreen("privacy")} className="text-sm text-stone-400 hover:text-stone-600 transition-colors underline underline-offset-4">Datenschutz</button></div>
+      <div className="text-center"><p className="text-sm text-stone-400 dark:text-stone-500 mb-2">Gemacht in Österreich 🇦🇹</p><button onClick={()=>setScreen("privacy")} className="text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors underline underline-offset-4">Datenschutz</button></div>
     </div>
   );
 }
@@ -232,15 +265,15 @@ function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
 function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, authName, setAuthName, profileSex, setProfileSex, profileBirthYear, setProfileBirthYear, authLoading, onSignup, onLogin, setScreen }: any) {
   return (
     <div className="max-w-md mx-auto mt-16 px-6">
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-8">
         <h2 className="font-display text-3xl mb-2">{isSignup ? "Konto erstellen" : "Willkommen zurück"}</h2>
-        <p className="text-sm text-stone-500 mb-8">{isSignup ? "Starte jetzt mit deinem persönlichen Longevity-Dashboard." : "Melde dich an."}</p>
-        {isSignup && <div className="mb-5"><label className="block text-sm font-medium text-stone-600 mb-2">Name</label><input value={authName} onChange={(e:any)=>setAuthName(e.target.value)} placeholder="Dein Name" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>}
-        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 mb-2">Email</label><input type="email" value={authEmail} onChange={(e:any)=>setAuthEmail(e.target.value)} placeholder="du@beispiel.com" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
-        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 mb-2">Passwort</label><input type="password" value={authPass} onChange={(e:any)=>setAuthPass(e.target.value)} placeholder="Min. 8 Zeichen" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
-        {isSignup && (<><div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 mb-2">Biologisches Geschlecht</label><select value={profileSex} onChange={(e:any)=>setProfileSex(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base bg-white"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 mb-2">Geburtsjahr</label><input type="number" value={profileBirthYear} onChange={(e:any)=>setProfileBirthYear(e.target.value)} min="1920" max="2010" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none" /></div></div><p className="text-xs text-stone-400 -mt-2 mb-5">Geschlecht und Alter beeinflussen die Referenzwerte.</p></>)}
+        <p className="text-sm text-stone-500 dark:text-stone-400 mb-8">{isSignup ? "Starte jetzt mit deinem persönlichen Longevity-Dashboard." : "Melde dich an."}</p>
+        {isSignup && <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Name</label><input value={authName} onChange={(e:any)=>setAuthName(e.target.value)} placeholder="Dein Name" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>}
+        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Email</label><input type="email" value={authEmail} onChange={(e:any)=>setAuthEmail(e.target.value)} placeholder="du@beispiel.com" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
+        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Passwort</label><input type="password" value={authPass} onChange={(e:any)=>setAuthPass(e.target.value)} placeholder="Min. 8 Zeichen" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
+        {isSignup && (<><div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Biologisches Geschlecht</label><select value={profileSex} onChange={(e:any)=>setProfileSex(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-white dark:bg-stone-900"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Geburtsjahr</label><input type="number" value={profileBirthYear} onChange={(e:any)=>setProfileBirthYear(e.target.value)} min="1920" max="2010" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div></div><p className="text-xs text-stone-400 dark:text-stone-500 -mt-2 mb-5">Geschlecht und Alter beeinflussen die Referenzwerte.</p></>)}
         <button onClick={isSignup?onSignup:onLogin} disabled={authLoading} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-50 transition-colors">{authLoading?"Laden…":isSignup?"Konto erstellen":"Anmelden"}</button>
-        <p className="text-center text-sm text-stone-400 mt-5">{isSignup?"Schon ein Konto? ":"Noch kein Konto? "}<span className="text-teal-600 cursor-pointer font-medium hover:underline" onClick={()=>setScreen(isSignup?"login":"signup")}>{isSignup?"Anmelden":"Registrieren"}</span></p>
+        <p className="text-center text-sm text-stone-400 dark:text-stone-500 mt-5">{isSignup?"Schon ein Konto? ":"Noch kein Konto? "}<span className="text-teal-600 cursor-pointer font-medium hover:underline" onClick={()=>setScreen(isSignup?"login":"signup")}>{isSignup?"Anmelden":"Registrieren"}</span></p>
       </div>
     </div>
   );
@@ -254,7 +287,7 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
     <div className="max-w-lg mx-auto mt-20 px-6 text-center">
       <div className="text-7xl mb-6">🩸</div>
       <h2 className="font-display text-3xl mb-4">Dein erstes Blutbild</h2>
-      <p className="text-stone-500 text-base mb-8 leading-relaxed">Gib deine letzten Blutwerte ein und sieh sofort wie sie im Vergleich zu Referenz- und optimalen Bereichen abschneiden.</p>
+      <p className="text-stone-500 dark:text-stone-400 text-base mb-8 leading-relaxed">Gib deine letzten Blutwerte ein und sieh sofort wie sie im Vergleich zu Referenz- und optimalen Bereichen abschneiden.</p>
       <button onClick={()=>{setPanelValues({});setPanelCategory(CATEGORY_ORDER[0]);setScreen("addpanel");}} className="px-8 py-4 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">+ Blutbild hinzufügen</button>
       <Disclaimer />
     </div>);
@@ -268,7 +301,7 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       <div className="flex justify-between items-start mb-8 flex-wrap gap-4">
-        <div><h1 className="font-display text-3xl mb-1">Hallo {displayName}</h1><p className="text-base text-stone-500">{new Date(latest.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{latest.lab_name&&` · ${latest.lab_name}`} · {total} Marker</p></div>
+        <div><h1 className="font-display text-3xl mb-1">Hallo {displayName}</h1><p className="text-base text-stone-500 dark:text-stone-400">{new Date(latest.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{latest.lab_name&&` · ${latest.lab_name}`} · {total} Marker</p></div>
         <div className="flex gap-2 flex-wrap">
           <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
           <button onClick={()=>{setPanelValues({});setPanelCategory(CATEGORY_ORDER[0]);setScreen("addpanel");}} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">+ Neues Panel</button>
@@ -276,22 +309,22 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
       </div>
 
       {/* Score Overview */}
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 mb-8">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-8">
         <div className="flex items-center gap-6 flex-wrap">
           <div className="flex-shrink-0">
             <div className="relative w-20 h-20">
               <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f1f5f9" strokeWidth="3" />
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" className="stroke-slate-100 dark:stroke-stone-800" strokeWidth="3" />
                 <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#059669" strokeWidth="3" strokeDasharray={`${optPct}, 100`} strokeLinecap="round" />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center"><span className="text-xl font-bold text-emerald-600">{optPct}%</span></div>
             </div>
           </div>
           <div className="flex-1">
-            <p className="text-base font-medium text-stone-700 mb-3">{optPct >= 70 ? "Sehr gut — die meisten Werte sind optimal" : optPct >= 40 ? "Solide Basis — einige Werte verdienen Aufmerksamkeit" : "Mehrere Werte liegen außerhalb des optimalen Bereichs"}</p>
+            <p className="text-base font-medium text-stone-700 dark:text-stone-200 mb-3">{optPct >= 70 ? "Sehr gut — die meisten Werte sind optimal" : optPct >= 40 ? "Solide Basis — einige Werte verdienen Aufmerksamkeit" : "Mehrere Werte liegen außerhalb des optimalen Bereichs"}</p>
             <div className="flex gap-5 flex-wrap">
               {[{l:"Optimal",c:counts.optimal,cls:"text-emerald-600"},{l:"Normal",c:counts.normal,cls:"text-amber-600"},{l:"Kritisch",c:counts.low+counts.high,cls:"text-red-600"}].map((s,i)=>(
-                <div key={i} className="flex items-center gap-2"><span className={`text-2xl font-bold ${s.cls}`}>{s.c}</span><span className="text-sm text-stone-500">{s.l}</span></div>
+                <div key={i} className="flex items-center gap-2"><span className={`text-2xl font-bold ${s.cls}`}>{s.c}</span><span className="text-sm text-stone-500 dark:text-stone-400">{s.l}</span></div>
               ))}
             </div>
           </div>
@@ -300,7 +333,7 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
 
       {/* Longevity legend when enabled */}
       {showLongevity && (
-        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700">
+        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:border-emerald-800/40 dark:text-emerald-300">
           <div className="flex items-center gap-2">
             <div className="w-4 h-2.5 rounded bg-amber-200/70" />
             <span>Referenzbereich</span>
@@ -339,25 +372,25 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
                           <StatusBadge status={si.status} />
                           {prevVal && <DeltaIndicator current={v.value} previous={prevVal.value} />}
                         </div>
-                        <div className="text-sm text-stone-400">{marker.name_de} · {marker.description_de}</div>
-                        {explanation && <div className="text-xs text-stone-500 mt-1.5 leading-relaxed max-w-lg">{explanation}</div>}
+                        <div className="text-sm text-stone-400 dark:text-stone-500">{marker.name_de} · {marker.description_de}</div>
+                        {explanation && <div className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 leading-relaxed max-w-lg">{explanation}</div>}
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold leading-none" style={{color:si.color}}>{v.value}</div>
-                        <div className="text-xs text-stone-400 mt-0.5">{marker.unit}</div>
+                        <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{marker.unit}</div>
                       </div>
                       {hist.length >= 2 && <Sparkline data={hist.map((h:any)=>h.value)} color={si.color} />}
                     </div>
                     <RangeBar value={v.value} marker={marker} sex={sex} showLongevity={showLongevity} />
                     <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
-                      <div className="flex gap-5 text-xs text-stone-400">
+                      <div className="flex gap-5 text-xs text-stone-400 dark:text-stone-500">
                         <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
                         {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
                       </div>
                       {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
                     </div>
-                    {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed">{marker.longevity_note}</div>}
-                    {hist.length >= 2 && <div className="flex gap-2 mt-2 flex-wrap">{hist.map((h:any,i:number)=><span key={i} className="text-[11px] text-stone-400 bg-white/60 px-2.5 py-1 rounded-lg">{new Date(h.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {h.value}</span>)}</div>}
+                    {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed dark:bg-teal-950/40 dark:text-teal-200">{marker.longevity_note}</div>}
+                    {hist.length >= 2 && <div className="flex gap-2 mt-2 flex-wrap">{hist.map((h:any,i:number)=><span key={i} className="text-[11px] text-stone-400 dark:text-stone-500 bg-white/60 dark:bg-stone-800/60 px-2.5 py-1 rounded-lg">{new Date(h.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {h.value}</span>)}</div>}
                   </div>
                 );
               })}
@@ -379,37 +412,37 @@ function AddPanelScreen({ sex, panelDate, setPanelDate, panelLab, setPanelLab, p
   const cc = getCatColor(panelCategory);
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
-      <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 hover:text-stone-700 mb-4 transition-colors">← Zurück</button>
+      <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück</button>
       <h2 className="font-display text-3xl mb-2">Blutbild hinzufügen</h2>
-      <p className="text-base text-stone-500 mb-8">Gib die Werte deines letzten Bluttests ein. Du musst nicht alles ausfüllen — nur was auf deinem Befund steht.</p>
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 mb-6">
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-8">Gib die Werte deines letzten Bluttests ein. Du musst nicht alles ausfüllen — nur was auf deinem Befund steht.</p>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
         <div className="grid grid-cols-2 gap-4">
-          <div><label className="block text-sm font-medium text-stone-600 mb-2">Testdatum</label><input type="date" value={panelDate} onChange={(e:any)=>setPanelDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
-          <div><label className="block text-sm font-medium text-stone-600 mb-2">Labor (optional)</label><input value={panelLab} onChange={(e:any)=>setPanelLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+          <div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Testdatum</label><input type="date" value={panelDate} onChange={(e:any)=>setPanelDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+          <div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Labor (optional)</label><input value={panelLab} onChange={(e:any)=>setPanelLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
         </div>
       </div>
       {/* Category Tabs with colors */}
       <div className="flex gap-1.5 mb-3 flex-wrap">{getSortedCategories().map(cat=>{
         const catC = getCatColor(cat);
-        return (<button key={cat} onClick={()=>setPanelCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${panelCategory===cat? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}>{cat}</button>);
+        return (<button key={cat} onClick={()=>setPanelCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${panelCategory===cat? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700"}`}>{cat}</button>);
       })}</div>
       {/* Filter */}
-      <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 text-white":"bg-stone-50 text-stone-500 hover:bg-stone-100"}`}>{f.l}</button>))}</div>
+      <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white":"bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800"}`}>{f.l}</button>))}</div>
       {/* Marker Inputs */}
       <div className={`rounded-2xl border shadow-sm p-5 ${cc.bg} ${cc.border}`}>
-        {filtered.length === 0 && <p className="text-sm text-stone-400 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
+        {filtered.length === 0 && <p className="text-sm text-stone-400 dark:text-stone-500 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
         {filtered.map(marker => {
           const explanation = MARKER_EXPLANATIONS[marker.id];
           return (
-            <div key={marker.id} className="flex items-center gap-4 py-3.5 border-b border-stone-100/50 last:border-0">
+            <div key={marker.id} className="flex items-center gap-4 py-3.5 border-b border-stone-100/50 dark:border-stone-800/50 last:border-0">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-medium text-base">{marker.name}</span></div>
-                <div className="text-xs text-stone-400 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
-                {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed">{explanation}</div>}
+                <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
+                {explanation && <div className="text-xs text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">{explanation}</div>}
               </div>
               <div className="flex items-center gap-2">
-                <input type="number" step="any" value={panelValues[marker.id]||""} onChange={(e:any)=>setPanelValues((pv:any)=>({...pv,[marker.id]:e.target.value}))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white" />
-                <span className="text-xs text-stone-400 min-w-[52px]">{marker.unit}</span>
+                <input type="number" step="any" value={panelValues[marker.id]||""} onChange={(e:any)=>setPanelValues((pv:any)=>({...pv,[marker.id]:e.target.value}))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white dark:bg-stone-900" />
+                <span className="text-xs text-stone-400 dark:text-stone-500 min-w-[52px]">{marker.unit}</span>
               </div>
             </div>
           );
@@ -417,7 +450,7 @@ function AddPanelScreen({ sex, panelDate, setPanelDate, panelLab, setPanelLab, p
       </div>
       <div className="flex gap-3 mt-6">
         <button onClick={onSave} disabled={saving||filledCount===0} className="flex-1 py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{saving?"Speichern…":`Panel speichern (${filledCount} Werte)`}</button>
-        <button onClick={()=>setScreen("dashboard")} className="px-6 py-3.5 border border-stone-200 rounded-xl text-base hover:bg-stone-50 transition-colors">Abbrechen</button>
+        <button onClick={()=>setScreen("dashboard")} className="px-6 py-3.5 border border-stone-200 dark:border-stone-700 rounded-xl text-base hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">Abbrechen</button>
       </div>
     </div>
   );
@@ -442,13 +475,13 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
-      <button onClick={() => setScreen("viewpanel")} className="text-sm text-stone-500 hover:text-stone-700 mb-4 transition-colors">← Zurück zum Panel</button>
+      <button onClick={() => setScreen("viewpanel")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück zum Panel</button>
       <h2 className="font-display text-3xl mb-2">Panel bearbeiten</h2>
-      <p className="text-base text-stone-500 mb-8">Korrigiere oder ergänze deine Werte. Änderungen werden sofort in der Datenbank aktualisiert.</p>
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 mb-6">
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-8">Korrigiere oder ergänze deine Werte. Änderungen werden sofort in der Datenbank aktualisiert.</p>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
         <div className="grid grid-cols-2 gap-4">
-          <div><label className="block text-sm font-medium text-stone-600 mb-2">Testdatum</label><input type="date" value={editDate} onChange={(e:any) => setEditDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
-          <div><label className="block text-sm font-medium text-stone-600 mb-2">Labor (optional)</label><input value={editLab} onChange={(e:any) => setEditLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+          <div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Testdatum</label><input type="date" value={editDate} onChange={(e:any) => setEditDate(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
+          <div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Labor (optional)</label><input value={editLab} onChange={(e:any) => setEditLab(e.target.value)} placeholder="z.B. Labordiagnostik Wien" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20" /></div>
         </div>
       </div>
       {/* Category Tabs */}
@@ -456,30 +489,30 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
         const catC = getCatColor(cat);
         const hasValues = BLOOD_MARKERS.filter(m => m.category === cat).some(m => editValues[m.id] && editValues[m.id] !== "");
         return (
-          <button key={cat} onClick={() => setEditCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative ${editCategory === cat ? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 text-stone-500 hover:bg-stone-200"}`}>
+          <button key={cat} onClick={() => setEditCategory(cat)} className={`px-4 py-2 rounded-full text-sm font-medium transition-colors relative ${editCategory === cat ? `${catC.light} ${catC.text} shadow-sm border ${catC.border}` : "bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700"}`}>
             {cat}
             {hasValues && <span className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${catC.dot}`} />}
           </button>
         );
       })}</div>
       {/* Filter */}
-      <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 text-white":"bg-stone-50 text-stone-500 hover:bg-stone-100"}`}>{f.l}</button>))}</div>
+      <div className="flex gap-2 mb-4">{[{l:"Wichtige",v:"essential" as const},{l:"Empfohlen",v:"recommended" as const},{l:"Alle",v:"all" as const}].map(f=>(<button key={f.v} onClick={()=>setFilter(f.v)} className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${filter===f.v?"bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white":"bg-stone-50 dark:bg-stone-900 text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800"}`}>{f.l}</button>))}</div>
       {/* Marker Inputs */}
       <div className={`rounded-2xl border shadow-sm p-5 ${cc.bg} ${cc.border}`}>
-        {filtered.length === 0 && <p className="text-sm text-stone-400 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
+        {filtered.length === 0 && <p className="text-sm text-stone-400 dark:text-stone-500 py-4 text-center">Keine Marker in dieser Kategorie mit dem aktuellen Filter.</p>}
         {filtered.map(marker => {
           const hasValue = editValues[marker.id] && editValues[marker.id] !== "";
           const explanation = MARKER_EXPLANATIONS[marker.id];
           return (
-            <div key={marker.id} className={`flex items-center gap-4 py-3.5 border-b border-stone-100/50 last:border-0 ${hasValue ? "" : "opacity-60"}`}>
+            <div key={marker.id} className={`flex items-center gap-4 py-3.5 border-b border-stone-100/50 dark:border-stone-800/50 last:border-0 ${hasValue ? "" : "opacity-60"}`}>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-medium text-base">{marker.name}</span>{hasValue && <span className="text-xs text-emerald-600 font-medium">✓</span>}</div>
-                <div className="text-xs text-stone-400 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
-                {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed">{explanation}</div>}
+                <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{marker.name_de} · Ref: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</div>
+                {explanation && <div className="text-xs text-stone-500 dark:text-stone-400 mt-1 leading-relaxed">{explanation}</div>}
               </div>
               <div className="flex items-center gap-2">
-                <input type="number" step="any" value={editValues[marker.id] || ""} onChange={(e:any) => setEditValues(pv => ({ ...pv, [marker.id]: e.target.value }))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white" />
-                <span className="text-xs text-stone-400 min-w-[52px]">{marker.unit}</span>
+                <input type="number" step="any" value={editValues[marker.id] || ""} onChange={(e:any) => setEditValues(pv => ({ ...pv, [marker.id]: e.target.value }))} placeholder="—" className="w-24 px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-base text-right focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 bg-white dark:bg-stone-900" />
+                <span className="text-xs text-stone-400 dark:text-stone-500 min-w-[52px]">{marker.unit}</span>
               </div>
             </div>
           );
@@ -487,7 +520,7 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
       </div>
       <div className="flex gap-3 mt-6">
         <button onClick={() => onSaveEdit(panel.id, editDate, editLab, editValues)} disabled={saving || filledCount === 0} className="flex-1 py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors">{saving ? "Speichern…" : `Änderungen speichern (${filledCount} Werte)`}</button>
-        <button onClick={() => setScreen("viewpanel")} className="px-6 py-3.5 border border-stone-200 rounded-xl text-base hover:bg-stone-50 transition-colors">Abbrechen</button>
+        <button onClick={() => setScreen("viewpanel")} className="px-6 py-3.5 border border-stone-200 dark:border-stone-700 rounded-xl text-base hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">Abbrechen</button>
       </div>
     </div>
   );
@@ -500,19 +533,19 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
   const prevPanel = panelIdx > 0 ? panels[panelIdx - 1] : null;
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
-      <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 hover:text-stone-700 mb-4">← Zurück</button>
+      <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4">← Zurück</button>
       <div className="flex justify-between items-start mb-6 flex-wrap gap-3">
-        <div><h2 className="font-display text-3xl mb-1">Panel Ergebnisse</h2><p className="text-base text-stone-500">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{p.lab_name&&` · ${p.lab_name}`} · {p.values.length} Marker</p></div>
+        <div><h2 className="font-display text-3xl mb-1">Panel Ergebnisse</h2><p className="text-base text-stone-500 dark:text-stone-400">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{p.lab_name&&` · ${p.lab_name}`} · {p.values.length} Marker</p></div>
         <div className="flex gap-2 flex-wrap">
           <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
-          <button onClick={() => setScreen("editpanel")} className="px-4 py-2.5 bg-stone-100 text-stone-700 rounded-xl text-sm font-medium hover:bg-stone-200 transition-colors">✏️ Bearbeiten</button>
-          <button onClick={()=>onExportPdf(p)} className="px-4 py-2.5 bg-stone-800 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">📄 PDF Export</button>
-          <button onClick={()=>onDelete(p.id)} className="px-4 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 transition-colors">Löschen</button>
+          <button onClick={() => setScreen("editpanel")} className="px-4 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">✏️ Bearbeiten</button>
+          <button onClick={()=>onExportPdf(p)} className="px-4 py-2.5 bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">📄 PDF Export</button>
+          <button onClick={()=>onDelete(p.id)} className="px-4 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Löschen</button>
         </div>
       </div>
 
       {showLongevity && (
-        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700">
+        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:border-emerald-800/40 dark:text-emerald-300">
           <div className="flex items-center gap-2">
             <div className="w-4 h-2.5 rounded bg-amber-200/70" />
             <span>Referenzbereich</span>
@@ -535,18 +568,18 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
             const [showNote, setShowNote] = useState(false);
           return (<div key={v.markerId} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}>
             <div className="flex justify-between items-center flex-wrap gap-2"><div className="flex-1"><div className="flex items-center gap-2.5"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><StatusBadge status={si.status} />{prevVal&&<DeltaIndicator current={v.value} previous={prevVal.value} />}</div>
-            <div className="text-sm text-stone-400">{marker.name_de}</div>
-            {explanation && <div className="text-xs text-stone-500 mt-1 leading-relaxed max-w-lg">{explanation}</div>}
-            </div><div className="text-xl font-bold" style={{color:si.color}}>{v.value} <span className="text-sm font-normal text-stone-400">{marker.unit}</span></div></div>
+            <div className="text-sm text-stone-400 dark:text-stone-500">{marker.name_de}</div>
+            {explanation && <div className="text-xs text-stone-500 dark:text-stone-400 mt-1 leading-relaxed max-w-lg">{explanation}</div>}
+            </div><div className="text-xl font-bold" style={{color:si.color}}>{v.value} <span className="text-sm font-normal text-stone-400 dark:text-stone-500">{marker.unit}</span></div></div>
             <RangeBar value={v.value} marker={marker} sex={sex} showLongevity={showLongevity} />
             <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
-              <div className="flex gap-5 text-xs text-stone-400">
+              <div className="flex gap-5 text-xs text-stone-400 dark:text-stone-500">
                 <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
                 {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
               </div>
               {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
             </div>
-            {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed">{marker.longevity_note}</div>}
+            {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed dark:bg-teal-950/40 dark:text-teal-200">{marker.longevity_note}</div>}
           </div>);})}</div>);
       })}
       <Disclaimer />
@@ -556,16 +589,16 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
 
 /* ─── HISTORY ───────────────────────────────────────────────────── */
 function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, showLongevity }: any) {
-  if(!panels.length) return (<div className="max-w-lg mx-auto mt-16 px-6 text-center"><p className="text-stone-500 text-base mb-5">Noch keine Panels vorhanden.</p><button onClick={()=>setScreen("addpanel")} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700">+ Panel hinzufügen</button></div>);
+  if(!panels.length) return (<div className="max-w-lg mx-auto mt-16 px-6 text-center"><p className="text-stone-500 dark:text-stone-400 text-base mb-5">Noch keine Panels vorhanden.</p><button onClick={()=>setScreen("addpanel")} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700">+ Panel hinzufügen</button></div>);
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
       <h2 className="font-display text-3xl mb-6">Verlauf</h2>
-      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 mb-3">Alle Panels</h3>
-      {[...panels].reverse().map((p:any)=>(<div key={p.id} onClick={()=>{setCurrentPanel(p);setScreen("viewpanel");}} className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5 mb-3 cursor-pointer hover:shadow-md hover:-translate-y-px transition-all"><div className="flex justify-between items-center"><div><span className="font-semibold text-base">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}</span>{p.lab_name&&<span className="text-stone-400 text-sm ml-3">· {p.lab_name}</span>}</div><span className="text-sm text-stone-500">{p.values.length} Marker →</span></div></div>))}
-      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 mt-8 mb-3">Trends</h3>
+      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">Alle Panels</h3>
+      {[...panels].reverse().map((p:any)=>(<div key={p.id} onClick={()=>{setCurrentPanel(p);setScreen("viewpanel");}} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-3 cursor-pointer hover:shadow-md hover:-translate-y-px transition-all"><div className="flex justify-between items-center"><div><span className="font-semibold text-base">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}</span>{p.lab_name&&<span className="text-stone-400 dark:text-stone-500 text-sm ml-3">· {p.lab_name}</span>}</div><span className="text-sm text-stone-500 dark:text-stone-400">{p.values.length} Marker →</span></div></div>))}
+      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mt-8 mb-3">Trends</h3>
       {BLOOD_MARKERS.filter(m=>m.priority!=="extended").map(marker=>{const h=getHistory(marker.id);if(h.length<2) return null;const lsi=getStatus(h[h.length-1].value,marker,sex);const prev=h[h.length-2];
         const cc = getCatColor(marker.category);
-        return (<div key={marker.id} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}><div className="flex justify-between items-center flex-wrap gap-3"><div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><span className="text-sm text-stone-400">{marker.name_de}</span><DeltaIndicator current={h[h.length-1].value} previous={prev.value} /></div><div className="flex items-center gap-4"><Sparkline data={h.map((x:any)=>x.value)} color={lsi.color} /><div className="text-right"><div className="text-lg font-bold" style={{color:lsi.color}}>{h[h.length-1].value}</div><div className="text-xs text-stone-400">{marker.unit}</div></div></div></div><div className="flex gap-2 mt-3 flex-wrap">{h.map((x:any,i:number)=><span key={i} className="text-xs text-stone-400 bg-white/60 px-2.5 py-1 rounded-lg">{new Date(x.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {x.value}</span>)}</div></div>);
+        return (<div key={marker.id} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}><div className="flex justify-between items-center flex-wrap gap-3"><div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><span className="text-sm text-stone-400 dark:text-stone-500">{marker.name_de}</span><DeltaIndicator current={h[h.length-1].value} previous={prev.value} /></div><div className="flex items-center gap-4"><Sparkline data={h.map((x:any)=>x.value)} color={lsi.color} /><div className="text-right"><div className="text-lg font-bold" style={{color:lsi.color}}>{h[h.length-1].value}</div><div className="text-xs text-stone-400 dark:text-stone-500">{marker.unit}</div></div></div></div><div className="flex gap-2 mt-3 flex-wrap">{h.map((x:any,i:number)=><span key={i} className="text-xs text-stone-400 dark:text-stone-500 bg-white/60 dark:bg-stone-800/60 px-2.5 py-1 rounded-lg">{new Date(x.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {x.value}</span>)}</div></div>);
       })}
       <Disclaimer />
     </div>
@@ -577,14 +610,14 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
   return (
     <div className="max-w-md mx-auto px-6 py-8">
       <h2 className="font-display text-3xl mb-6">Profil</h2>
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 mb-4">
-        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 mb-2">Name</label><input value={profile?.display_name||""} onChange={(e:any)=>setProfile((p:any)=>p?{...p,display_name:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none" /></div>
-        <div className="mb-5 opacity-60"><label className="block text-sm font-medium text-stone-600 mb-2">Email</label><input value={user?.email||""} disabled className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base bg-stone-50" /></div>
-        <div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 mb-2">Biologisches Geschlecht</label><select value={profile?.sex||"male"} onChange={(e:any)=>setProfile((p:any)=>p?{...p,sex:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base bg-white"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 mb-2">Geburtsjahr</label><input type="number" value={profile?.birth_year||1990} onChange={(e:any)=>setProfile((p:any)=>p?{...p,birth_year:parseInt(e.target.value)}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 text-base focus:border-teal-500 focus:outline-none" /></div></div>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-4">
+        <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Name</label><input value={profile?.display_name||""} onChange={(e:any)=>setProfile((p:any)=>p?{...p,display_name:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div>
+        <div className="mb-5 opacity-60"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Email</label><input value={user?.email||""} disabled className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-stone-50 dark:bg-stone-900" /></div>
+        <div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Biologisches Geschlecht</label><select value={profile?.sex||"male"} onChange={(e:any)=>setProfile((p:any)=>p?{...p,sex:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-white dark:bg-stone-900"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Geburtsjahr</label><input type="number" value={profile?.birth_year||1990} onChange={(e:any)=>setProfile((p:any)=>p?{...p,birth_year:parseInt(e.target.value)}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div></div>
         <button onClick={()=>profile&&onUpdateProfile({display_name:profile.display_name,sex:profile.sex,birth_year:profile.birth_year})} className="w-full py-3 bg-teal-600 text-white rounded-xl text-base font-medium hover:bg-teal-700 transition-colors">Profil speichern</button>
       </div>
-      <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-6 border-l-[3px] border-l-red-500"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 transition-colors">Alle Daten löschen</button></div>
-      <button onClick={()=>setScreen("privacy")} className="mt-5 text-sm text-stone-400 hover:text-stone-600">Datenschutz →</button>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 dark:text-stone-400 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Alle Daten löschen</button></div>
+      <button onClick={()=>setScreen("privacy")} className="mt-5 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">Datenschutz →</button>
     </div>
   );
 }
@@ -593,10 +626,10 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
 function PrivacyScreen({ user, setScreen }: any) {
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
-      <button onClick={()=>setScreen(user?"dashboard":"landing")} className="text-sm text-stone-500 hover:text-stone-700 mb-4">← Zurück</button>
+      <button onClick={()=>setScreen(user?"dashboard":"landing")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4">← Zurück</button>
       <h2 className="font-display text-3xl mb-2">Datenschutz & DSGVO</h2>
-      <p className="text-base text-stone-500 mb-8">Vitalis ist mit Datenschutz als Kernprinzip entwickelt.</p>
-      {[{t:"Deine Daten bleiben bei dir",d:"Blutwerte werden in einer gesicherten Datenbank gespeichert, geschützt durch Row Level Security (RLS). Nur du kannst auf deine Daten zugreifen."},{t:"Kein anderer User sieht deine Daten",d:"Die Datenbank erzwingt auf technischer Ebene, dass jeder Nutzer nur seine eigenen Daten sehen kann — selbst bei einem Software-Fehler."},{t:"Deine Rechte nach DSGVO",d:"Du kannst jederzeit alle Daten einsehen, exportieren oder vollständig löschen."},{t:"Kein Medizinprodukt",d:"Vitalis ist ein Bildungstool. Es ist kein zertifiziertes Medizinprodukt. Es stellt keine Diagnosen und gibt keine Behandlungsempfehlungen."},{t:"Optimale Bereiche",d:"Basieren auf publizierter Longevity-Forschung. Pädagogisch, nicht diagnostisch. Bitte immer mit deinem Arzt besprechen."}].map((s,i)=>(<div key={i} className="mb-7"><h3 className="text-lg font-semibold mb-1.5">{s.t}</h3><p className="text-base text-stone-500 leading-relaxed">{s.d}</p></div>))}
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-8">Vitalis ist mit Datenschutz als Kernprinzip entwickelt.</p>
+      {[{t:"Deine Daten bleiben bei dir",d:"Blutwerte werden in einer gesicherten Datenbank gespeichert, geschützt durch Row Level Security (RLS). Nur du kannst auf deine Daten zugreifen."},{t:"Kein anderer User sieht deine Daten",d:"Die Datenbank erzwingt auf technischer Ebene, dass jeder Nutzer nur seine eigenen Daten sehen kann — selbst bei einem Software-Fehler."},{t:"Deine Rechte nach DSGVO",d:"Du kannst jederzeit alle Daten einsehen, exportieren oder vollständig löschen."},{t:"Kein Medizinprodukt",d:"Vitalis ist ein Bildungstool. Es ist kein zertifiziertes Medizinprodukt. Es stellt keine Diagnosen und gibt keine Behandlungsempfehlungen."},{t:"Optimale Bereiche",d:"Basieren auf publizierter Longevity-Forschung. Pädagogisch, nicht diagnostisch. Bitte immer mit deinem Arzt besprechen."}].map((s,i)=>(<div key={i} className="mb-7"><h3 className="text-lg font-semibold mb-1.5">{s.t}</h3><p className="text-base text-stone-500 dark:text-stone-400 leading-relaxed">{s.d}</p></div>))}
     </div>
   );
 }
@@ -624,6 +657,32 @@ export default function Home() {
   const [panelCategory, setPanelCategory] = useState(CATEGORY_ORDER[0]);
   const [saving, setSaving] = useState(false);
   const [showLongevity, setShowLongevity] = useState(false);
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
+
+  // Initialize theme from DOM (set by inline script in layout.tsx before hydration)
+  useEffect(() => {
+    setThemeState(document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }, []);
+
+  // Follow system preference when user has not manually chosen
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const handler = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem("vitalis-theme")) {
+        const next = e.matches ? "dark" : "light";
+        document.documentElement.classList.toggle("dark", e.matches);
+        setThemeState(next);
+      }
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const setTheme = (next: "light" | "dark") => {
+    document.documentElement.classList.toggle("dark", next === "dark");
+    localStorage.setItem("vitalis-theme", next);
+    setThemeState(next);
+  };
 
   const notify = (msg:string,type="ok") => {setToast({msg,type});setTimeout(()=>setToast(null),3000);};
 
@@ -788,11 +847,11 @@ export default function Home() {
   const getHistory = (mid:string)=>panels.filter(p=>p.values.some(v=>v.markerId===mid)).map(p=>({date:p.test_date,value:p.values.find(v=>v.markerId===mid)?.value!})).filter(h=>h.value!==undefined).sort((a,b)=>a.date.localeCompare(b.date));
   const sex = profile?.sex||"male";
 
-  if(loading) return (<div className="flex items-center justify-center min-h-screen"><div className="text-center"><div className="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg shadow-teal-600/20">V</div><div className="text-stone-400 text-base">Laden…</div></div></div>);
+  if(loading) return (<div className="flex items-center justify-center min-h-screen"><div className="text-center"><div className="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg shadow-teal-600/20">V</div><div className="text-stone-400 dark:text-stone-500 text-base">Laden…</div></div></div>);
 
   return (<>
-    <AppHeader user={user} screen={screen} setScreen={setScreen} onLogout={handleLogout} />
-    {toast&&<div className={`toast-animate fixed top-[72px] left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-xl text-sm font-medium shadow-lg z-[200] ${toast.type==="err"?"bg-red-50 text-red-600":"bg-emerald-50 text-emerald-600"}`}>{toast.msg}</div>}
+    <AppHeader user={user} screen={screen} setScreen={setScreen} onLogout={handleLogout} theme={theme} setTheme={setTheme} />
+    {toast&&<div className={`toast-animate fixed top-[72px] left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-xl text-sm font-medium shadow-lg z-[200] ${toast.type==="err"?"bg-red-50 text-red-600 dark:bg-red-950/60 dark:text-red-300":"bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300"}`}>{toast.msg}</div>}
     {screen==="landing"&&<LandingScreen setScreen={setScreen} />}
     {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
     {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
