@@ -68,6 +68,102 @@ const MARKER_EXPLANATIONS: Record<string, string> = {
   ldh: "Gewebeschadens-Marker. Erhöht bei Verletzungen, Infektionen oder Bluterkrankungen.",
 };
 
+/* ─── MARKER INFLUENCES ─────────────────────────────────────────── */
+const MARKER_INFLUENCES: Record<string, { up: string[]; down: string[] }> = {
+  glucose: {
+    up: ["Zucker & raffinierte Kohlenhydrate", "Bewegungsmangel", "Chronischer Stress & Schlafmangel", "Übergewicht (v.a. viszerales Fett)"],
+    down: ["Bewegung nach Mahlzeiten", "Schlafdauer optimieren (7–9 h)", "Ballaststoffreiche Ernährung", "Intervallfasten"],
+  },
+  hba1c: {
+    up: ["Dauerhaft erhöhte Glukosewerte", "Wenig Bewegung", "Verarbeitete Lebensmittel & Zucker", "Stress & Schlafmangel"],
+    down: ["Regelmäßiger Sport (bes. Krafttraining)", "Low-Carb oder mediterrane Ernährung", "Gewichtsreduktion bei Übergewicht", "Guter Schlaf (7–9 h)"],
+  },
+  insulin: {
+    up: ["Häufige kohlenhydratreiche Mahlzeiten", "Übergewicht & Bewegungsmangel", "Schlafmangel & chronischer Stress", "Verarbeiteter Zucker & Fruchtzucker"],
+    down: ["Intervallfasten (z.B. 16:8)", "Krafttraining erhöht Insulinsensitivität", "Ballaststoffe verlangsamen Glukoseanstieg", "Gewichtsreduktion"],
+  },
+  ldl: {
+    up: ["Gesättigte Fettsäuren (Butter, rotes Fleisch)", "Trans-Fette (industriell verarbeitet)", "Genetische Prädisposition", "Schilddrüsenunterfunktion"],
+    down: ["Statine (Medikament)", "Lösliche Ballaststoffe (Hafer, Hülsenfrüchte)", "Regelmäßiger Ausdauersport", "Mediterrane Ernährung"],
+  },
+  hdl: {
+    up: ["Regelmäßige Bewegung (v.a. Ausdauer)", "Omega-3-reiche Ernährung (Fisch, Nüsse)", "Rauchen aufhören", "Moderater Alkoholkonsum"],
+    down: ["Rauchen", "Bewegungsmangel & Übergewicht", "Trans-Fette & stark verarbeitete Lebensmittel", "Sehr fettarme Diäten"],
+  },
+  trig: {
+    up: ["Zucker, Fruchtzucker & raffinierte Kohlenhydrate", "Alkohol", "Übergewicht & metabolisches Syndrom", "Bewegungsmangel"],
+    down: ["Omega-3-Fettsäuren (Fischöl)", "Alkohol reduzieren oder weglassen", "Kohlenhydrate reduzieren", "Regelmäßiger Sport"],
+  },
+  apob: {
+    up: ["Hohe LDL- und VLDL-Partikelzahl", "Gesättigte Fette & Transfette", "Übergewicht & Insulinresistenz"],
+    down: ["Statine & PCSK9-Inhibitoren", "Lösliche Ballaststoffe", "Mediterrane / pflanzenbetonte Kost", "Gewichtsreduktion"],
+  },
+  crp: {
+    up: ["Aktive Infektionen & Entzündungen", "Übergewicht (viszerales Fett)", "Rauchen", "Verarbeitete Lebensmittel & Zucker"],
+    down: ["Regelmäßiger Sport", "Mediterrane Ernährung", "Ausreichend Schlaf", "Stressreduktion (Meditation, etc.)"],
+  },
+  ferritin: {
+    up: ["Eisenreiche Ernährung (rotes Fleisch)", "Aktive Entzündungen im Körper", "Regelmäßiger Alkohol", "Hämochromatose (genetisch)"],
+    down: ["Blutspende (bei Männern mit hohen Werten)", "Pflanzenbetonte Ernährung", "Phytate (Getreide, Hülsenfrüchte) hemmen Eisenaufnahme"],
+  },
+  tsh: {
+    up: ["Jodmangel", "Autoimmune Schilddrüsenerkrankung (Hashimoto)", "Starker Stress & Schlafentzug", "Selenmangel"],
+    down: ["Ausreichend Jod & Selen in der Ernährung", "Levothyroxin-Therapie bei Unterfunktion", "Stressmanagement"],
+  },
+  vitd: {
+    up: ["Direkte Sonneneinstrahlung (UVB, 20–30 min/Tag)", "Vitamin D3-Supplementierung", "Fettreiche Fische (Lachs, Makrele)", "Vitamin-D-reiche Pilze (UV-behandelt)"],
+    down: ["Konsequenter Sonnenschutz ohne Supplementierung", "Übergewicht (D3 wird im Fettgewebe gebunden)", "Wenig Sonnenlicht (Österreich Oktober–März)", "Malabsorptionssyndrome"],
+  },
+  b12: {
+    up: ["Tierische Produkte (Fleisch, Eier, Milch)", "B12-Supplementierung (Methylcobalamin)", "Gesunde Magengesundheit (Intrinsic Factor)"],
+    down: ["Vegane / vegetarische Ernährung ohne Supplement", "Metformin-Einnahme reduziert Aufnahme", "Magensäureblocker (PPI)", "Alter (Absorptionsfähigkeit sinkt)"],
+  },
+  alt: {
+    up: ["Alkohol", "Fettleber (metabolisch oder alkoholfrei)", "Bestimmte Medikamente (Statine, Paracetamol)", "Intensiver Sport kurz vor Blutabnahme"],
+    down: ["Alkohol reduzieren oder weglassen", "Gewichtsreduktion bei Fettleber", "Mediterrane Ernährung", "Kaffee (nachweislich leberschützend)"],
+  },
+  ggt: {
+    up: ["Alkohol (sehr sensitiv)", "Leberschädigende Medikamente", "Übergewicht & metabolisches Syndrom", "Rauchen"],
+    down: ["Alkohol reduzieren oder weglassen", "Gewichtsreduktion", "Regelmäßige Bewegung", "Koffein"],
+  },
+  creatinine: {
+    up: ["Hoher Fleischkonsum vor dem Test", "Dehydration", "Intensiver Sport kurz vor Test", "Hohe Muskelmasse (physiologisch)"],
+    down: ["Ausreichend Hydrierung", "Weniger rotes Fleisch vor dem Test", "Pflanzliche Ernährung"],
+  },
+  egfr: {
+    up: ["Gute Hydrierung", "Gesunder Blutdruck (unter 130/80)", "Regelmäßige Bewegung", "Normaler Blutzucker"],
+    down: ["Chronisch hoher Blutdruck", "Unkontrollierter Diabetes", "NSAID-Schmerzmittel (Ibuprofen) langfristig", "Natürlicher Rückgang mit dem Alter (~1 mL/min/Jahr)"],
+  },
+  testosterone_total: {
+    up: ["Krafttraining (v.a. Kniebeugen, Kreuzheben)", "Ausreichend Schlaf (7–9 h)", "Zink & Vitamin D ausreichend", "Gesundes Körpergewicht"],
+    down: ["Alkohol reduziert Produktion", "Übergewicht & Insulinresistenz", "Chronischer Stress (Cortisol hemmt T)", "Schlafmangel"],
+  },
+  omega3_index: {
+    up: ["Fettreicher Fisch 2–3× pro Woche", "Hochdosierte Fischöl-Kapseln (EPA/DHA)", "Algenöl (vegane Alternative)"],
+    down: ["Omega-6-reiche Ernährung (Sonnenblumenöl)", "Kein Fisch und kein Fischöl-Supplement"],
+  },
+  magnesium: {
+    up: ["Nüsse & Samen (Kürbiskerne, Mandeln)", "Grünes Blattgemüse (Spinat, Mangold)", "Magnesium-Glycinat oder -Malat (Supplement)", "Hülsenfrüchte & Vollkornprodukte"],
+    down: ["Alkohol erhöht Ausscheidung über Nieren", "Chronischer Stress", "Diuretika & bestimmte Medikamente", "Stark verarbeitete Ernährung"],
+  },
+  homocysteine: {
+    up: ["Vitamin B12-Mangel", "Folsäure-Mangel", "Vitamin B6-Mangel", "Rauchen & hoher Kaffeekonsum"],
+    down: ["B12-Supplementierung (Methylcobalamin)", "Folsäure (v.a. aus grünem Gemüse)", "Vitamin B6-reiche Kost", "Rauchen aufhören"],
+  },
+  wbc: {
+    up: ["Aktive Infektionen (bakteriell/viral)", "Chronische Entzündung", "Rauchen", "Intensiver Sport direkt vor dem Test"],
+    down: ["Entzündungsreduzierende Ernährung", "Guter Schlaf & Stressreduktion", "Rauchen aufhören"],
+  },
+  hb: {
+    up: ["Höhentraining", "Ausreichend Eisen, B12 & Folsäure", "Gute Hydrierung"],
+    down: ["Eisenmangel (häufigste Ursache bei Frauen)", "Blutung oder hoher Blutverlust", "B12- oder Folsäure-Mangel"],
+  },
+  cortisol: {
+    up: ["Chronischer psychischer Stress", "Schlafmangel", "Übermäßiger Sport", "Koffein (kurzfristig)"],
+    down: ["Regelmäßige Entspannung & Meditation", "Ausreichend Schlaf", "Adaptogene (Ashwagandha)", "Moderate Bewegung"],
+  },
+};
+
 /* ─── SHARED UI ─────────────────────────────────────────────────── */
 function RangeBar({ value, marker, sex, showLongevity }: { value: number; marker: BloodMarker; sex: string; showLongevity: boolean }) {
   const s = sex === "female" ? "f" : "m";
@@ -97,6 +193,71 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   const mn = Math.min(...data)*0.9, mx = Math.max(...data)*1.1, rng = mx-mn||1, w=140, h=36;
   const pts = data.map((v,i) => `${(i/(data.length-1))*w},${h-((v-mn)/rng)*h}`).join(" ");
   return (<svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="block"><polyline points={pts} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />{data.map((v,i)=><circle key={i} cx={(i/(data.length-1))*w} cy={h-((v-mn)/rng)*h} r={i===data.length-1?4:2} fill={i===data.length-1?color:color+"80"} />)}</svg>);
+}
+
+/* ─── MARKER HISTORY CHART ──────────────────────────────────────── */
+function MarkerHistoryChart({ history, marker, sex, showLongevity }: {
+  history: { date: string; value: number }[];
+  marker: BloodMarker;
+  sex: string;
+  showLongevity: boolean;
+}) {
+  if (!history || history.length === 0) return null;
+  const s = sex === "female" ? "f" : "m";
+  const refMin = marker[`ref_min_${s}` as keyof BloodMarker] as number;
+  const refMax = marker[`ref_max_${s}` as keyof BloodMarker] as number;
+  const optMin = marker[`opt_min_${s}` as keyof BloodMarker] as number;
+  const optMax = marker[`opt_max_${s}` as keyof BloodMarker] as number;
+  const W = 560, H = 180;
+  const PAD = { top: 12, right: 20, bottom: 36, left: 48 };
+  const pw = W - PAD.left - PAD.right;
+  const ph = H - PAD.top - PAD.bottom;
+  const allVals = history.map(h => h.value);
+  const rawMin = Math.min(refMin, ...allVals);
+  const rawMax = Math.max(refMax, ...allVals);
+  const pad = (rawMax - rawMin) * 0.15 || 1;
+  const yMin = Math.max(0, rawMin - pad);
+  const yMax = rawMax + pad;
+  const yRange = yMax - yMin || 1;
+  const xOf = (i: number) => PAD.left + (history.length === 1 ? pw / 2 : (i / (history.length - 1)) * pw);
+  const yOf = (v: number) => PAD.top + ph - ((v - yMin) / yRange) * ph;
+  const ticks = [0, 1, 2, 3].map(i => {
+    const v = yMin + (yRange * i) / 3;
+    const label = v < 10 ? v.toFixed(2) : v < 100 ? v.toFixed(1) : Math.round(v).toString();
+    return { y: yOf(v), label };
+  });
+  const pts = history.map((h, i) => ({ x: xOf(i), y: yOf(h.value), value: h.value, date: h.date }));
+  const linePath = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const areaPath = `${linePath} L${pts[pts.length-1].x.toFixed(1)},${(H - PAD.bottom).toFixed(1)} L${pts[0].x.toFixed(1)},${(H - PAD.bottom).toFixed(1)} Z`;
+  const si = getStatus(history[history.length - 1].value, marker, sex);
+  const refY1 = yOf(refMax), refH = Math.max(0, yOf(refMin) - yOf(refMax));
+  const optY1 = yOf(optMax), optH = Math.max(0, yOf(optMin) - yOf(optMax));
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ height: 180 }}>
+      <rect x={PAD.left} y={refY1} width={pw} height={refH} fill="#d97706" fillOpacity="0.1" />
+      {showLongevity && <rect x={PAD.left} y={optY1} width={pw} height={optH} fill="#059669" fillOpacity="0.12" />}
+      {ticks.map((t, i) => (
+        <g key={i}>
+          <line x1={PAD.left} x2={W - PAD.right} y1={t.y} y2={t.y} stroke="#a8a29e" strokeOpacity="0.25" strokeWidth="1" />
+          <text x={PAD.left - 5} y={t.y + 4} textAnchor="end" fontSize="9" fill="#a8a29e" fontFamily="-apple-system,sans-serif">{t.label}</text>
+        </g>
+      ))}
+      <path d={areaPath} fill={si.color} fillOpacity="0.07" />
+      <path d={linePath} fill="none" stroke={si.color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {pts.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r={i === pts.length - 1 ? 6 : 4} fill={si.color} stroke="white" strokeWidth="2.5">
+          <title>{new Date(p.date).toLocaleDateString("de-AT", { day: "numeric", month: "short", year: "numeric" })}: {p.value} {marker.unit}</title>
+        </circle>
+      ))}
+      {pts.map((p, i) => (
+        <text key={i} x={p.x} y={H - 4} textAnchor="middle" fontSize="9" fill="#a8a29e" fontFamily="-apple-system,sans-serif">
+          {new Date(p.date).toLocaleDateString("de-AT", { month: "short", year: "2-digit" })}
+        </text>
+      ))}
+      <line x1={PAD.left} x2={PAD.left} y1={PAD.top} y2={H - PAD.bottom} stroke="#d6d3d1" strokeWidth="1" />
+      <line x1={PAD.left} x2={W - PAD.right} y1={H - PAD.bottom} y2={H - PAD.bottom} stroke="#d6d3d1" strokeWidth="1" />
+    </svg>
+  );
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -358,7 +519,7 @@ function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, 
 }
 
 /* ─── DASHBOARD ──────────────────────────────────────────────────── */
-function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues, setPanelCategory, getHistory, showLongevity, setShowLongevity }: any) {
+function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues, setPanelCategory, getHistory, showLongevity, setShowLongevity, onSelectMarker }: any) {
   const latest = panels[panels.length-1];
   const displayName = profile?.display_name || user?.email?.split("@")[0] || "";
   if (!latest) return (
@@ -465,7 +626,10 @@ function DashboardScreen({ panels, profile, user, sex, setScreen, setPanelValues
                         <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
                         {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
                       </div>
-                      {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+                      <div className="flex items-center gap-3">
+                        {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+                        <button onClick={()=>onSelectMarker(v.markerId)} className="text-xs text-stone-400 dark:text-stone-500 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Details →</button>
+                      </div>
                     </div>
                     {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed dark:bg-teal-950/40 dark:text-teal-200">{marker.longevity_note}</div>}
                     {hist.length >= 2 && <div className="flex gap-2 mt-2 flex-wrap">{hist.map((h:any,i:number)=><span key={i} className="text-[11px] text-stone-400 dark:text-stone-500 bg-white/60 dark:bg-stone-800/60 px-2.5 py-1 rounded-lg">{new Date(h.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {h.value}</span>)}</div>}
@@ -605,7 +769,7 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
 }
 
 /* ─── VIEW PANEL ────────────────────────────────────────────────── */
-function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, showLongevity, setShowLongevity }: any) {
+function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, showLongevity, setShowLongevity, onSelectMarker }: any) {
   const p = currentPanel||panels[panels.length-1]; if(!p) return null;
   const panelIdx = panels.findIndex((pan:Panel) => pan.id === p.id);
   const prevPanel = panelIdx > 0 ? panels[panelIdx - 1] : null;
@@ -655,7 +819,10 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
                 <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
                 {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
               </div>
-              {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+              <div className="flex items-center gap-3">
+                {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-teal-600 hover:text-teal-700 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
+                <button onClick={()=>onSelectMarker(v.markerId)} className="text-xs text-stone-400 dark:text-stone-500 hover:text-teal-600 dark:hover:text-teal-400 font-medium transition-colors">Details →</button>
+              </div>
             </div>
             {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-teal-50 text-sm text-teal-800 leading-relaxed dark:bg-teal-950/40 dark:text-teal-200">{marker.longevity_note}</div>}
           </div>);})}</div>);
@@ -700,6 +867,150 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
   );
 }
 
+/* ─── MARKER DETAIL ─────────────────────────────────────────────── */
+function MarkerDetailScreen({ markerId, setScreen, getHistory, sex, showLongevity, markerPrevScreen }: any) {
+  const marker = BLOOD_MARKERS.find(m => m.id === markerId);
+  if (!marker) return null;
+  const history = getHistory(markerId);
+  const latest = history[history.length - 1];
+  const s = sex === "female" ? "f" : "m";
+  const si = latest ? getStatus(latest.value, marker, sex) : null;
+  const influences = MARKER_INFLUENCES[markerId];
+  const cc = getCatColor(marker.category);
+  return (
+    <div className="max-w-3xl mx-auto px-6 py-8">
+      {/* Back */}
+      <button onClick={() => setScreen(markerPrevScreen || "dashboard")} className="flex items-center gap-1 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-6 transition-colors">← Zurück</button>
+
+      {/* Title + Current Value */}
+      <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <span className={`text-xs font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full ${cc.light} ${cc.text}`}>{marker.category}</span>
+            <PriorityDot priority={marker.priority} />
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl mb-1">{marker.name_de}</h1>
+          <p className="text-base text-stone-500 dark:text-stone-400">{marker.name} · {marker.unit}</p>
+        </div>
+        {si && latest && (
+          <div className="text-right flex-shrink-0">
+            <div className="text-5xl font-bold leading-none" style={{ color: si.color }}>{latest.value}</div>
+            <div className="text-sm text-stone-400 dark:text-stone-500 mt-1">{marker.unit}</div>
+            <div className="mt-2"><StatusBadge status={si.status} /></div>
+          </div>
+        )}
+      </div>
+
+      {/* Range bar + ranges */}
+      {latest && (
+        <div className={`rounded-2xl border p-5 mb-6 ${cc.bg} ${cc.border}`}>
+          <RangeBar value={latest.value} marker={marker} sex={sex} showLongevity={true} />
+          <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+            <span className="text-stone-500 dark:text-stone-400">Referenz: <span className="font-medium text-stone-700 dark:text-stone-200">{marker[`ref_min_${s}` as keyof BloodMarker]}–{marker[`ref_max_${s}` as keyof BloodMarker]} {marker.unit}</span></span>
+            <span className="text-emerald-600 dark:text-emerald-400">Longevity-Optimal: <span className="font-medium">{marker[`opt_min_${s}` as keyof BloodMarker]}–{marker[`opt_max_${s}` as keyof BloodMarker]} {marker.unit}</span></span>
+          </div>
+        </div>
+      )}
+
+      {/* History Chart */}
+      {history.length > 0 ? (
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider">Verlauf</h2>
+            <span className="text-xs text-stone-400 dark:text-stone-500">{history.length} Messung{history.length !== 1 ? "en" : ""}</span>
+          </div>
+          <MarkerHistoryChart history={history} marker={marker} sex={sex} showLongevity={showLongevity} />
+          <div className="flex gap-2 mt-3 flex-wrap">
+            {history.map((h: any, i: number) => (
+              <span key={i} className="text-xs text-stone-400 dark:text-stone-500 bg-stone-50 dark:bg-stone-800 px-2.5 py-1 rounded-lg">
+                {new Date(h.date).toLocaleDateString("de-AT", { day: "numeric", month: "short", year: "numeric" })}: <span className="font-medium text-stone-700 dark:text-stone-300">{h.value}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="bg-stone-50 dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 p-6 mb-6 text-center">
+          <p className="text-stone-400 dark:text-stone-500 text-sm">Noch keine Messwerte für diesen Marker erfasst.</p>
+        </div>
+      )}
+
+      {/* About */}
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-6">
+        <h2 className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-3">Was misst dieser Marker?</h2>
+        <p className="text-base text-stone-700 dark:text-stone-300 leading-relaxed mb-2">{marker.description_de}</p>
+        {MARKER_EXPLANATIONS[markerId] && (
+          <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">{MARKER_EXPLANATIONS[markerId]}</p>
+        )}
+      </div>
+
+      {/* Longevity Note */}
+      {marker.longevity_note && (
+        <div className="rounded-2xl border border-teal-200/60 dark:border-teal-800/40 bg-teal-50/60 dark:bg-teal-950/30 p-5 mb-6">
+          <p className="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-2">Longevity-Perspektive</p>
+          <p className="text-sm text-teal-800 dark:text-teal-200 leading-relaxed">{marker.longevity_note}</p>
+        </div>
+      )}
+
+      {/* Influences */}
+      {influences && (
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-6">
+          <h2 className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-4">Einflussfaktoren</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <p className="text-xs font-semibold text-red-500 dark:text-red-400 uppercase tracking-wide mb-2.5">Erhöht den Wert ↑</p>
+              <ul className="space-y-2">
+                {influences.up.map((item: string, i: number) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-stone-600 dark:text-stone-300">
+                    <span className="text-red-400 mt-0.5 flex-shrink-0 text-[10px]">▲</span><span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-emerald-500 dark:text-emerald-400 uppercase tracking-wide mb-2.5">Senkt den Wert ↓</p>
+              <ul className="space-y-2">
+                {influences.down.map((item: string, i: number) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-stone-600 dark:text-stone-300">
+                    <span className="text-emerald-500 mt-0.5 flex-shrink-0 text-[10px]">▼</span><span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ranges by sex */}
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-8">
+        <h2 className="text-sm font-semibold text-stone-500 dark:text-stone-400 uppercase tracking-wider mb-4">Referenzbereiche</h2>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-stone-100 dark:border-stone-800">
+              <th className="text-left pb-2 font-medium text-stone-400 dark:text-stone-500">Bereich</th>
+              <th className="text-right pb-2 font-medium text-stone-400 dark:text-stone-500">Männer</th>
+              <th className="text-right pb-2 font-medium text-stone-400 dark:text-stone-500">Frauen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-stone-50 dark:border-stone-800/50">
+              <td className="py-2.5 text-amber-600 dark:text-amber-400 font-medium">Klinischer Referenzbereich</td>
+              <td className="text-right py-2.5 text-stone-700 dark:text-stone-300">{marker.ref_min_m}–{marker.ref_max_m} {marker.unit}</td>
+              <td className="text-right py-2.5 text-stone-700 dark:text-stone-300">{marker.ref_min_f}–{marker.ref_max_f} {marker.unit}</td>
+            </tr>
+            <tr>
+              <td className="py-2.5 text-emerald-600 dark:text-emerald-400 font-medium">Longevity-Optimal (Attia)</td>
+              <td className="text-right py-2.5 text-stone-700 dark:text-stone-300">{marker.opt_min_m}–{marker.opt_max_m} {marker.unit}</td>
+              <td className="text-right py-2.5 text-stone-700 dark:text-stone-300">{marker.opt_min_f}–{marker.opt_max_f} {marker.unit}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <Disclaimer />
+    </div>
+  );
+}
+
 /* ─── PRIVACY ───────────────────────────────────────────────────── */
 function PrivacyScreen({ user, setScreen }: any) {
   return (
@@ -736,6 +1047,14 @@ export default function Home() {
   const [saving, setSaving] = useState(false);
   const [showLongevity, setShowLongevity] = useState(false);
   const [theme, setThemeState] = useState<"light" | "dark">("light");
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
+  const [markerPrevScreen, setMarkerPrevScreen] = useState("dashboard");
+
+  const openMarkerDetail = (markerId: string, fromScreen = "dashboard") => {
+    setSelectedMarkerId(markerId);
+    setMarkerPrevScreen(fromScreen);
+    setScreen("markerdetail");
+  };
 
   // Initialize theme from DOM (set by inline script in layout.tsx before hydration)
   useEffect(() => {
@@ -933,10 +1252,11 @@ export default function Home() {
     {screen==="landing"&&<LandingScreen setScreen={setScreen} />}
     {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
     {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
-    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={setScreen} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} />}
+    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={setScreen} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"dashboard")} />}
     {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={setScreen} />}
     {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={setScreen} />}
-    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={setScreen} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} />}
+    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={setScreen} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
+    {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={setScreen} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
     {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={setScreen} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
     {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={setScreen} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={setScreen} />}
