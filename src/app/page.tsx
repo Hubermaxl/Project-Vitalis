@@ -258,25 +258,83 @@ function AppHeader({ user, screen, setScreen, onLogout, theme, setTheme }: any) 
 /* ─── ONBOARDING / LANDING ──────────────────────────────────────── */
 function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
   return (
-    <div className="px-6 py-16 max-w-3xl mx-auto">
-      <div className="text-center mb-20">
-        <div className="mx-auto mb-8 w-20 h-20">
-          <img src="/brand/mark.svg" alt="Vitalis" className="w-full h-full drop-shadow-xl" />
+    <div className="px-6 max-w-4xl mx-auto">
+
+      {/* ── Hero ─────────────────────────────────────────────────── */}
+      <div className="text-center pt-20 pb-16">
+        <div className="mx-auto mb-8 w-16 h-16">
+          <img src="/brand/mark.svg" alt="Vitalis" className="w-full h-full drop-shadow-lg" />
         </div>
-        <h1 className="font-display text-4xl sm:text-5xl font-normal leading-[1.1] mb-6 tracking-tight">Deine Blutwerte,<br /><span className="text-teal-600">optimiert verstanden.</span></h1>
-        <p className="text-lg text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-4 leading-relaxed">Vitalis zeigt dir nicht nur ob deine Werte im Referenzbereich liegen — sondern ob sie <em>optimal für deine Gesundheit</em> sind.</p>
-        <p className="text-base text-stone-400 dark:text-stone-500 max-w-lg mx-auto mb-10 leading-relaxed">Inspiriert von der Longevity-Medizin nach Dr. Peter Attia. Privat, sicher, und schön dargestellt — weil das Auge immer mitspielt.</p>
-        <div className="flex gap-3 justify-center flex-wrap">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.08] mb-6 tracking-tight">
+          Deine Blutwerte,<br />
+          <span className="text-teal-600 dark:text-teal-400">optimiert verstanden.</span>
+        </h1>
+        <p className="text-lg text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-10 leading-relaxed">
+          Nicht nur ob deine Werte „normal" sind — sondern ob sie <em>optimal</em> für ein langes, gesundes Leben sind. Basierend auf Longevity-Medizin nach Dr. Peter Attia.
+        </p>
+        <div className="flex gap-3 justify-center flex-wrap mb-12">
           <button onClick={()=>setScreen("signup")} className="px-8 py-4 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">Kostenlos starten</button>
-          <button onClick={()=>setScreen("login")} className="px-8 py-4 border border-stone-200 dark:border-stone-700 rounded-xl font-medium text-base hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors">Anmelden</button>
+          <button onClick={()=>setScreen("login")} className="px-8 py-4 border border-stone-200 dark:border-stone-700 rounded-xl font-medium text-base hover:bg-stone-50 dark:hover:bg-stone-900 transition-colors text-stone-700 dark:text-stone-300">Anmelden</button>
+        </div>
+        {/* Trust chips */}
+        <div className="flex flex-wrap justify-center gap-2">
+          {[
+            { icon: "🇦🇹", label: "Österreichische Referenzwerte" },
+            { icon: "🔒", label: "DSGVO-konform" },
+            { icon: "🏥", label: "Kein Datenweitergabe" },
+            { icon: "✦",  label: "Longevity-optimale Bereiche" },
+          ].map((c) => (
+            <span key={c.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 dark:bg-stone-800 text-xs font-medium text-stone-600 dark:text-stone-300">
+              <span>{c.icon}</span>{c.label}
+            </span>
+          ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
-        {[{icon:"📊",title:"Mehr als nur Referenzwerte",desc:"Standard-Labore sagen dir nur ob etwas 'normal' ist. Wir zeigen dir den optimalen Bereich — nach neuester Longevity-Forschung."},{icon:"📈",title:"Veränderungen sehen",desc:"Vergleiche deine Werte über Monate und Jahre. Sieh auf einen Blick was sich verbessert und was Aufmerksamkeit braucht."},{icon:"🔒",title:"100% Privat",desc:"Deine Gesundheitsdaten gehören nur dir. Verschlüsselt gespeichert, DSGVO-konform, kein Tracking, kein Datenverkauf."}].map((f,i)=>(
-          <div key={i} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6"><div className="text-3xl mb-3">{f.icon}</div><h3 className="text-base font-semibold mb-2">{f.title}</h3><p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">{f.desc}</p></div>
+
+      {/* ── Feature Cards ────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {[
+          {
+            icon: "📊",
+            title: "Mehr als Referenzwerte",
+            desc: "Standard-Labore sagen dir ob etwas 'normal' ist. Vitalis zeigt dir den optimalen Bereich — für maximale Gesundheit, nicht nur Krankheitsvermeidung.",
+          },
+          {
+            icon: "📈",
+            title: "Trend über Zeit",
+            desc: "Vergleiche deine Werte über Monate und Jahre. Sieh auf einen Blick was sich verbessert und wo du Aufmerksamkeit brauchst.",
+          },
+          {
+            icon: "🔒",
+            title: "Privat & sicher",
+            desc: "Deine Gesundheitsdaten gehören nur dir. Verschlüsselt, DSGVO-konform, kein Tracking, kein Datenverkauf — made in Austria.",
+          },
+        ].map((f) => (
+          <div key={f.title} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6">
+            <div className="text-2xl mb-3">{f.icon}</div>
+            <h3 className="text-sm font-semibold mb-2 text-stone-900 dark:text-stone-100">{f.title}</h3>
+            <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed">{f.desc}</p>
+          </div>
         ))}
       </div>
-      <div className="text-center"><p className="text-sm text-stone-400 dark:text-stone-500 mb-2">Gemacht in Österreich 🇦🇹</p><button onClick={()=>setScreen("privacy")} className="text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300 transition-colors underline underline-offset-4">Datenschutz</button></div>
+
+      {/* ── EU / DSGVO Trust Banner ──────────────────────────────── */}
+      <div className="rounded-2xl border border-teal-200/60 dark:border-teal-800/40 bg-teal-50/60 dark:bg-teal-950/30 p-6 mb-16">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white text-lg">🇪🇺</div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-teal-800 dark:text-teal-200 mb-0.5">Europäischer Datenschutz. Kein Kompromiss.</p>
+            <p className="text-sm text-teal-700 dark:text-teal-300 leading-relaxed">Deine Daten werden ausschließlich auf EU-Servern gespeichert — DSGVO-konform, ohne Weitergabe an Dritte. Kein US-Cloud-Anbieter, kein Tracking, keine Werbung.</p>
+          </div>
+          <button onClick={()=>setScreen("privacy")} className="flex-shrink-0 text-xs text-teal-600 dark:text-teal-400 hover:underline underline-offset-4 whitespace-nowrap">Datenschutz lesen →</button>
+        </div>
+      </div>
+
+      {/* ── Footer ───────────────────────────────────────────────── */}
+      <div className="text-center pb-16">
+        <p className="text-sm text-stone-400 dark:text-stone-500">Gemacht in Österreich 🇦🇹 · <button onClick={()=>setScreen("privacy")} className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors underline underline-offset-4">Datenschutz</button></p>
+      </div>
+
     </div>
   );
 }
