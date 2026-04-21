@@ -6,10 +6,12 @@
 
 @layer base {
   * { box-sizing: border-box; }
-  ::selection { background: #ccfbf1; }
+  ::selection { background: #ccfbf1; color: #134e4a; }
+  .dark ::selection { background: #0f766e; color: #ccfbf1; }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
+  html, body { background-color: inherit; }
 }
 
 @keyframes slideDown {
