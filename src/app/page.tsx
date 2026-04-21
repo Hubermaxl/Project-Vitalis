@@ -168,6 +168,25 @@ function ThemeToggle({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (
   );
 }
 
+/* ─── VITALIS LOGO ──────────────────────────────────────────────── */
+function VitalisLogo() {
+  return (
+    <svg viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+         className="h-8 w-auto text-stone-900 dark:text-stone-100" aria-label="Vitalis">
+      {/* Mark */}
+      <rect x="0" y="4" width="32" height="32" rx="8" fill="#0d9488"/>
+      <line x1="9" y1="13" x2="16" y2="24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="23" y1="13" x2="16" y2="24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+      <circle cx="16" cy="24" r="1.75" fill="white"/>
+      {/* Wordmark — fill="currentColor" übernimmt text-stone-900 / dark:text-stone-100 */}
+      <text x="44" y="26"
+            fontFamily="'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif"
+            fontSize="19" fontWeight="500" letterSpacing="-0.3"
+            fill="currentColor">vitalis</text>
+    </svg>
+  );
+}
+
 /* ─── CATEGORY HEADER ───────────────────────────────────────────── */
 function CategoryHeader({ category }: { category: string }) {
   const cc = getCatColor(category);
@@ -191,8 +210,7 @@ function AppHeader({ user, screen, setScreen, onLogout, theme, setTheme }: any) 
     <header className="px-6 py-3 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 dark:border-stone-800 dark:bg-stone-950/80">
       <div className="flex justify-between items-center">
         <div className="flex items-center cursor-pointer min-h-11" onClick={() => { setScreen(user ? "dashboard" : "landing"); setMenuOpen(false); }}>
-          <img src="/brand/logo.svg" alt="Vitalis" className="h-8 w-auto dark:hidden" />
-          <img src="/brand/logo-dark.svg" alt="Vitalis" className="h-8 w-auto hidden dark:block" />
+          <VitalisLogo />
         </div>
         {user ? (
           <>
