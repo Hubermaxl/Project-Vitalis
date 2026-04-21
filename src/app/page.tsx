@@ -190,9 +190,9 @@ function AppHeader({ user, screen, setScreen, onLogout, theme, setTheme }: any) 
   return (
     <header className="px-6 py-3 border-b border-stone-100 bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 dark:border-stone-800 dark:bg-stone-950/80">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-3 cursor-pointer min-h-11" onClick={() => { setScreen(user ? "dashboard" : "landing"); setMenuOpen(false); }}>
-          <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white text-base font-bold shadow-sm shadow-teal-600/20">V</div>
-          <span className="font-display text-[22px] tracking-tight">Vitalis</span>
+        <div className="flex items-center cursor-pointer min-h-11" onClick={() => { setScreen(user ? "dashboard" : "landing"); setMenuOpen(false); }}>
+          <img src="/brand/logo.svg" alt="Vitalis" className="h-8 w-auto dark:hidden" />
+          <img src="/brand/logo-dark.svg" alt="Vitalis" className="h-8 w-auto hidden dark:block" />
         </div>
         {user ? (
           <>
@@ -242,7 +242,9 @@ function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
   return (
     <div className="px-6 py-16 max-w-3xl mx-auto">
       <div className="text-center mb-20">
-        <div className="w-20 h-20 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 shadow-xl shadow-teal-600/25">V</div>
+        <div className="mx-auto mb-8 w-20 h-20">
+          <img src="/brand/mark.svg" alt="Vitalis" className="w-full h-full drop-shadow-xl" />
+        </div>
         <h1 className="font-display text-4xl sm:text-5xl font-normal leading-[1.1] mb-6 tracking-tight">Deine Blutwerte,<br /><span className="text-teal-600">optimiert verstanden.</span></h1>
         <p className="text-lg text-stone-500 dark:text-stone-400 max-w-xl mx-auto mb-4 leading-relaxed">Vitalis zeigt dir nicht nur ob deine Werte im Referenzbereich liegen — sondern ob sie <em>optimal für deine Gesundheit</em> sind.</p>
         <p className="text-base text-stone-400 dark:text-stone-500 max-w-lg mx-auto mb-10 leading-relaxed">Inspiriert von der Longevity-Medizin nach Dr. Peter Attia. Privat, sicher, und schön dargestellt — weil das Auge immer mitspielt.</p>
