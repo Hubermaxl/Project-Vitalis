@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Vitalis — Deine Blutwerte, optimiert verstanden",
   description: "Verfolge deine Blutwerte privat und sicher. Longevity-optimale Bereiche nach Dr. Peter Attia, österreichische Referenzwerte, DSGVO-konform.",
+  icons: {
+    icon: "/brand/favicon.svg",
+    shortcut: "/brand/favicon.svg",
+  },
 };
 
 const themeInitScript = `
