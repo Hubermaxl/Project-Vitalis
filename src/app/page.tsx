@@ -851,17 +851,39 @@ function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, sh
 }
 
 /* ─── PROFILE ───────────────────────────────────────────────────── */
-function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, setScreen }: any) {
+function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, setScreen, panels, onExportCSV, onExportJSON }: any) {
+  const totalMarkers = panels?.reduce((sum: number, p: Panel) => sum + p.values.length, 0) || 0;
   return (
     <div className="max-w-md mx-auto px-6 py-8">
       <h2 className="font-display text-3xl mb-6">Profil</h2>
+
+      {/* Profile form */}
       <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-4">
         <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Name</label><input value={profile?.display_name||""} onChange={(e:any)=>setProfile((p:any)=>p?{...p,display_name:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div>
         <div className="mb-5 opacity-60"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Email</label><input value={user?.email||""} disabled className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-stone-50 dark:bg-stone-900" /></div>
         <div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Biologisches Geschlecht</label><select value={profile?.sex||"male"} onChange={(e:any)=>setProfile((p:any)=>p?{...p,sex:e.target.value}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-white dark:bg-stone-900"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Geburtsjahr</label><input type="number" value={profile?.birth_year||1990} onChange={(e:any)=>setProfile((p:any)=>p?{...p,birth_year:parseInt(e.target.value)}:null)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div></div>
         <button onClick={()=>profile&&onUpdateProfile({display_name:profile.display_name,sex:profile.sex,birth_year:profile.birth_year})} className="w-full py-3 bg-teal-600 text-white rounded-xl text-base font-medium hover:bg-teal-700 transition-colors">Profil speichern</button>
       </div>
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 dark:text-stone-400 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Alle Daten löschen</button></div>
+
+      {/* Data export — DSGVO Datenportabilität */}
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-4">
+        <h3 className="text-base font-semibold mb-1">Meine Daten exportieren</h3>
+        <p className="text-sm text-stone-500 dark:text-stone-400 mb-1">Alle deine Blutwerte als Datei herunterladen — dein DSGVO-Recht auf Datenportabilität.</p>
+        <p className="text-xs text-stone-400 dark:text-stone-500 mb-4">{panels?.length || 0} Panel{panels?.length !== 1 ? "s" : ""} · {totalMarkers} Messwerte gesamt</p>
+        <div className="flex gap-3 flex-wrap">
+          <button onClick={onExportCSV} className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+          </button>
+          <button onClick={onExportJSON} className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            JSON
+          </button>
+        </div>
+      </div>
+
+      {/* Danger zone */}
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500 mb-0"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 dark:text-stone-400 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Alle Daten löschen</button></div>
       <button onClick={()=>setScreen("privacy")} className="mt-5 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">Datenschutz →</button>
     </div>
   );
@@ -1214,6 +1236,89 @@ export default function Home() {
     setProfile(prev=>prev?{...prev,...updates}:null);notify("Profil aktualisiert");
   };
 
+  /* ─── CSV / JSON EXPORT (DSGVO Datenportabilität) ────────────── */
+  const handleExportCSV = () => {
+    const sx = (profile?.sex || "male") === "female" ? "f" : "m";
+    const sexLabel = profile?.sex || "male";
+    const header = "Datum;Labor;Marker ID;Name;Wert;Einheit;Status;Ref Min;Ref Max;Opt Min;Opt Max";
+    const rows = panels.flatMap(p =>
+      p.values.map(v => {
+        const m = BLOOD_MARKERS.find(bm => bm.id === v.markerId);
+        if (!m) return null;
+        const si = getStatus(v.value, m, sexLabel);
+        return [
+          p.test_date,
+          p.lab_name || "",
+          m.id,
+          m.name_de,
+          v.value,
+          m.unit,
+          si.label,
+          m[`ref_min_${sx}` as keyof BloodMarker],
+          m[`ref_max_${sx}` as keyof BloodMarker],
+          m[`opt_min_${sx}` as keyof BloodMarker],
+          m[`opt_max_${sx}` as keyof BloodMarker],
+        ].join(";");
+      }).filter(Boolean)
+    );
+    const csv = [header, ...rows].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `vitalis-export-${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    notify("CSV heruntergeladen");
+  };
+
+  const handleExportJSON = () => {
+    const sx = (profile?.sex || "male") === "female" ? "f" : "m";
+    const sexLabel = profile?.sex || "male";
+    const data = {
+      export_date: new Date().toISOString(),
+      app: "Vitalis",
+      version: "1.0",
+      profile: {
+        name: profile?.display_name || "",
+        sex: profile?.sex || "",
+        birth_year: profile?.birth_year || null,
+      },
+      panels: panels.map(p => ({
+        date: p.test_date,
+        lab: p.lab_name || null,
+        values: p.values.map(v => {
+          const m = BLOOD_MARKERS.find(bm => bm.id === v.markerId);
+          if (!m) return null;
+          const si = getStatus(v.value, m, sexLabel);
+          return {
+            marker_id: v.markerId,
+            name_de: m.name_de,
+            name_en: m.name,
+            category: m.category,
+            value: v.value,
+            unit: m.unit,
+            status: si.status,
+            reference: { min: m[`ref_min_${sx}` as keyof BloodMarker], max: m[`ref_max_${sx}` as keyof BloodMarker] },
+            optimal:   { min: m[`opt_min_${sx}` as keyof BloodMarker], max: m[`opt_max_${sx}` as keyof BloodMarker] },
+          };
+        }).filter(Boolean),
+      })),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `vitalis-export-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    notify("JSON heruntergeladen");
+  };
+
   /* ─── PDF EXPORT ──────────────────────────────────────────────── */
   const handleExportPdf = (panel: Panel) => {
     const sex = profile?.sex || "male";
@@ -1281,7 +1386,7 @@ export default function Home() {
     {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={navigate} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
     {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={navigate} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
     {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={navigate} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
-    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} />}
+    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
   </>);
 }
