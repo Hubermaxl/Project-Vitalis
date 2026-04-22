@@ -837,7 +837,12 @@ function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, sh
   if(!panels.length) return (<div className="max-w-lg mx-auto mt-16 px-6 text-center"><p className="text-stone-500 dark:text-stone-400 text-base mb-5">Noch keine Panels vorhanden.</p><button onClick={()=>setScreen("addpanel")} className="px-6 py-3 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700">+ Panel hinzufügen</button></div>);
   return (
     <div className="max-w-4xl mx-auto px-6 py-8">
-      <h2 className="font-display text-3xl mb-6">Verlauf</h2>
+      <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
+        <h2 className="font-display text-3xl">Verlauf</h2>
+        {panels.length >= 2 && (
+          <button onClick={()=>setScreen("compare")} className="px-4 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">⇄ Panels vergleichen</button>
+        )}
+      </div>
       <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">Alle Panels</h3>
       {[...panels].reverse().map((p:any)=>(<div key={p.id} onClick={()=>{setCurrentPanel(p);setScreen("viewpanel");}} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-3 cursor-pointer hover:shadow-md hover:-translate-y-px transition-all"><div className="flex justify-between items-center"><div><span className="font-semibold text-base">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}</span>{p.lab_name&&<span className="text-stone-400 dark:text-stone-500 text-sm ml-3">· {p.lab_name}</span>}</div><span className="text-sm text-stone-500 dark:text-stone-400">{p.values.length} Marker →</span></div></div>))}
       <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mt-8 mb-3">Trends</h3>
@@ -1034,6 +1039,103 @@ function MarkerDetailScreen({ markerId, setScreen, getHistory, sex, showLongevit
 }
 
 /* ─── PRIVACY ───────────────────────────────────────────────────── */
+/* ─── PANEL COMPARE ─────────────────────────────────────────────── */
+function ComparePanelScreen({ panels, sex, setScreen, compareAId, setCompareAId, compareBId, setCompareBId }: any) {
+  if (panels.length < 2) return (
+    <div className="max-w-lg mx-auto mt-16 px-6 text-center">
+      <p className="text-stone-500 dark:text-stone-400 text-base mb-5">Für den Vergleich brauchst du mindestens 2 Panels.</p>
+      <button onClick={()=>setScreen("history")} className="px-6 py-3 bg-stone-100 dark:bg-stone-800 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">← Zum Verlauf</button>
+    </div>
+  );
+
+  const panelA = panels.find((p:Panel)=>p.id===compareAId) || panels[panels.length-2];
+  const panelB = panels.find((p:Panel)=>p.id===compareBId) || panels[panels.length-1];
+  const fmt = (d:string) => new Date(d).toLocaleDateString("de-AT", { day:"numeric", month:"long", year:"numeric" });
+  const fmtShort = (d:string) => new Date(d).toLocaleDateString("de-AT", { month:"short", year:"2-digit" });
+
+  const markerIds = new Set<string>();
+  panelA.values.forEach((v:any)=>markerIds.add(v.markerId));
+  panelB.values.forEach((v:any)=>markerIds.add(v.markerId));
+
+  const sameDay = panelA.id === panelB.id;
+
+  return (
+    <div className="max-w-5xl mx-auto px-6 py-8">
+      <button onClick={()=>setScreen("history")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück</button>
+      <h2 className="font-display text-3xl mb-1">Panel-Vergleich</h2>
+      <p className="text-sm text-stone-500 dark:text-stone-400 mb-6">Sieh Veränderungen zwischen zwei Zeitpunkten direkt nebeneinander.</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-4">
+          <label className="block text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 font-semibold mb-2">Panel A (vorher)</label>
+          <select value={panelA.id} onChange={(e:any)=>setCompareAId(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-sm bg-white dark:bg-stone-900 focus:border-teal-500 focus:outline-none">
+            {panels.map((p:Panel)=>(<option key={p.id} value={p.id}>{fmt(p.test_date)}{p.lab_name?` · ${p.lab_name}`:""}</option>))}
+          </select>
+        </div>
+        <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-4">
+          <label className="block text-xs uppercase tracking-widest text-stone-400 dark:text-stone-500 font-semibold mb-2">Panel B (nachher)</label>
+          <select value={panelB.id} onChange={(e:any)=>setCompareBId(e.target.value)} className="w-full px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-sm bg-white dark:bg-stone-900 focus:border-teal-500 focus:outline-none">
+            {panels.map((p:Panel)=>(<option key={p.id} value={p.id}>{fmt(p.test_date)}{p.lab_name?` · ${p.lab_name}`:""}</option>))}
+          </select>
+        </div>
+      </div>
+
+      {sameDay && (
+        <div className="mb-6 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl text-sm dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-300">
+          Wähle zwei unterschiedliche Panels um Veränderungen zu sehen.
+        </div>
+      )}
+
+      {getSortedCategories().map(cat => {
+        const catMarkers = BLOOD_MARKERS.filter(m=>m.category===cat && markerIds.has(m.id));
+        if (!catMarkers.length) return null;
+        const cc = getCatColor(cat);
+        return (
+          <div key={cat} className="mb-7">
+            <CategoryHeader category={cat} />
+            <div className={`rounded-2xl border shadow-sm overflow-hidden ${cc.bg} ${cc.border}`}>
+              <div className="hidden md:grid grid-cols-[1fr_120px_120px_90px] gap-4 px-5 py-3 text-xs uppercase tracking-widest text-stone-500 dark:text-stone-400 font-semibold border-b border-stone-200/60 dark:border-stone-700/40">
+                <div>Marker</div>
+                <div className="text-right">A · {fmtShort(panelA.test_date)}</div>
+                <div className="text-right">B · {fmtShort(panelB.test_date)}</div>
+                <div className="text-right">Δ</div>
+              </div>
+              {catMarkers.map(marker=>{
+                const vA = panelA.values.find((v:any)=>v.markerId===marker.id);
+                const vB = panelB.values.find((v:any)=>v.markerId===marker.id);
+                const siA = vA ? getStatus(vA.value, marker, sex) : null;
+                const siB = vB ? getStatus(vB.value, marker, sex) : null;
+                return (
+                  <div key={marker.id} className="grid grid-cols-1 md:grid-cols-[1fr_120px_120px_90px] gap-2 md:gap-4 px-5 py-4 border-b border-stone-200/40 dark:border-stone-700/30 last:border-b-0 md:items-center">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <PriorityDot priority={marker.priority} />
+                      <span className="font-semibold text-sm">{marker.name}</span>
+                      <span className="text-xs text-stone-400 dark:text-stone-500">{marker.name_de}</span>
+                    </div>
+                    <div className="md:text-right">
+                      <div className="md:hidden text-xs text-stone-400 dark:text-stone-500 mb-0.5">A · {fmtShort(panelA.test_date)}</div>
+                      {vA ? (<div className="flex md:justify-end items-baseline gap-1.5"><span className="font-bold text-base" style={{color:siA!.color}}>{vA.value}</span><span className="text-xs text-stone-400 dark:text-stone-500">{marker.unit}</span></div>) : <span className="text-stone-300 dark:text-stone-600 text-sm">—</span>}
+                    </div>
+                    <div className="md:text-right">
+                      <div className="md:hidden text-xs text-stone-400 dark:text-stone-500 mb-0.5">B · {fmtShort(panelB.test_date)}</div>
+                      {vB ? (<div className="flex md:justify-end items-baseline gap-1.5"><span className="font-bold text-base" style={{color:siB!.color}}>{vB.value}</span><span className="text-xs text-stone-400 dark:text-stone-500">{marker.unit}</span></div>) : <span className="text-stone-300 dark:text-stone-600 text-sm">—</span>}
+                    </div>
+                    <div className="md:text-right">
+                      <div className="md:hidden text-xs text-stone-400 dark:text-stone-500 mb-0.5">Δ</div>
+                      {vA && vB ? <DeltaIndicator current={vB.value} previous={vA.value} /> : <span className="text-xs text-stone-300 dark:text-stone-600">—</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+      <Disclaimer />
+    </div>
+  );
+}
+
 function PrivacyScreen({ user, setScreen }: any) {
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
@@ -1071,6 +1173,8 @@ export default function Home() {
   const [theme, setThemeState] = useState<"light" | "dark">("light");
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const [markerPrevScreen, setMarkerPrevScreen] = useState("dashboard");
+  const [compareAId, setCompareAId] = useState<string | null>(null);
+  const [compareBId, setCompareBId] = useState<string | null>(null);
 
   // Browser history API: push state on every navigation
   const navigate = (newScreen: string) => {
@@ -1386,6 +1490,7 @@ export default function Home() {
     {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={navigate} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
     {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={navigate} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
     {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={navigate} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
+    {screen==="compare"&&<ComparePanelScreen panels={panels} sex={sex} setScreen={navigate} compareAId={compareAId} setCompareAId={setCompareAId} compareBId={compareBId} setCompareBId={setCompareBId} />}
     {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
   </>);
