@@ -8,16 +8,16 @@ interface Prof { id: string; display_name: string; sex: string; birth_year: numb
 
 /* ─── CATEGORY COLORS ───────────────────────────────────────────── */
 const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string; accent: string; dot: string; light: string }> = {
-  "Blutbild":              { bg: "bg-rose-50/60 dark:bg-rose-950/30",         border: "border-rose-200/60 dark:border-rose-800/40",        text: "text-rose-700 dark:text-rose-300",       accent: "#e11d48", dot: "bg-rose-400",    light: "bg-rose-100 dark:bg-rose-900/50" },
-  "Stoffwechsel":          { bg: "bg-amber-50/60 dark:bg-amber-950/30",       border: "border-amber-200/60 dark:border-amber-800/40",      text: "text-amber-700 dark:text-amber-300",     accent: "#d97706", dot: "bg-amber-400",   light: "bg-amber-100 dark:bg-amber-900/50" },
-  "Lipide":                { bg: "bg-violet-50/60 dark:bg-violet-950/30",     border: "border-violet-200/60 dark:border-violet-800/40",    text: "text-violet-700 dark:text-violet-300",   accent: "#7c3aed", dot: "bg-violet-400",  light: "bg-violet-100 dark:bg-violet-900/50" },
-  "Entzündung":            { bg: "bg-orange-50/60 dark:bg-orange-950/30",     border: "border-orange-200/60 dark:border-orange-800/40",    text: "text-orange-700 dark:text-orange-300",   accent: "#ea580c", dot: "bg-orange-400",  light: "bg-orange-100 dark:bg-orange-900/50" },
-  "Schilddrüse":           { bg: "bg-sky-50/60 dark:bg-sky-950/30",           border: "border-sky-200/60 dark:border-sky-800/40",          text: "text-sky-700 dark:text-sky-300",         accent: "#0284c7", dot: "bg-sky-400",     light: "bg-sky-100 dark:bg-sky-900/50" },
-  "Leber":                 { bg: "bg-emerald-50/60 dark:bg-emerald-950/30",   border: "border-emerald-200/60 dark:border-emerald-800/40",  text: "text-emerald-700 dark:text-emerald-300", accent: "#059669", dot: "bg-emerald-400", light: "bg-emerald-100 dark:bg-emerald-900/50" },
-  "Niere":                 { bg: "bg-cyan-50/60 dark:bg-cyan-950/30",         border: "border-cyan-200/60 dark:border-cyan-800/40",        text: "text-cyan-700 dark:text-cyan-300",       accent: "#0891b2", dot: "bg-cyan-400",    light: "bg-cyan-100 dark:bg-cyan-900/50" },
-  "Vitamine & Minerale":   { bg: "bg-yellow-50/60 dark:bg-yellow-950/30",     border: "border-yellow-200/60 dark:border-yellow-800/40",    text: "text-yellow-700 dark:text-yellow-300",   accent: "#ca8a04", dot: "bg-yellow-400",  light: "bg-yellow-100 dark:bg-yellow-900/50" },
-  "Hormone":               { bg: "bg-fuchsia-50/60 dark:bg-fuchsia-950/30",   border: "border-fuchsia-200/60 dark:border-fuchsia-800/40",  text: "text-fuchsia-700 dark:text-fuchsia-300", accent: "#c026d3", dot: "bg-fuchsia-400", light: "bg-fuchsia-100 dark:bg-fuchsia-900/50" },
-  "Weitere":               { bg: "bg-stone-50/60 dark:bg-stone-800/40",       border: "border-stone-200/60 dark:border-stone-700/50",      text: "text-stone-600 dark:text-stone-300",     accent: "#78716c", dot: "bg-stone-400",   light: "bg-stone-100 dark:bg-stone-800" },
+  "Blutbild":              { bg: "bg-rose-50/60 dark:bg-rose-900/20",         border: "border-rose-200/60 dark:border-rose-600/40",        text: "text-rose-700 dark:text-rose-300",       accent: "#e11d48", dot: "bg-rose-400",    light: "bg-rose-100 dark:bg-rose-900/50" },
+  "Stoffwechsel":          { bg: "bg-amber-50/60 dark:bg-amber-900/20",       border: "border-amber-200/60 dark:border-amber-600/40",      text: "text-amber-700 dark:text-amber-300",     accent: "#d97706", dot: "bg-amber-400",   light: "bg-amber-100 dark:bg-amber-900/50" },
+  "Lipide":                { bg: "bg-violet-50/60 dark:bg-violet-900/20",     border: "border-violet-200/60 dark:border-violet-600/40",    text: "text-violet-700 dark:text-violet-300",   accent: "#7c3aed", dot: "bg-violet-400",  light: "bg-violet-100 dark:bg-violet-900/50" },
+  "Entzündung":            { bg: "bg-orange-50/60 dark:bg-orange-900/20",     border: "border-orange-200/60 dark:border-orange-600/40",    text: "text-orange-700 dark:text-orange-300",   accent: "#ea580c", dot: "bg-orange-400",  light: "bg-orange-100 dark:bg-orange-900/50" },
+  "Schilddrüse":           { bg: "bg-sky-50/60 dark:bg-sky-900/20",           border: "border-sky-200/60 dark:border-sky-600/40",          text: "text-sky-700 dark:text-sky-300",         accent: "#0284c7", dot: "bg-sky-400",     light: "bg-sky-100 dark:bg-sky-900/50" },
+  "Leber":                 { bg: "bg-emerald-50/60 dark:bg-emerald-900/20",   border: "border-emerald-200/60 dark:border-emerald-600/40",  text: "text-emerald-700 dark:text-emerald-300", accent: "#059669", dot: "bg-emerald-400", light: "bg-emerald-100 dark:bg-emerald-900/50" },
+  "Niere":                 { bg: "bg-cyan-50/60 dark:bg-cyan-900/20",         border: "border-cyan-200/60 dark:border-cyan-600/40",        text: "text-cyan-700 dark:text-cyan-300",       accent: "#0891b2", dot: "bg-cyan-400",    light: "bg-cyan-100 dark:bg-cyan-900/50" },
+  "Vitamine & Minerale":   { bg: "bg-yellow-50/60 dark:bg-yellow-900/20",     border: "border-yellow-200/60 dark:border-yellow-600/40",    text: "text-yellow-700 dark:text-yellow-300",   accent: "#ca8a04", dot: "bg-yellow-400",  light: "bg-yellow-100 dark:bg-yellow-900/50" },
+  "Hormone":               { bg: "bg-fuchsia-50/60 dark:bg-fuchsia-900/20",   border: "border-fuchsia-200/60 dark:border-fuchsia-600/40",  text: "text-fuchsia-700 dark:text-fuchsia-300", accent: "#c026d3", dot: "bg-fuchsia-400", light: "bg-fuchsia-100 dark:bg-fuchsia-900/50" },
+  "Weitere":               { bg: "bg-stone-50/60 dark:bg-stone-800/30",       border: "border-stone-200/60 dark:border-stone-600/40",      text: "text-stone-600 dark:text-stone-300",     accent: "#78716c", dot: "bg-stone-400",   light: "bg-stone-100 dark:bg-stone-800" },
 };
 const getCatColor = (cat: string) => CATEGORY_COLORS[cat] || CATEGORY_COLORS["Weitere"];
 
@@ -177,13 +177,13 @@ function RangeBar({ value, marker, sex, showLongevity }: { value: number; marker
   const toP = (v: number) => Math.max(0, Math.min(100, ((v - dMin) / rng) * 100));
   const si = getStatus(value, marker, sex);
   return (
-    <div className="relative h-10 mt-3">
+    <div className="relative h-14 mt-3">
       <div className="absolute top-[14px] left-0 right-0 h-3 rounded-full bg-slate-100 dark:bg-stone-800" />
       <div className="absolute top-[14px] h-3 rounded-full bg-amber-200/50" style={{ left: `${toP(refMin)}%`, width: `${toP(refMax)-toP(refMin)}%` }} />
       {showLongevity && <div className="absolute top-[12px] h-4 rounded-full bg-emerald-300/60 border border-emerald-400/30" style={{ left: `${toP(optMin)}%`, width: `${toP(optMax)-toP(optMin)}%` }} />}
       <div className="absolute top-[8px] w-7 h-7 rounded-full border-[3px] border-white z-[2] transition-all duration-500 ease-out shadow-md" style={{ left: `calc(${toP(value)}% - 14px)`, background: si.color }} />
-      <div className="absolute top-[28px] text-[10px] text-stone-400 dark:text-stone-500" style={{ left: `${toP(refMin)}%`, transform: "translateX(-50%)" }}>{refMin}</div>
-      <div className="absolute top-[28px] text-[10px] text-stone-400 dark:text-stone-500" style={{ left: `${toP(refMax)}%`, transform: "translateX(-50%)" }}>{refMax}</div>
+      <div className="absolute top-[40px] text-xs text-stone-400 dark:text-stone-500 font-medium" style={{ left: `${toP(refMin)}%`, transform: "translateX(-50%)" }}>{refMin}</div>
+      <div className="absolute top-[40px] text-xs text-stone-400 dark:text-stone-500 font-medium" style={{ left: `${toP(refMax)}%`, transform: "translateX(-50%)" }}>{refMax}</div>
     </div>
   );
 }
@@ -1050,11 +1050,34 @@ export default function Home() {
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const [markerPrevScreen, setMarkerPrevScreen] = useState("dashboard");
 
+  // Browser history API: push state on every navigation
+  const navigate = (newScreen: string) => {
+    window.history.pushState({ screen: newScreen }, "");
+    setScreen(newScreen);
+  };
+
   const openMarkerDetail = (markerId: string, fromScreen = "dashboard") => {
     setSelectedMarkerId(markerId);
     setMarkerPrevScreen(fromScreen);
+    window.history.pushState({ screen: "markerdetail", markerId, fromScreen }, "");
     setScreen("markerdetail");
   };
+
+  // Listen for browser back/forward button
+  useEffect(() => {
+    window.history.replaceState({ screen: "landing" }, "");
+    const handler = (e: PopStateEvent) => {
+      if (e.state?.screen) {
+        setScreen(e.state.screen);
+        if (e.state.screen === "markerdetail") {
+          if (e.state.markerId) setSelectedMarkerId(e.state.markerId);
+          if (e.state.fromScreen) setMarkerPrevScreen(e.state.fromScreen);
+        }
+      }
+    };
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, []);
 
   // Initialize theme from DOM (set by inline script in layout.tsx before hydration)
   useEffect(() => {
@@ -1110,7 +1133,7 @@ export default function Home() {
     if(data.user){
       setUser(data.user);await new Promise(r=>setTimeout(r,800));
       await supabase.from("profiles").update({sex:profileSex,birth_year:parseInt(profileBirthYear),display_name:authName||authEmail.split("@")[0]}).eq("id",data.user.id);
-      await loadProfile(data.user.id);setScreen("dashboard");setAuthEmail("");setAuthPass("");setAuthName("");notify("Willkommen bei Vitalis!");
+      await loadProfile(data.user.id);navigate("dashboard");setAuthEmail("");setAuthPass("");setAuthName("");notify("Willkommen bei Vitalis!");
     }
     setAuthLoading(false);
   };
@@ -1120,10 +1143,10 @@ export default function Home() {
     setAuthLoading(true);
     const{data,error}=await supabase.auth.signInWithPassword({email:authEmail,password:authPass});
     if(error){notify(error.message,"err");setAuthLoading(false);return;}
-    setUser(data.user);await loadProfile(data.user.id);await loadPanels(data.user.id);setScreen("dashboard");setAuthEmail("");setAuthPass("");notify("Willkommen zurück!");setAuthLoading(false);
+    setUser(data.user);await loadProfile(data.user.id);await loadPanels(data.user.id);navigate("dashboard");setAuthEmail("");setAuthPass("");notify("Willkommen zurück!");setAuthLoading(false);
   };
 
-  const handleLogout = async ()=>{await supabase.auth.signOut();setUser(null);setProfile(null);setPanels([]);setScreen("landing");};
+  const handleLogout = async ()=>{await supabase.auth.signOut();setUser(null);setProfile(null);setPanels([]);navigate("landing");};
 
   /* ─── Save panel ──────────────────────────────────────────────── */
   const handleSavePanel = async () => {
@@ -1140,7 +1163,7 @@ export default function Home() {
       await loadPanels(user.id);
       setCurrentPanel({...panelRow,values:vals});
       setPanelValues({});setPanelDate(new Date().toISOString().split("T")[0]);setPanelLab("");
-      setScreen("viewpanel");
+      navigate("viewpanel");
       notify(`Gespeichert — ${vals.length} Marker erfasst`);
     } catch(e:any) {
       console.error("Save error:",e);
@@ -1170,7 +1193,7 @@ export default function Home() {
       await loadPanels(user.id);
       const updatedPanel = { id: panelId, user_id: user.id, test_date: date, lab_name: lab || null, values: vals };
       setCurrentPanel(updatedPanel);
-      setScreen("viewpanel");
+      navigate("viewpanel");
       notify(`Aktualisiert — ${vals.length} Marker gespeichert`);
     } catch (e: any) {
       console.error("Edit error:", e);
@@ -1183,7 +1206,7 @@ export default function Home() {
     if(!confirm("Panel wirklich löschen?")) return;
     await supabase.from("blood_values").delete().eq("panel_id",pid);
     await supabase.from("blood_panels").delete().eq("id",pid);
-    await loadPanels(user.id);setScreen("dashboard");notify("Panel gelöscht");
+    await loadPanels(user.id);navigate("dashboard");notify("Panel gelöscht");
   };
 
   const handleUpdateProfile = async (updates:Partial<Prof>)=>{
@@ -1247,18 +1270,18 @@ export default function Home() {
   if(loading) return (<div className="flex items-center justify-center min-h-screen"><div className="text-center"><div className="w-14 h-14 rounded-2xl bg-teal-600 flex items-center justify-center text-white text-2xl font-bold mx-auto mb-4 shadow-lg shadow-teal-600/20">V</div><div className="text-stone-400 dark:text-stone-500 text-base">Laden…</div></div></div>);
 
   return (<>
-    <AppHeader user={user} screen={screen} setScreen={setScreen} onLogout={handleLogout} theme={theme} setTheme={setTheme} />
+    <AppHeader user={user} screen={screen} setScreen={navigate} onLogout={handleLogout} theme={theme} setTheme={setTheme} />
     {toast&&<div className={`toast-animate fixed top-[72px] left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-xl text-sm font-medium shadow-lg z-[200] ${toast.type==="err"?"bg-red-50 text-red-600 dark:bg-red-950/60 dark:text-red-300":"bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300"}`}>{toast.msg}</div>}
-    {screen==="landing"&&<LandingScreen setScreen={setScreen} />}
-    {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
-    {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={setScreen} />}
-    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={setScreen} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"dashboard")} />}
-    {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={setScreen} />}
-    {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={setScreen} />}
-    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={setScreen} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
-    {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={setScreen} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
-    {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={setScreen} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
-    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={setScreen} />}
-    {screen==="privacy"&&<PrivacyScreen user={user} setScreen={setScreen} />}
+    {screen==="landing"&&<LandingScreen setScreen={navigate} />}
+    {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} />}
+    {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} />}
+    {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={navigate} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"dashboard")} />}
+    {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={navigate} />}
+    {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={navigate} />}
+    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={navigate} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
+    {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={navigate} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
+    {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={navigate} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
+    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} />}
+    {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
   </>);
 }
