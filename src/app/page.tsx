@@ -876,7 +876,7 @@ function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, sh
 }
 
 /* ─── PROFILE ───────────────────────────────────────────────────── */
-function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, setScreen, panels, onExportCSV, onExportJSON }: any) {
+function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, onDeleteAccount, setScreen, panels, onExportCSV, onExportJSON }: any) {
   const totalMarkers = panels?.reduce((sum: number, p: Panel) => sum + p.values.length, 0) || 0;
   return (
     <div className="max-w-md mx-auto px-6 py-8">
@@ -908,7 +908,12 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
       </div>
 
       {/* Danger zone */}
-      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500 mb-0"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 dark:text-stone-400 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Alle Daten löschen</button></div>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500 mb-0">
+        <h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3>
+        <p className="text-sm text-stone-500 dark:text-stone-400 mb-1">Account und alle gespeicherten Blutwerte permanent löschen.</p>
+        <p className="text-xs text-stone-400 dark:text-stone-500 mb-4">Dein DSGVO-Recht auf Löschung (Art. 17). Diese Aktion ist unwiderruflich — kein Backup wird aufbewahrt.</p>
+        <button onClick={onDeleteAccount} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Account & alle Daten löschen</button>
+      </div>
       <LegalFooter setScreen={setScreen} />
     </div>
   );
@@ -1500,6 +1505,32 @@ export default function Home() {
 
   const handleLogout = async ()=>{await supabase.auth.signOut();setUser(null);setProfile(null);setPanels([]);navigate("landing");};
 
+  /* ─── DSGVO Art. 17 — vollständige Account-Löschung ──────────── */
+  const handleDeleteAccount = async () => {
+    if (!confirm("Account & ALLE Daten unwiderruflich löschen?\n\nAlle Blutwerte, Panels und dein Account werden permanent entfernt. Diese Aktion kann nicht rückgängig gemacht werden.")) return;
+    if (!confirm("Letzte Bestätigung: Wirklich alles löschen?")) return;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { notify("Nicht angemeldet", "err"); return; }
+    try {
+      const res = await fetch("/api/delete-account", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Unbekannter Fehler" }));
+        notify("Fehler beim Löschen: " + (err.error || "Unbekannt"), "err");
+        return;
+      }
+      await supabase.auth.signOut();
+      setUser(null); setProfile(null); setPanels([]);
+      navigate("landing");
+      notify("Dein Account und alle Daten wurden gelöscht.");
+    } catch (e: any) {
+      console.error("Delete account error:", e);
+      notify("Fehler beim Löschen: " + (e.message || "Netzwerkfehler"), "err");
+    }
+  };
+
   /* ─── Save panel ──────────────────────────────────────────────── */
   const handleSavePanel = async () => {
     const vals = Object.entries(panelValues).filter(([_,v])=>v!==""&&v!==undefined).map(([id,v])=>({markerId:id,value:parseFloat(v as string)})).filter(e=>!isNaN(e.value));
@@ -1717,7 +1748,7 @@ export default function Home() {
     {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={navigate} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
     {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={navigate} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
     {screen==="compare"&&<ComparePanelScreen panels={panels} sex={sex} setScreen={navigate} compareAId={compareAId} setCompareAId={setCompareAId} compareBId={compareBId} setCompareBId={setCompareBId} />}
-    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
+    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
     {screen==="impressum"&&<ImpressumScreen user={user} setScreen={navigate} />}
     {screen==="terms"&&<TermsScreen user={user} setScreen={navigate} />}
