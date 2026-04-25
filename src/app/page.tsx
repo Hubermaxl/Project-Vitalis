@@ -493,7 +493,8 @@ function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
 
       {/* ── Footer ───────────────────────────────────────────────── */}
       <div className="text-center pb-16">
-        <p className="text-sm text-stone-400 dark:text-stone-500">Gemacht in Österreich 🇦🇹 · <button onClick={()=>setScreen("privacy")} className="hover:text-stone-600 dark:hover:text-stone-300 transition-colors underline underline-offset-4">Datenschutz</button></p>
+        <p className="text-sm text-stone-400 dark:text-stone-500 mb-3">Gemacht in Österreich 🇦🇹</p>
+        <LegalFooter setScreen={setScreen} />
       </div>
 
     </div>
@@ -501,7 +502,7 @@ function LandingScreen({ setScreen }: { setScreen: (s:string)=>void }) {
 }
 
 /* ─── AUTH ───────────────────────────────────────────────────────── */
-function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, authName, setAuthName, profileSex, setProfileSex, profileBirthYear, setProfileBirthYear, authLoading, onSignup, onLogin, setScreen }: any) {
+function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, authName, setAuthName, profileSex, setProfileSex, profileBirthYear, setProfileBirthYear, authLoading, onSignup, onLogin, setScreen, termsAccepted, setTermsAccepted }: any) {
   return (
     <div className="max-w-md mx-auto mt-16 px-6">
       <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-8">
@@ -511,9 +512,28 @@ function AuthScreen({ isSignup, authEmail, setAuthEmail, authPass, setAuthPass, 
         <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Email</label><input type="email" value={authEmail} onChange={(e:any)=>setAuthEmail(e.target.value)} placeholder="du@beispiel.com" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
         <div className="mb-5"><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Passwort</label><input type="password" value={authPass} onChange={(e:any)=>setAuthPass(e.target.value)} placeholder="Min. 8 Zeichen" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20 transition-all" /></div>
         {isSignup && (<><div className="grid grid-cols-2 gap-4 mb-5"><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Biologisches Geschlecht</label><select value={profileSex} onChange={(e:any)=>setProfileSex(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base bg-white dark:bg-stone-900"><option value="male">Männlich</option><option value="female">Weiblich</option></select></div><div><label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Geburtsjahr</label><input type="number" value={profileBirthYear} onChange={(e:any)=>setProfileBirthYear(e.target.value)} min="1920" max="2010" className="w-full px-4 py-3 rounded-xl border border-stone-200 dark:border-stone-700 text-base focus:border-teal-500 focus:outline-none" /></div></div><p className="text-xs text-stone-400 dark:text-stone-500 -mt-2 mb-5">Geschlecht und Alter beeinflussen die Referenzwerte.</p></>)}
-        <button onClick={isSignup?onSignup:onLogin} disabled={authLoading} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-50 transition-colors">{authLoading?"Laden…":isSignup?"Konto erstellen":"Anmelden"}</button>
+        {isSignup && (
+          <label className="flex items-start gap-3 mb-5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={!!termsAccepted}
+              onChange={(e:any)=>setTermsAccepted(e.target.checked)}
+              className="mt-1 w-4 h-4 accent-teal-600 cursor-pointer"
+            />
+            <span className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+              Ich akzeptiere die{" "}
+              <button type="button" onClick={()=>setScreen("terms")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Nutzungsbedingungen</button>,{" "}
+              die{" "}
+              <button type="button" onClick={()=>setScreen("privacy")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Datenschutzerklärung</button>{" "}
+              und den{" "}
+              <button type="button" onClick={()=>setScreen("disclaimer")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">medizinischen Hinweis</button>.
+            </span>
+          </label>
+        )}
+        <button onClick={isSignup?onSignup:onLogin} disabled={authLoading || (isSignup && !termsAccepted)} className="w-full py-3.5 bg-teal-600 text-white rounded-xl font-medium text-base hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">{authLoading?"Laden…":isSignup?"Konto erstellen":"Anmelden"}</button>
         <p className="text-center text-sm text-stone-400 dark:text-stone-500 mt-5">{isSignup?"Schon ein Konto? ":"Noch kein Konto? "}<span className="text-teal-600 cursor-pointer font-medium hover:underline" onClick={()=>setScreen(isSignup?"login":"signup")}>{isSignup?"Anmelden":"Registrieren"}</span></p>
       </div>
+      <div className="mt-8"><LegalFooter setScreen={setScreen} /></div>
     </div>
   );
 }
@@ -889,7 +909,7 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
 
       {/* Danger zone */}
       <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 border-l-[3px] border-l-red-500 mb-0"><h3 className="text-base font-semibold text-red-600 mb-1">Gefahrenzone</h3><p className="text-sm text-stone-500 dark:text-stone-400 mb-3">Alle Daten permanent löschen.</p><button onClick={()=>{if(confirm("Alle Daten löschen? Das kann nicht rückgängig gemacht werden."))onLogout();}} className="px-5 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Alle Daten löschen</button></div>
-      <button onClick={()=>setScreen("privacy")} className="mt-5 text-sm text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">Datenschutz →</button>
+      <LegalFooter setScreen={setScreen} />
     </div>
   );
 }
@@ -1136,6 +1156,210 @@ function ComparePanelScreen({ panels, sex, setScreen, compareAId, setCompareAId,
   );
 }
 
+/* ─── IMPRESSUM ─────────────────────────────────────────────────── */
+function ImpressumScreen({ user, setScreen }: any) {
+  const Row = ({ label, value }: { label: string; value: string }) => (
+    <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-1 md:gap-4 py-2.5 border-b border-stone-100 dark:border-stone-800 last:border-b-0">
+      <div className="text-sm font-medium text-stone-500 dark:text-stone-400">{label}</div>
+      <div className="text-sm text-stone-800 dark:text-stone-200">{value}</div>
+    </div>
+  );
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      <button onClick={()=>setScreen(user?"dashboard":"landing")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück</button>
+      <h2 className="font-display text-3xl mb-2">Impressum</h2>
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-8">Offenlegung gemäß §5 ECG, §14 UGB und §25 MedienG.</p>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
+        <h3 className="text-base font-semibold mb-4">Medieninhaber & Diensteanbieter</h3>
+        <Row label="Name" value="[VOR- UND NACHNAME]" />
+        <Row label="Unternehmensform" value="Einzelunternehmen" />
+        <Row label="Anschrift" value="[STRASSE NR., PLZ ORT, ÖSTERREICH]" />
+        <Row label="E-Mail" value="[KONTAKT@VITALIS.AT]" />
+        <Row label="Telefon" value="[+43 ...]" />
+      </section>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
+        <h3 className="text-base font-semibold mb-4">Unternehmensdaten</h3>
+        <Row label="Unternehmensgegenstand" value="Bereitstellung einer Web-Anwendung zur Selbst-Dokumentation und Visualisierung von Blutwerten (Bildungstool, kein Medizinprodukt)." />
+        <Row label="UID-Nummer" value="[ATU XXXXXXXX]" />
+        <Row label="Firmenbuch / GLN" value="[GGF. NICHT EINGETRAGEN]" />
+        <Row label="Gewerbe" value="Dienstleistung in der automatischen Datenverarbeitung und Informationstechnik (freies Gewerbe)" />
+      </section>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
+        <h3 className="text-base font-semibold mb-4">Behördliches</h3>
+        <Row label="Aufsichtsbehörde" value="[BEZIRKSHAUPTMANNSCHAFT / MAGISTRAT GEMÄSS WOHNSITZ]" />
+        <Row label="Mitgliedschaft" value="Wirtschaftskammer Österreich (WKO), Fachgruppe UBIT" />
+        <Row label="Anwendbare Rechtsvorschrift" value="Gewerbeordnung (GewO), abrufbar unter www.ris.bka.gv.at" />
+      </section>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
+        <h3 className="text-base font-semibold mb-3">Online-Streitbeilegung</h3>
+        <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{" "}
+          <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">https://ec.europa.eu/consumers/odr</a>.
+          Wir sind nicht verpflichtet und nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+      </section>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-6">
+        <h3 className="text-base font-semibold mb-3">Haftungsausschluss</h3>
+        <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-3">
+          Die Inhalte dieser Anwendung wurden mit größtmöglicher Sorgfalt erstellt. Für Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird jedoch keine Gewähr übernommen.
+        </p>
+        <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+          Vitalis ist <strong>kein Medizinprodukt</strong> im Sinne der MDR (EU) 2017/745 und ersetzt keine ärztliche Untersuchung, Diagnose oder Behandlung. Siehe auch{" "}
+          <button onClick={()=>setScreen("disclaimer")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Medizinischer Hinweis</button>.
+        </p>
+      </section>
+
+      <section className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6">
+        <h3 className="text-base font-semibold mb-3">Urheberrecht</h3>
+        <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+          Sämtliche Inhalte, Texte, Grafiken und das Layout dieser Anwendung sind urheberrechtlich geschützt. Eine Verwendung außerhalb des persönlichen Gebrauchs ist nur mit ausdrücklicher Zustimmung gestattet.
+        </p>
+      </section>
+    </div>
+  );
+}
+
+/* ─── AGB / NUTZUNGSBEDINGUNGEN ─────────────────────────────────── */
+function TermsScreen({ user, setScreen }: any) {
+  const sections = [
+    {
+      t: "1. Geltungsbereich",
+      d: "Diese Nutzungsbedingungen regeln die Nutzung der Web-Anwendung Vitalis (im Folgenden \"Dienst\") zwischen dem Betreiber (siehe Impressum) und dem Nutzer. Mit der Registrierung erkennt der Nutzer diese Bedingungen sowie die Datenschutzerklärung als verbindlich an.",
+    },
+    {
+      t: "2. Leistungsbeschreibung",
+      d: "Vitalis ist eine Plattform zur strukturierten Erfassung und Visualisierung selbst übermittelter Blutwerte. Die Anwendung dient ausschließlich Bildungs- und Selbst-Tracking-Zwecken. Vitalis stellt keine Diagnosen, gibt keine Behandlungsempfehlungen und ist kein Medizinprodukt im Sinne der MDR (EU) 2017/745.",
+    },
+    {
+      t: "3. Registrierung & Konto",
+      d: "Voraussetzung für die Nutzung ist die Erstellung eines Kontos mit gültiger E-Mail-Adresse. Der Nutzer ist verpflichtet, wahrheitsgemäße Angaben zu machen und sein Passwort vertraulich zu behandeln. Eine Weitergabe des Kontos an Dritte ist untersagt.",
+    },
+    {
+      t: "4. Pflichten des Nutzers",
+      d: "Der Nutzer trägt die alleinige Verantwortung für die Richtigkeit der eingegebenen Werte. Vitalis ersetzt keine ärztliche Konsultation. Bei gesundheitlichen Beschwerden oder auffälligen Werten ist unverzüglich qualifiziertes medizinisches Personal aufzusuchen.",
+    },
+    {
+      t: "5. Haftungsausschluss",
+      d: "Der Betreiber haftet nur für Schäden, die auf Vorsatz oder grober Fahrlässigkeit beruhen. Eine Haftung für mittelbare Schäden, Folgeschäden oder entgangenen Gewinn ist ausgeschlossen. Ausgeschlossen ist insbesondere jede Haftung für Entscheidungen oder Handlungen, die der Nutzer auf Grundlage der dargestellten Werte oder Optimalbereiche trifft.",
+    },
+    {
+      t: "6. Verfügbarkeit",
+      d: "Der Betreiber bemüht sich um eine möglichst hohe Verfügbarkeit, übernimmt jedoch keine Gewähr für eine ununterbrochene Erreichbarkeit. Wartungsarbeiten, Software-Updates und Ausfälle des Hostings können zu vorübergehenden Einschränkungen führen.",
+    },
+    {
+      t: "7. Datenschutz",
+      d: "Die Verarbeitung personenbezogener Daten erfolgt ausschließlich nach Maßgabe der DSGVO und der Datenschutzerklärung. Der Nutzer hat jederzeit das Recht auf Auskunft, Berichtigung, Löschung und Datenübertragbarkeit seiner Daten.",
+    },
+    {
+      t: "8. Kündigung",
+      d: "Der Nutzer kann sein Konto jederzeit ohne Angabe von Gründen über die Profilseite löschen. Mit der Löschung werden alle gespeicherten Blutwerte und Profilinformationen unwiderruflich entfernt.",
+    },
+    {
+      t: "9. Änderungen",
+      d: "Der Betreiber behält sich vor, diese Nutzungsbedingungen anzupassen. Wesentliche Änderungen werden den Nutzern per E-Mail oder über die Anwendung angekündigt. Eine fortgesetzte Nutzung gilt als Zustimmung zur geänderten Fassung.",
+    },
+    {
+      t: "10. Schlussbestimmungen",
+      d: "Es gilt österreichisches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist, soweit gesetzlich zulässig, der Wohnsitz des Betreibers. Sollte eine Bestimmung dieser Bedingungen unwirksam sein, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.",
+    },
+  ];
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      <button onClick={()=>setScreen(user?"dashboard":"landing")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück</button>
+      <h2 className="font-display text-3xl mb-2">Nutzungsbedingungen</h2>
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-2">Stand: [DATUM EINTRAGEN]</p>
+      <p className="text-sm text-stone-500 dark:text-stone-400 mb-8">Bitte lies diese Bedingungen vor der Nutzung sorgfältig durch.</p>
+      {sections.map((s, i) => (
+        <div key={i} className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">{s.t}</h3>
+          <p className="text-base text-stone-600 dark:text-stone-300 leading-relaxed">{s.d}</p>
+        </div>
+      ))}
+      <p className="text-xs text-stone-400 dark:text-stone-500 mt-10">
+        Bei Fragen zu diesen Bedingungen siehe{" "}
+        <button onClick={()=>setScreen("impressum")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Impressum</button>.
+      </p>
+    </div>
+  );
+}
+
+/* ─── MEDICAL DISCLAIMER ────────────────────────────────────────── */
+function DisclaimerScreen({ user, setScreen }: any) {
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      <button onClick={()=>setScreen(user?"dashboard":"landing")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4 transition-colors">← Zurück</button>
+      <h2 className="font-display text-3xl mb-2">Medizinischer Hinweis</h2>
+      <p className="text-base text-stone-500 dark:text-stone-400 mb-8">Bitte sorgfältig lesen, bevor du Vitalis nutzt.</p>
+
+      <div className="bg-amber-50 dark:bg-amber-950/30 border-l-[3px] border-amber-400 rounded-xl p-5 mb-8">
+        <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+          <strong>⚕️ Vitalis ist kein Medizinprodukt.</strong> Die Anwendung dient ausschließlich der Bildung und der persönlichen Selbst-Dokumentation. Sie stellt <strong>keine Diagnose</strong>, gibt <strong>keine Behandlungsempfehlung</strong> und ersetzt unter keinen Umständen die Konsultation einer Ärztin oder eines Arztes.
+        </p>
+      </div>
+
+      {[
+        {
+          t: "Was Vitalis ist",
+          d: "Ein Werkzeug zur strukturierten Erfassung und Visualisierung deiner selbst hochgeladenen Blutwerte über Zeit. Vitalis zeigt dir Referenzbereiche aus der Labormedizin sowie zusätzlich \"Longevity-Optimalbereiche\", die auf publizierter Forschung im Bereich der präventiven und gesunden Alterung basieren.",
+        },
+        {
+          t: "Was Vitalis nicht ist",
+          d: "Vitalis ist kein zertifiziertes Medizinprodukt im Sinne der EU-Verordnung MDR 2017/745. Es führt keine Diagnostik durch, gibt keine therapeutischen Empfehlungen und ist nicht zur Vorhersage, Erkennung, Überwachung oder Behandlung von Krankheiten bestimmt.",
+        },
+        {
+          t: "Über Optimalbereiche",
+          d: "Die in Vitalis dargestellten Optimalbereiche sind pädagogischer Natur und basieren auf wissenschaftlicher Literatur (u.a. Peter Attia, \"Outlive\", sowie Übersichtsarbeiten zur präventiven Medizin). Sie unterscheiden sich teilweise von klassischen Laborreferenzen. Diese Bereiche gelten nicht universell und können für deine individuelle Situation ungeeignet sein. Sprich Veränderungen immer mit deiner Ärztin oder deinem Arzt ab.",
+        },
+        {
+          t: "Wann du sofort medizinische Hilfe suchen solltest",
+          d: "Bei akuten Beschwerden, auffälligen oder kritischen Werten, Schwangerschaft, chronischen Erkrankungen oder vor jeder Änderung deiner Lebensweise (Ernährung, Sport, Supplementierung, Medikamente) konsultiere bitte unverzüglich qualifiziertes medizinisches Fachpersonal.",
+        },
+        {
+          t: "Keine Haftung für Entscheidungen",
+          d: "Der Betreiber von Vitalis übernimmt keine Haftung für gesundheitliche, finanzielle oder sonstige Folgen, die aus der Nutzung der Anwendung oder aus Entscheidungen entstehen, die du auf Basis der dargestellten Werte oder Bereiche triffst.",
+        },
+        {
+          t: "Datenqualität",
+          d: "Die Aussagekraft der Visualisierung hängt vollständig von der Korrektheit der eingegebenen Werte ab. Tipp- oder Übertragungsfehler werden von Vitalis nicht erkannt. Bewahre stets das Originaldokument deines Labors auf.",
+        },
+      ].map((s, i) => (
+        <div key={i} className="mb-6">
+          <h3 className="text-lg font-semibold mb-2">{s.t}</h3>
+          <p className="text-base text-stone-600 dark:text-stone-300 leading-relaxed">{s.d}</p>
+        </div>
+      ))}
+
+      <p className="text-xs text-stone-400 dark:text-stone-500 mt-10">
+        Siehe auch{" "}
+        <button onClick={()=>setScreen("terms")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Nutzungsbedingungen</button>{" · "}
+        <button onClick={()=>setScreen("privacy")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Datenschutz</button>{" · "}
+        <button onClick={()=>setScreen("impressum")} className="text-teal-600 dark:text-teal-400 hover:underline underline-offset-4">Impressum</button>.
+      </p>
+    </div>
+  );
+}
+
+/* ─── LEGAL FOOTER (wiederverwendbar) ───────────────────────────── */
+function LegalFooter({ setScreen }: { setScreen: (s: string) => void }) {
+  const link = "hover:text-stone-600 dark:hover:text-stone-300 transition-colors underline underline-offset-4";
+  return (
+    <div className="text-center text-xs text-stone-400 dark:text-stone-500 mt-8 flex justify-center gap-3 flex-wrap">
+      <button onClick={()=>setScreen("impressum")} className={link}>Impressum</button>
+      <span>·</span>
+      <button onClick={()=>setScreen("terms")} className={link}>AGB</button>
+      <span>·</span>
+      <button onClick={()=>setScreen("privacy")} className={link}>Datenschutz</button>
+      <span>·</span>
+      <button onClick={()=>setScreen("disclaimer")} className={link}>Medizinischer Hinweis</button>
+    </div>
+  );
+}
+
 function PrivacyScreen({ user, setScreen }: any) {
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
@@ -1175,6 +1399,7 @@ export default function Home() {
   const [markerPrevScreen, setMarkerPrevScreen] = useState("dashboard");
   const [compareAId, setCompareAId] = useState<string | null>(null);
   const [compareBId, setCompareBId] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   // Browser history API: push state on every navigation
   const navigate = (newScreen: string) => {
@@ -1253,6 +1478,7 @@ export default function Home() {
 
   const handleSignup = async () => {
     if(!authEmail||!authPass||authPass.length<8){notify("Email & Passwort (min. 8 Zeichen) nötig","err");return;}
+    if(!termsAccepted){notify("Bitte AGB, Datenschutz & medizinischen Hinweis akzeptieren","err");return;}
     setAuthLoading(true);
     const{data,error}=await supabase.auth.signUp({email:authEmail,password:authPass,options:{data:{display_name:authName||authEmail.split("@")[0]}}});
     if(error){notify(error.message,"err");setAuthLoading(false);return;}
@@ -1482,8 +1708,8 @@ export default function Home() {
     <AppHeader user={user} screen={screen} setScreen={navigate} onLogout={handleLogout} theme={theme} setTheme={setTheme} />
     {toast&&<div className={`toast-animate fixed top-[72px] left-1/2 -translate-x-1/2 px-6 py-3.5 rounded-xl text-sm font-medium shadow-lg z-[200] ${toast.type==="err"?"bg-red-50 text-red-600 dark:bg-red-950/60 dark:text-red-300":"bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-300"}`}>{toast.msg}</div>}
     {screen==="landing"&&<LandingScreen setScreen={navigate} />}
-    {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} />}
-    {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} />}
+    {screen==="login"&&<AuthScreen isSignup={false} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} termsAccepted={termsAccepted} setTermsAccepted={setTermsAccepted} />}
+    {screen==="signup"&&<AuthScreen isSignup={true} authEmail={authEmail} setAuthEmail={setAuthEmail} authPass={authPass} setAuthPass={setAuthPass} authName={authName} setAuthName={setAuthName} profileSex={profileSex} setProfileSex={setProfileSex} profileBirthYear={profileBirthYear} setProfileBirthYear={setProfileBirthYear} authLoading={authLoading} onSignup={handleSignup} onLogin={handleLogin} setScreen={navigate} termsAccepted={termsAccepted} setTermsAccepted={setTermsAccepted} />}
     {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={navigate} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"dashboard")} />}
     {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={navigate} />}
     {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={navigate} />}
@@ -1493,5 +1719,8 @@ export default function Home() {
     {screen==="compare"&&<ComparePanelScreen panels={panels} sex={sex} setScreen={navigate} compareAId={compareAId} setCompareAId={setCompareAId} compareBId={compareBId} setCompareBId={setCompareBId} />}
     {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
+    {screen==="impressum"&&<ImpressumScreen user={user} setScreen={navigate} />}
+    {screen==="terms"&&<TermsScreen user={user} setScreen={navigate} />}
+    {screen==="disclaimer"&&<DisclaimerScreen user={user} setScreen={navigate} />}
   </>);
 }
