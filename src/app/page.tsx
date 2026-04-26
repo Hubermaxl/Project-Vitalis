@@ -789,7 +789,7 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
 }
 
 /* ─── VIEW PANEL ────────────────────────────────────────────────── */
-function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, showLongevity, setShowLongevity, onSelectMarker }: any) {
+function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, onShare, showLongevity, setShowLongevity, onSelectMarker }: any) {
   const p = currentPanel||panels[panels.length-1]; if(!p) return null;
   const panelIdx = panels.findIndex((pan:Panel) => pan.id === p.id);
   const prevPanel = panelIdx > 0 ? panels[panelIdx - 1] : null;
@@ -801,6 +801,7 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
         <div className="flex gap-2 flex-wrap">
           <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
           <button onClick={() => setScreen("editpanel")} className="px-4 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">✏️ Bearbeiten</button>
+          <button onClick={()=>onShare(p)} className="px-4 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm shadow-teal-600/20">📋 Mit Arzt teilen</button>
           <button onClick={()=>onExportPdf(p)} className="px-4 py-2.5 bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">📄 PDF Export</button>
           <button onClick={()=>onDelete(p.id)} className="px-4 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Löschen</button>
         </div>
@@ -876,7 +877,7 @@ function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, sh
 }
 
 /* ─── PROFILE ───────────────────────────────────────────────────── */
-function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, onDeleteAccount, setScreen, panels, onExportCSV, onExportJSON }: any) {
+function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogout, onDeleteAccount, setScreen, panels, shares, onRevokeShare, onExportCSV, onExportJSON, notify }: any) {
   const totalMarkers = panels?.reduce((sum: number, p: Panel) => sum + p.values.length, 0) || 0;
   return (
     <div className="max-w-md mx-auto px-6 py-8">
@@ -905,6 +906,51 @@ function ProfileScreenView({ user, profile, setProfile, onUpdateProfile, onLogou
             JSON
           </button>
         </div>
+      </div>
+
+      {/* Active sharing links */}
+      <div className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-6 mb-4">
+        <h3 className="text-base font-semibold mb-1">Aktive Sharing-Links</h3>
+        <p className="text-sm text-stone-500 dark:text-stone-400 mb-4">Links, die du mit Ärzten oder anderen Personen geteilt hast. Du kannst sie jederzeit widerrufen — danach ist die Seite sofort nicht mehr aufrufbar.</p>
+        {!shares?.length ? (
+          <p className="text-sm text-stone-400 dark:text-stone-500 italic">Keine aktiven Links. Erstelle einen Link auf einer Panel-Ansicht.</p>
+        ) : (
+          <div className="space-y-3">
+            {shares.map((s: any) => {
+              const panelDate = s.blood_panels?.test_date
+                ? new Date(s.blood_panels.test_date).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })
+                : "Panel gelöscht";
+              const lab = s.blood_panels?.lab_name;
+              const expiresStr = s.expires_at
+                ? new Date(s.expires_at).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" })
+                : null;
+              const isExpired = s.expires_at && new Date(s.expires_at) < new Date();
+              const url = `${typeof window !== "undefined" ? window.location.origin : ""}/share/${s.token}`;
+              const handleCopy = async () => {
+                try { await navigator.clipboard.writeText(url); notify?.("Link kopiert"); }
+                catch { notify?.("Konnte Link nicht kopieren", "err"); }
+              };
+              return (
+                <div key={s.id} className="flex items-start justify-between gap-3 p-4 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-800/30 flex-wrap">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium">Panel vom {panelDate}{lab ? ` · ${lab}` : ""}</div>
+                    <div className="text-xs text-stone-500 dark:text-stone-400 mt-1 flex items-center gap-2 flex-wrap">
+                      <span>{s.view_count || 0} Aufruf{s.view_count === 1 ? "" : "e"}</span>
+                      <span>·</span>
+                      <span>Erstellt {new Date(s.created_at).toLocaleDateString("de-AT", { day: "numeric", month: "short" })}</span>
+                      {expiresStr && (<><span>·</span><span className={isExpired ? "text-red-600" : ""}>{isExpired ? "Abgelaufen am " : "Läuft ab am "}{expiresStr}</span></>)}
+                      {!s.expires_at && (<><span>·</span><span>Kein Ablauf</span></>)}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <button onClick={handleCopy} className="px-3 py-2 bg-stone-100 dark:bg-stone-700 text-stone-700 dark:text-stone-200 rounded-lg text-xs font-medium hover:bg-stone-200 dark:hover:bg-stone-600 transition-colors">Kopieren</button>
+                    <button onClick={() => onRevokeShare(s.id)} className="px-3 py-2 border border-red-200 text-red-600 rounded-lg text-xs font-medium hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Widerrufen</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Danger zone */}
@@ -1064,6 +1110,114 @@ function MarkerDetailScreen({ markerId, setScreen, getHistory, sex, showLongevit
 }
 
 /* ─── PRIVACY ───────────────────────────────────────────────────── */
+/* ─── SHARE MODAL ───────────────────────────────────────────────── */
+function ShareModal({ panel, user, onClose, onCreated, notify }: any) {
+  const [step, setStep] = useState<"select" | "link">("select");
+  const [expiry, setExpiry] = useState<"7d" | "30d" | "never">("7d");
+  const [creating, setCreating] = useState(false);
+  const [link, setLink] = useState("");
+
+  const handleCreate = async () => {
+    setCreating(true);
+    const token = (typeof crypto !== "undefined" && crypto.randomUUID
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
+    ).replace(/-/g, "");
+    let expires_at: string | null = null;
+    if (expiry === "7d") expires_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    if (expiry === "30d") expires_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    const { error } = await supabase.from("share_links").insert([{
+      token, panel_id: panel.id, user_id: user.id, expires_at,
+    }]);
+    if (error) {
+      notify("Fehler beim Erstellen: " + error.message, "err");
+      setCreating(false);
+      return;
+    }
+    setLink(`${window.location.origin}/share/${token}`);
+    setStep("link");
+    setCreating(false);
+    onCreated?.();
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      notify("Link kopiert");
+    } catch {
+      notify("Konnte Link nicht kopieren — bitte manuell markieren", "err");
+    }
+  };
+
+  const dateStr = new Date(panel.test_date).toLocaleDateString("de-AT", { day: "numeric", month: "long", year: "numeric" });
+
+  return (
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl border border-stone-100 dark:border-stone-800 p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="font-display text-2xl">{step === "select" ? "Mit Arzt teilen" : "Link erstellt ✓"}</h3>
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors text-lg">×</button>
+        </div>
+
+        {step === "select" && (
+          <>
+            <p className="text-sm text-stone-500 dark:text-stone-400 mb-5">
+              Erzeuge einen sicheren Link zum Panel vom <strong>{dateStr}</strong>. Wer den Link bekommt, sieht alle Werte read-only — ohne sich registrieren zu müssen.
+            </p>
+            <label className="block text-sm font-medium text-stone-600 dark:text-stone-300 mb-2">Gültigkeit</label>
+            <div className="space-y-2 mb-6">
+              {[
+                { v: "7d", l: "7 Tage", d: "Empfohlen für einen Arzttermin" },
+                { v: "30d", l: "30 Tage", d: "Falls der Termin später ist" },
+                { v: "never", l: "Kein Ablaufdatum", d: "Du kannst den Link jederzeit im Profil widerrufen" },
+              ].map(opt => (
+                <label key={opt.v} className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${expiry === opt.v ? "border-teal-500 bg-teal-50 dark:bg-teal-950/40" : "border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800"}`}>
+                  <input type="radio" name="expiry" checked={expiry === opt.v} onChange={() => setExpiry(opt.v as any)} className="mt-1 accent-teal-600" />
+                  <div>
+                    <div className="text-sm font-medium">{opt.l}</div>
+                    <div className="text-xs text-stone-500 dark:text-stone-400">{opt.d}</div>
+                  </div>
+                </label>
+              ))}
+            </div>
+            <div className="text-xs text-stone-400 dark:text-stone-500 mb-5 leading-relaxed px-1">
+              💡 Wichtig: Der Empfänger sieht deinen Namen, das Datum, das Labor und alle Werte dieses Panels. Werte aus anderen Panels bleiben privat.
+            </div>
+            <div className="flex gap-2 justify-end">
+              <button onClick={onClose} className="px-4 py-2.5 border border-stone-200 dark:border-stone-700 rounded-xl text-sm hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors">Abbrechen</button>
+              <button onClick={handleCreate} disabled={creating} className="px-5 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 disabled:opacity-50 transition-colors">{creating ? "Erstelle…" : "Link erstellen"}</button>
+            </div>
+          </>
+        )}
+
+        {step === "link" && (
+          <>
+            <p className="text-sm text-stone-500 dark:text-stone-400 mb-4">
+              Sende diesen Link an deinen Arzt. Du kannst ihn jederzeit im Profil widerrufen.
+            </p>
+            <div className="flex gap-2 mb-5">
+              <input
+                value={link}
+                readOnly
+                onClick={(e: any) => e.target.select()}
+                className="flex-1 px-3 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-xs bg-stone-50 dark:bg-stone-800 font-mono"
+              />
+              <button onClick={handleCopy} className="px-4 py-2.5 bg-teal-600 text-white rounded-xl text-sm font-medium hover:bg-teal-700 transition-colors whitespace-nowrap">Kopieren</button>
+            </div>
+            <div className="text-xs text-stone-400 dark:text-stone-500 mb-5 leading-relaxed px-1">
+              Der Link wurde verschlüsselt erzeugt — nur wer ihn kennt, kann das Panel sehen. Verwalte aktive Links unter <strong>Profil → Aktive Sharing-Links</strong>.
+            </div>
+            <div className="flex justify-end">
+              <button onClick={onClose} className="px-5 py-2.5 bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">Fertig</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── PANEL COMPARE ─────────────────────────────────────────────── */
 function ComparePanelScreen({ panels, sex, setScreen, compareAId, setCompareAId, compareBId, setCompareBId }: any) {
   if (panels.length < 2) return (
@@ -1405,6 +1559,8 @@ export default function Home() {
   const [compareAId, setCompareAId] = useState<string | null>(null);
   const [compareBId, setCompareBId] = useState<string | null>(null);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [shareModalPanel, setShareModalPanel] = useState<Panel | null>(null);
+  const [shares, setShares] = useState<any[]>([]);
 
   // Browser history API: push state on every navigation
   const navigate = (newScreen: string) => {
@@ -1474,6 +1630,30 @@ export default function Home() {
   },[]);
 
   const loadProfile = async (uid:string) => {const{data}=await supabase.from("profiles").select("*").eq("id",uid).single();if(data) setProfile(data);};
+
+  const loadShares = async (uid: string) => {
+    const { data } = await supabase
+      .from("share_links")
+      .select("id, token, panel_id, created_at, expires_at, view_count, last_viewed_at, blood_panels(test_date, lab_name)")
+      .eq("user_id", uid)
+      .is("revoked_at", null)
+      .order("created_at", { ascending: false });
+    setShares(data || []);
+  };
+
+  const handleRevokeShare = async (shareId: string) => {
+    if (!confirm("Diesen Sharing-Link wirklich widerrufen? Der Empfänger kann das Panel danach nicht mehr sehen.")) return;
+    const { error } = await supabase
+      .from("share_links")
+      .update({ revoked_at: new Date().toISOString() })
+      .eq("id", shareId);
+    if (error) { notify("Fehler beim Widerrufen: " + error.message, "err"); return; }
+    if (user) await loadShares(user.id);
+    notify("Link widerrufen");
+  };
+
+  // Shares laden wenn User ins Profil geht
+  useEffect(() => { if (user && screen === "profile") loadShares(user.id); }, [user, screen]);
   const loadPanels = async (uid:string) => {
     const{data:pd}=await supabase.from("blood_panels").select("*").eq("user_id",uid).order("test_date",{ascending:true});
     if(!pd){setPanels([]);return;}
@@ -1744,11 +1924,12 @@ export default function Home() {
     {screen==="dashboard"&&<DashboardScreen panels={panels} profile={profile} user={user} sex={sex} setScreen={navigate} setPanelValues={setPanelValues} setPanelCategory={setPanelCategory} getHistory={getHistory} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"dashboard")} />}
     {screen==="addpanel"&&<AddPanelScreen sex={sex} panelDate={panelDate} setPanelDate={setPanelDate} panelLab={panelLab} setPanelLab={setPanelLab} panelValues={panelValues} setPanelValues={setPanelValues} panelCategory={panelCategory} setPanelCategory={setPanelCategory} saving={saving} onSave={handleSavePanel} setScreen={navigate} />}
     {screen==="editpanel"&&currentPanel&&<EditPanelScreen panel={currentPanel} sex={sex} saving={saving} onSaveEdit={handleEditPanel} setScreen={navigate} />}
-    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={navigate} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
+    {screen==="viewpanel"&&<ViewPanelScreen currentPanel={currentPanel} panels={panels} sex={sex} setScreen={navigate} onDelete={handleDeletePanel} onExportPdf={handleExportPdf} onShare={(p:Panel)=>setShareModalPanel(p)} showLongevity={showLongevity} setShowLongevity={setShowLongevity} onSelectMarker={(id:string)=>openMarkerDetail(id,"viewpanel")} />}
+    {shareModalPanel && user && <ShareModal panel={shareModalPanel} user={user} onClose={()=>setShareModalPanel(null)} onCreated={()=>user && loadShares(user.id)} notify={notify} />}
     {screen==="markerdetail"&&selectedMarkerId&&<MarkerDetailScreen markerId={selectedMarkerId} setScreen={navigate} getHistory={getHistory} sex={sex} showLongevity={showLongevity} markerPrevScreen={markerPrevScreen} />}
     {screen==="history"&&<HistoryScreen panels={panels} sex={sex} setScreen={navigate} setCurrentPanel={setCurrentPanel} getHistory={getHistory} showLongevity={showLongevity} />}
     {screen==="compare"&&<ComparePanelScreen panels={panels} sex={sex} setScreen={navigate} compareAId={compareAId} setCompareAId={setCompareAId} compareBId={compareBId} setCompareBId={setCompareBId} />}
-    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} setScreen={navigate} panels={panels} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} />}
+    {screen==="profile"&&<ProfileScreenView user={user} profile={profile} setProfile={setProfile} onUpdateProfile={handleUpdateProfile} onLogout={handleLogout} onDeleteAccount={handleDeleteAccount} setScreen={navigate} panels={panels} shares={shares} onRevokeShare={handleRevokeShare} onExportCSV={handleExportCSV} onExportJSON={handleExportJSON} notify={notify} />}
     {screen==="privacy"&&<PrivacyScreen user={user} setScreen={navigate} />}
     {screen==="impressum"&&<ImpressumScreen user={user} setScreen={navigate} />}
     {screen==="terms"&&<TermsScreen user={user} setScreen={navigate} />}
