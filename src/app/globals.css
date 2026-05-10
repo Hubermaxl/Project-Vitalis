@@ -2,12 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap');
-
 @layer base {
   * { box-sizing: border-box; }
-  ::selection { background: #ccfbf1; color: #134e4a; }
-  .dark ::selection { background: #0f766e; color: #ccfbf1; }
+  ::selection { background: #dbeafe; color: #1e3a8a; }
+  .dark ::selection { background: #1e40af; color: #dbeafe; }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
@@ -16,9 +14,43 @@
 
 @keyframes slideDown {
   from { opacity: 0; transform: translate(-50%, -10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }
+.toast-animate { animation: slideDown 0.3s ease-out; }
 
-.toast-animate {
-  animation: slideDown 0.3s ease-out;
+/* ─── Vitalis Animations (per README > Animationen) ───────────────── */
+
+@keyframes vitalis-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fade-up { animation: vitalis-fade-up 0.7s ease both; }
+
+@keyframes vitalis-float-a {
+  0%,100% { transform: translateY(0) translateX(0); }
+  50%     { transform: translateY(-8px) translateX(4px); }
+}
+@keyframes vitalis-float-b {
+  0%,100% { transform: translateY(0) translateX(0); }
+  50%     { transform: translateY(6px) translateX(-3px); }
+}
+.animate-float-a { animation: vitalis-float-a 5s ease-in-out infinite; }
+.animate-float-b { animation: vitalis-float-b 7s ease-in-out infinite; }
+
+@keyframes vitalis-scan-laser {
+  0%,100% { top: 12%; }
+  50%     { top: 76%; }
+}
+.animate-scan-laser { animation: vitalis-scan-laser 2.2s ease-in-out infinite; }
+
+@keyframes vitalis-pulse-ring {
+  0%   { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-pulse-ring { animation: vitalis-pulse-ring 1.4s ease-out infinite; }
+
+@keyframes vitalis-confetti-fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+}
+.animate-confetti { animation: vitalis-confetti-fall 1.6s ease-in forwards; }

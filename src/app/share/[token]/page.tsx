@@ -28,9 +28,9 @@ function ErrorScreen({ title, message }: { title: string; message: string }) {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="max-w-md text-center">
         <div className="w-14 h-14 rounded-2xl bg-stone-200 flex items-center justify-center text-stone-500 text-2xl mx-auto mb-5">⚠</div>
-        <h1 className="font-display text-2xl mb-2">{title}</h1>
+        <h1 className="font-extrabold tracking-tight text-2xl mb-2">{title}</h1>
         <p className="text-stone-500 mb-6">{message}</p>
-        <Link href="/" className="text-sm text-teal-600 hover:underline underline-offset-4">Zur Vitalis-Startseite →</Link>
+        <Link href="/" className="text-sm text-royal hover:underline underline-offset-4">Zur Vitalis-Startseite →</Link>
       </div>
     </div>
   );
@@ -114,10 +114,10 @@ export default async function SharePage({ params }: SharePageProps) {
   return (
     <div className="max-w-4xl mx-auto px-6 py-10 text-stone-900 bg-stone-50 min-h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-teal-600 flex-wrap gap-3">
+      <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-royal flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-teal-600 text-white font-bold text-lg flex items-center justify-center">V</div>
-          <div className="font-display text-2xl">Vitalis</div>
+          <div className="w-10 h-10 rounded-lg bg-royal text-white font-bold text-lg flex items-center justify-center">V</div>
+          <div className="font-extrabold tracking-tight text-2xl">Vitalis</div>
         </div>
         <div className="text-right text-sm text-stone-500">
           <div>Geteilt von <strong className="text-stone-700">{patientName}</strong></div>
@@ -126,7 +126,7 @@ export default async function SharePage({ params }: SharePageProps) {
       </div>
 
       {/* Hinweisbanner */}
-      <div className="mb-6 px-4 py-3 bg-teal-50 border border-teal-100 rounded-xl text-sm text-teal-800 leading-relaxed">
+      <div className="mb-6 px-4 py-3 bg-royal-50 border border-teal-100 rounded-xl text-sm text-royal-900 leading-relaxed">
         <strong>Read-only Ansicht.</strong> Diese Seite wurde mit einem Sharing-Link von <strong>{patientName}</strong> geteilt. Der Empfänger sieht ausschließlich die Werte dieses einen Blutbilds.
         {expiresStr && <> Gültig bis <strong>{expiresStr}</strong>.</>}
       </div>
@@ -183,7 +183,7 @@ export default async function SharePage({ params }: SharePageProps) {
 
       {/* Footer */}
       <div className="text-center mt-10 mb-6 text-sm text-stone-400">
-        Erstellt mit <Link href="/" className="text-teal-600 hover:underline underline-offset-4 font-medium">Vitalis</Link> · Dein persönliches Longevity-Dashboard
+        Erstellt mit <Link href="/" className="text-royal hover:underline underline-offset-4 font-medium">Vitalis</Link> · Dein persönliches Longevity-Dashboard
       </div>
     </div>
   );
