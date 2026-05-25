@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { BLOOD_MARKERS, CATEGORIES, CATEGORY_ORDER, getStatus, getSortedCategories, type BloodMarker, type StatusInfo } from "@/lib/markers";
 import { t } from "@/lib/i18n";
 import { MARKER_EXPLANATIONS, MARKER_INFLUENCES } from "@/lib/markerCopy";
-import { MobileDashboard, CategoryDetail, MarkerDetail, UploadFlow, OnboardingAuth, LandingPage, DesktopDashboard, HistoryScreen as VitalisHistoryScreen } from "@/components/vitalis";
+import { MobileDashboard, CategoryDetail, MarkerDetail, UploadFlow, OnboardingAuth, LandingPage, DesktopDashboard, HistoryScreen as VitalisHistoryScreen, ViewPanelScreen as VitalisViewPanelScreen } from "@/components/vitalis";
 
 interface Panel { id: string; user_id: string; test_date: string; lab_name: string | null; values: { markerId: string; value: number }[]; }
 interface Prof { id: string; display_name: string; sex: string; birth_year: number; }
@@ -401,66 +401,20 @@ function EditPanelScreen({ panel, sex, saving, onSaveEdit, setScreen }: { panel:
 
 /* ─── VIEW PANEL ────────────────────────────────────────────────── */
 function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExportPdf, onShare, showLongevity, setShowLongevity, onSelectMarker }: any) {
-  const p = currentPanel||panels[panels.length-1]; if(!p) return null;
-  const panelIdx = panels.findIndex((pan:Panel) => pan.id === p.id);
-  const prevPanel = panelIdx > 0 ? panels[panelIdx - 1] : null;
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
-      <button onClick={()=>setScreen("dashboard")} className="text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 mb-4">← Zurück</button>
-      <div className="flex justify-between items-start mb-6 flex-wrap gap-3">
-        <div><h2 className="font-extrabold tracking-tight text-3xl mb-1">Panel Ergebnisse</h2><p className="text-base text-stone-500 dark:text-stone-400">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}{p.lab_name&&` · ${p.lab_name}`} · {p.values.length} Marker</p></div>
-        <div className="flex gap-2 flex-wrap">
-          <LongevityToggle enabled={showLongevity} onToggle={() => setShowLongevity(!showLongevity)} />
-          <button onClick={() => setScreen("editpanel")} className="px-4 py-2.5 bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200 rounded-xl text-sm font-medium hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors">✏️ Bearbeiten</button>
-          <button onClick={()=>onShare(p)} className="px-4 py-2.5 bg-royal text-white rounded-xl text-sm font-medium hover:bg-royal-800 transition-colors shadow-sm shadow-royal/20">{t.share.button}</button>
-          <button onClick={()=>onExportPdf(p)} className="px-4 py-2.5 bg-stone-800 dark:bg-stone-100 dark:text-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-900 transition-colors">📄 PDF Export</button>
-          <button onClick={()=>onDelete(p.id)} className="px-4 py-2.5 border border-red-200 text-red-600 rounded-xl text-sm hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors">Löschen</button>
-        </div>
-      </div>
-
-      {showLongevity && (
-        <div className="flex items-center gap-4 mb-6 px-4 py-3 bg-emerald-50 rounded-xl border border-emerald-100 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:border-emerald-800/40 dark:text-emerald-300">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-2.5 rounded bg-amber-200/70" />
-            <span>Referenzbereich</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-2.5 rounded bg-emerald-300/80 border border-emerald-400/30" />
-            <span>Longevity-Optimal (nach Attia)</span>
-          </div>
-        </div>
-      )}
-
-      {getSortedCategories().map(cat=>{
-        const cc = getCatColor(cat);
-        const cv=p.values.filter((v:any)=>BLOOD_MARKERS.find(bm=>bm.id===v.markerId)?.category===cat);if(!cv.length) return null;
-        return (<div key={cat} className="mb-7">
-          <CategoryHeader category={cat} />
-          {cv.map((v:any)=>{const marker=BLOOD_MARKERS.find(m=>m.id===v.markerId);if(!marker) return null;const si=getStatus(v.value,marker,sex);const prevVal=prevPanel?.values.find((pv:any)=>pv.markerId===v.markerId);
-            const sx = sex==="female"?"f":"m";
-            const explanation = MARKER_EXPLANATIONS[marker.id];
-            const [showNote, setShowNote] = useState(false);
-          return (<div key={v.markerId} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}>
-            <div className="flex justify-between items-center flex-wrap gap-2"><div className="flex-1"><div className="flex items-center gap-2.5"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><StatusBadge status={si.status} />{prevVal&&<DeltaIndicator current={v.value} previous={prevVal.value} />}</div>
-            <div className="text-sm text-stone-400 dark:text-stone-500">{marker.name_de}</div>
-            {explanation && <div className="text-xs text-stone-500 dark:text-stone-400 mt-1 leading-relaxed max-w-lg">{explanation}</div>}
-            </div><div className="text-xl font-bold" style={{color:si.color}}>{v.value} <span className="text-sm font-normal text-stone-400 dark:text-stone-500">{marker.unit}</span></div></div>
-            <RangeBar value={v.value} marker={marker} sex={sex} showLongevity={showLongevity} />
-            <div className="flex justify-between items-center mt-2 flex-wrap gap-2">
-              <div className="flex gap-5 text-xs text-stone-400 dark:text-stone-500">
-                <span>Referenz: {marker[`ref_min_${sx}` as keyof BloodMarker]}–{marker[`ref_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>
-                {showLongevity && <span className="text-emerald-600 font-medium">Optimal: {marker[`opt_min_${sx}` as keyof BloodMarker]}–{marker[`opt_max_${sx}` as keyof BloodMarker]} {marker.unit}</span>}
-              </div>
-              <div className="flex items-center gap-3">
-                {showLongevity && marker.longevity_note && <button onClick={()=>setShowNote(!showNote)} className="text-xs text-royal hover:text-royal-800 font-medium">{showNote ? "Weniger ▴" : "Longevity-Info ▾"}</button>}
-                <button onClick={()=>onSelectMarker(v.markerId)} className="text-xs text-stone-400 dark:text-stone-500 hover:text-royal dark:hover:text-royal-400 font-medium transition-colors">Details →</button>
-              </div>
-            </div>
-            {showNote && showLongevity && marker.longevity_note && <div className="mt-3 p-3 rounded-xl bg-royal-50 text-sm text-royal-900 leading-relaxed dark:bg-royal-900/40 dark:text-royal-200">{marker.longevity_note}</div>}
-          </div>);})}</div>);
-      })}
-      <Disclaimer />
-    </div>
+    <VitalisViewPanelScreen
+      currentPanel={currentPanel}
+      panels={panels}
+      sex={sex}
+      onBack={() => setScreen("history")}
+      onEdit={() => setScreen("editpanel")}
+      onShare={onShare}
+      onExportPdf={onExportPdf}
+      onDelete={onDelete}
+      onSelectMarker={onSelectMarker}
+      showLongevity={showLongevity}
+      onToggleLongevity={() => setShowLongevity(!showLongevity)}
+    />
   );
 }
 

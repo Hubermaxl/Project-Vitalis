@@ -20,4 +20,5 @@ export { OnboardingAuth } from "./OnboardingAuth";
 export { LandingPage } from "./LandingPage";
 export { DesktopDashboard } from "./DesktopDashboard";
 export { HistoryScreen } from "./HistoryScreen";
+export { ViewPanelScreen } from "./ViewPanelScreen";
 export * from "./adapters";
