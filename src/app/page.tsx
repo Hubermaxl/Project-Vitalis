@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { BLOOD_MARKERS, CATEGORIES, CATEGORY_ORDER, getStatus, getSortedCategories, type BloodMarker, type StatusInfo } from "@/lib/markers";
 import { t } from "@/lib/i18n";
 import { MARKER_EXPLANATIONS, MARKER_INFLUENCES } from "@/lib/markerCopy";
-import { MobileDashboard, CategoryDetail, MarkerDetail, UploadFlow, OnboardingAuth, LandingPage, DesktopDashboard } from "@/components/vitalis";
+import { MobileDashboard, CategoryDetail, MarkerDetail, UploadFlow, OnboardingAuth, LandingPage, DesktopDashboard, HistoryScreen as VitalisHistoryScreen } from "@/components/vitalis";
 
 interface Panel { id: string; user_id: string; test_date: string; lab_name: string | null; values: { markerId: string; value: number }[]; }
 interface Prof { id: string; display_name: string; sex: string; birth_year: number; }
@@ -465,25 +465,16 @@ function ViewPanelScreen({ currentPanel, panels, sex, setScreen, onDelete, onExp
 }
 
 /* ─── HISTORY ───────────────────────────────────────────────────── */
-function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory, showLongevity }: any) {
-  if(!panels.length) return (<div className="max-w-lg mx-auto mt-16 px-6 text-center"><p className="text-stone-500 dark:text-stone-400 text-base mb-5">Noch keine Panels vorhanden.</p><button onClick={()=>setScreen("addpanel")} className="px-6 py-3 bg-royal text-white rounded-xl text-sm font-medium hover:bg-royal-800">+ Panel hinzufügen</button></div>);
+function HistoryScreen({ panels, sex, setScreen, setCurrentPanel, getHistory }: any) {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
-      <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-        <h2 className="font-extrabold tracking-tight text-3xl">Verlauf</h2>
-        {panels.length >= 2 && (
-          <button onClick={()=>setScreen("compare")} className="px-4 py-2.5 bg-royal text-white rounded-xl text-sm font-medium hover:bg-royal-800 transition-colors shadow-sm shadow-royal/20">⇄ Panels vergleichen</button>
-        )}
-      </div>
-      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">Alle Panels</h3>
-      {[...panels].reverse().map((p:any)=>(<div key={p.id} onClick={()=>{setCurrentPanel(p);setScreen("viewpanel");}} className="bg-white dark:bg-stone-900 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm p-5 mb-3 cursor-pointer hover:shadow-md hover:-translate-y-px transition-all"><div className="flex justify-between items-center"><div><span className="font-semibold text-base">{new Date(p.test_date).toLocaleDateString("de-AT",{day:"numeric",month:"long",year:"numeric"})}</span>{p.lab_name&&<span className="text-stone-400 dark:text-stone-500 text-sm ml-3">· {p.lab_name}</span>}</div><span className="text-sm text-stone-500 dark:text-stone-400">{p.values.length} Marker →</span></div></div>))}
-      <h3 className="text-sm font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mt-8 mb-3">Trends</h3>
-      {BLOOD_MARKERS.filter(m=>m.priority!=="extended").map(marker=>{const h=getHistory(marker.id);if(h.length<2) return null;const lsi=getStatus(h[h.length-1].value,marker,sex);const prev=h[h.length-2];
-        const cc = getCatColor(marker.category);
-        return (<div key={marker.id} className={`rounded-2xl border shadow-sm p-5 mb-3 ${cc.bg} ${cc.border}`}><div className="flex justify-between items-center flex-wrap gap-3"><div className="flex items-center gap-2"><PriorityDot priority={marker.priority} /><span className="font-semibold text-base">{marker.name}</span><span className="text-sm text-stone-400 dark:text-stone-500">{marker.name_de}</span><DeltaIndicator current={h[h.length-1].value} previous={prev.value} /></div><div className="flex items-center gap-4"><Sparkline data={h.map((x:any)=>x.value)} color={lsi.color} /><div className="text-right"><div className="text-lg font-bold" style={{color:lsi.color}}>{h[h.length-1].value}</div><div className="text-xs text-stone-400 dark:text-stone-500">{marker.unit}</div></div></div></div><div className="flex gap-2 mt-3 flex-wrap">{h.map((x:any,i:number)=><span key={i} className="text-xs text-stone-400 dark:text-stone-500 bg-white/60 dark:bg-stone-800/60 px-2.5 py-1 rounded-lg">{new Date(x.date).toLocaleDateString("de-AT",{month:"short",year:"2-digit"})}: {x.value}</span>)}</div></div>);
-      })}
-      <Disclaimer />
-    </div>
+    <VitalisHistoryScreen
+      panels={panels}
+      sex={sex}
+      onSelectPanel={(p: any) => { setCurrentPanel(p); setScreen("viewpanel"); }}
+      onCompare={() => setScreen("compare")}
+      onAddPanel={() => setScreen("addpanel")}
+      getHistory={getHistory}
+    />
   );
 }
 
